@@ -49,7 +49,7 @@ export default async function Track(req, res) {
 		let searchResult;
 		let songInfo;
 
-		const jsonData = addToJsonArray('/public/download.json', { id: id, spotify: spotifyId });
+		const jsonData = addToJsonArray('public/download.json', { id: id, spotify: spotifyId });
 
 		if (jsonData) {
 			const [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [spotifyId]);
