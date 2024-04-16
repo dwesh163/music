@@ -39,7 +39,7 @@ export const authOptions = (req) => ({
 					await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?, ?)', ['Liked', uuidv4(), insertedUser.user_id]);
 				}
 
-				if (JSON.parse(process.env.SUPER_ADMIN).includes(user.email)) {
+				if (JSON.parse(JSON.stringify(process.env.WHITELIST)).includes(user.email)) {
 					return Promise.resolve(true);
 				}
 
@@ -67,7 +67,7 @@ export const authOptions = (req) => ({
 				if (connection) connection.end();
 			}
 
-			if (JSON.parse(process.env.SUPER_ADMIN).includes(session.user.email)) {
+			if (JSON.parse(JSON.stringify(process.env.WHITELIST)).includes(user.email)) {
 				return session;
 			}
 			return null;
