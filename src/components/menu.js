@@ -63,7 +63,9 @@ export default function Menu({}) {
 			try {
 				const response = await fetch('/api/playlist');
 				const playlistsData = await response.json();
-				setPlaylists(playlistsData);
+				if (!playlistsData.error) {
+					setPlaylists(playlistsData);
+				}
 				setIsLoading(false);
 			} catch (error) {
 				console.error('Error fetching audio data:', error);
