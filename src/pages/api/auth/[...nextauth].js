@@ -21,6 +21,10 @@ export const authOptions = (req) => ({
 			clientSecret: process.env.GITHUB_SECRET,
 		}),
 	],
+	pages: {
+		signIn: '/auth/signin',
+		error: '/auth/error',
+	},
 	callbacks: {
 		async signIn({ user, account, profile, email, credentials }) {
 			const connection = await connectMySQL();
