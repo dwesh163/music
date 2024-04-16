@@ -2,6 +2,7 @@ import { getSession } from 'next-auth/react';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { useRouter } from 'next/router';
+import { getServerSession } from 'next-auth';
 
 async function connectMySQL() {
 	try {
