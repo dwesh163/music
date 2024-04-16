@@ -18,25 +18,6 @@ async function connectMySQL() {
 	}
 }
 
-function addToJsonArray(filePath, objectToAdd) {
-	const fileContent = fs.readFileSync(filePath);
-	const data = JSON.parse(fileContent);
-
-	if (!Array.isArray(data)) {
-		console.log('Invalid JSON');
-	}
-
-	const isObjectExists = data.some((item) => item.spotify === objectToAdd.spotify);
-
-	if (!isObjectExists) {
-		data.push(objectToAdd);
-		fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-		return false;
-	} else {
-		return true;
-	}
-}
-
 export default async function Track(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
@@ -50,13 +31,6 @@ export default async function Track(req, res) {
 		const id = uuidv4();
 		let searchResult;
 		let songInfo;
-
-		const jsonData = addToJsonArray('public/download.json', { id: id, spotify: spotifyId });
-
-		if (jsonData) {
-			const [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [spotifyId]);
-			res.status(200).json({ id: track.track_public_id });
-		}
 
 		const spotifyApi = new SpotifyWebApi({
 			clientId: process.env.CLIENTID,
