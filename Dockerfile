@@ -7,20 +7,23 @@ RUN apt-get update && apt-get install -y \
   python3 \
   python3-pip \
   ffmpeg \
+  python3-venv \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash -
 RUN apt-get install -y nodejs
 
-# Install spotdl
+RUN python3 -m venv /venv
+
+WORKDIR /app
+
+ENV PATH="/venv/bin:$PATH"
+
 RUN pip install spotdl
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
