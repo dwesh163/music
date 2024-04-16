@@ -7,6 +7,8 @@ import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import fs from 'fs';
 
+const { spawn } = require('child_process');
+
 async function connectMySQL() {
 	try {
 		const connection = await mysql.createConnection(dbConfig);
@@ -120,6 +122,22 @@ export default async function Track(req, res) {
 					await connection.execute('INSERT INTO track_artist (track_id, artist_id) VALUES (?, ?)', [track.track_id, artist.artist_id]);
 				}
 			}
+
+			const command = 'spotdl';
+			const args = [`https://open.spotify.com/intl-fr/track/${spotifyId}`, '--output musics'];
+			const download = spawn(command, args);
+
+			download.stdout.on('data', (data) => {
+				console.log(`stdout: ${data}`);
+			});
+
+			download.stderr.on('data', (data) => {
+				console.error(`stderr: ${data}`);
+			});
+
+			download.on('close', (code) => {
+				console.log(`child process exited with code ${code}`);
+			});
 
 			res.status(200).json(songInfo);
 		} catch (error) {
