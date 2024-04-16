@@ -53,7 +53,7 @@ export default function Home() {
 					) : (
 						<div className="w-full h-full overflow-hidden">
 							<div className="w-full p-7 pb-0">
-								<h1 className=" text-3xl mb-0 font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-6xl dark:text-white">{playlist.playlist.name}</h1>
+								<h1 className=" text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">{playlist.playlist.name}</h1>
 								<p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
 									{playlist.tracks.length} Track{playlist.tracks.length > 1 ? 's' : ''}
 								</p>
