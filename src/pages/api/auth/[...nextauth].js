@@ -67,10 +67,7 @@ export const authOptions = (req) => ({
 				if (connection) connection.end();
 			}
 
-			if (JSON.parse(JSON.stringify(process.env.WHITELIST)).includes(user.email)) {
-				return session;
-			}
-			return null;
+			return session;
 		},
 	},
 });
