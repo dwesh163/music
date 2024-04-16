@@ -13,7 +13,7 @@ async function connectMySQL() {
 }
 
 export default async function Track(req, res) {
-	const session = await getSession({ req });
+	const session = await getServerSession(req, res, authOptions);
 
 	if (!session) {
 		return res.status(401).json({ error: 'Unauthorized' });
@@ -24,7 +24,7 @@ export default async function Track(req, res) {
 			const connection = await connectMySQL();
 
 			const playlistId = req.query.playlistId;
-			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_id_public = ?', [session.user.id]);
+			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
 			const [[playlistInfo]] = await connection.execute('SELECT * FROM playlists WHERE playlist_user = ? AND public_id = ?', [user.user_id, playlistId]);
 
 			if (!playlistInfo) {
