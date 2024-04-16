@@ -3,6 +3,7 @@ import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { useRouter } from 'next/router';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 async function connectMySQL() {
 	try {
