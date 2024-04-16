@@ -1,4 +1,20 @@
-FROM node:18-alpine AS base
+FROM ubuntu:rolling AS base
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+  curl \
+  wget \
+  python3 \
+  python3-pip \
+  ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
+# Install spotdl
+RUN pip3 install spotdl
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -21,6 +37,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -50,6 +68,9 @@ COPY --from=builder /app/public ./public
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
+
+RUN mkdir musics
+RUN chown nextjs:nodejs musics
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
