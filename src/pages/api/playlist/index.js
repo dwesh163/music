@@ -3,6 +3,8 @@ import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 async function connectMySQL() {
 	try {
@@ -14,7 +16,7 @@ async function connectMySQL() {
 }
 
 export default async function Track(req, res) {
-	const session = await getSession({ req });
+	const session = await getServerSession(req, res, authOptions);
 
 	if (!session) {
 		return res.status(401).json({ error: 'Unauthorized' });
@@ -24,7 +26,7 @@ export default async function Track(req, res) {
 		try {
 			const connection = await connectMySQL();
 
-			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_id_public = ?', [session.user.id]);
+			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
 			const [playlistInfo] = await connection.execute('SELECT * FROM playlists WHERE playlist_user = ?', [user.user_id]);
 
 			if (playlistInfo.length === 0) {
