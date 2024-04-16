@@ -14,7 +14,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
 
 # Install spotdl
-RUN pip3 install spotdl
+RUN pip install spotdl
 
 # Install dependencies only when needed
 FROM base AS deps
