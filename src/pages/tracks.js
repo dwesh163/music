@@ -29,10 +29,8 @@ export default function Tracks() {
 	};
 
 	const downloadSong = async (id) => {
-		console.log(id);
 		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
 		const tracksData = await response.json();
-		console.log(tracksData);
 	};
 
 	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
@@ -53,11 +51,11 @@ export default function Tracks() {
 					<Menu />
 					<div className="w-full h-full overflow-hidden">
 						<div className="w-full p-7 pb-0">
-							<h1 className=" text-3xl mb-0 font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-6xl dark:text-white">Search</h1>
+							<h1 className=" text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">Search</h1>
 						</div>
 
 						<div className="w-full px-6 py-3">
-							<label for="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+							<label for="default-search" className="mb-2 text-sm font-medium  sr-only text-white">
 								Search
 							</label>
 							<div className="relative">
@@ -77,8 +75,8 @@ export default function Tracks() {
 							{results.error ? (
 								<div className="text-white w-full h-full flex items-center justify-center">Song Not Found</div>
 							) : (
-								<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-									<thead className="text-xs text-gray-900 uppercase dark:text-gray-400 w-full">
+								<table className="w-full text-sm text-left rtl:text-right text-gray-400">
+									<thead className="text-xs uppercase text-gray-400 w-full">
 										<tr>
 											<th scope="col" className="px-3 py-1 text-center">
 												#
