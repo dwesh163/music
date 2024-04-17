@@ -44,21 +44,21 @@ export default function Home() {
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<main className="w-screen h-screen bg-[#171719]">
-				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
-					<Player songId={songId} setSongId={setSongId} playlist={playlist} />
+			<main className="bg-[#171719]">
+				<Player songId={songId} setSongId={setSongId} playlist={playlist} />
+				<div className=" relative flex overflow-hidden bg-[#171719]">
 					<Menu />
 					{playlist.error ? (
 						<div className="h-[calc(100vh-101px)] w-full flex items-center justify-center text-white">Playlist not Found</div>
 					) : (
 						<div className="w-full h-full overflow-hidden">
-							<div className="w-full p-7 pb-0">
-								<h1 className=" text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">{playlist.playlist.name}</h1>
+							<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0">
+								<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">{playlist.playlist.name}</h1>
 								<p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
 									{playlist.tracks.length} Track{playlist.tracks.length > 1 ? 's' : ''}
 								</p>
 							</div>
-							<div className="px-7 overflow-x-scroll h-[calc(100vh-250px)]">
+							<div className="sm:px-7 px-4 overflow-y-scroll overflow-x-hidden h-[calc(100vh-250px)]">
 								<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 									<thead className="text-xs text-gray-900 uppercase dark:text-gray-400 w-full">
 										<tr>
@@ -68,13 +68,13 @@ export default function Home() {
 											<th scope="col" className="px-0 py-3">
 												Track
 											</th>
-											<th scope="col" className="px-6 py-3">
+											<th scope="col" className="hidden md:table-cell px-6 py-3">
 												Album
 											</th>
-											<th scope="col" className="px-6 py-3">
+											<th scope="col" className="hidden md:table-cell px-6 py-3">
 												Date
 											</th>
-											<th scope="col" className="px-6 py-3">
+											<th scope="col" className="hidden md:table-cell px-6 py-3">
 												Duration
 											</th>
 										</tr>
@@ -91,20 +91,27 @@ export default function Home() {
 													</div>
 												</td>
 												<th scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-													<img className="md:w-14 md:h-14 w-8 h-8 rounded" src={track.album.album_image} alt={track.album.album_name} />
+													<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track.album.album_image} alt={track.album.album_name} />
 													<div>
 														<p>{track.name}</p>
-														{track.artists.slice(0, 2).map((item, index) => (
-															<span className="font-normal text-gray-100 opacity-60 cursor-pointer" key={index} onClick={() => router.push('/artists/' + item.public_id)}>
-																{item.artist_name}
-																{index !== track.artists.length - 1 && <span>, </span>}
-															</span>
-														))}
+														<p className="flex flex-wrap">
+															{track.artists.slice(0, 2).map((item, index) => (
+																<span key={index}>
+																	<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.public_id)}>
+																		{item.artist_name}
+																	</span>
+																	{index !== track.artists.length - 1 && <span className="hidden sm:inline opacity-60 font-normal text-gray-100">, </span>}
+																</span>
+															))}
+
+															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '  -  ' + track.album.album_name : ''}</p>
+														</p>
+														<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</p>
 													</div>
 												</th>
-												<td className="px-6 py-4">{track.album.album_name}</td>
-												<td className="px-6 py-4">Today</td>
-												<td className="px-6 py-4">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</td>
+												<td className="hidden md:table-cell px-6 py-4">{track.album.album_name}</td>
+												<td className="hidden md:table-cell px-6 py-4">Today</td>
+												<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</td>
 											</tr>
 										))}
 									</tbody>
