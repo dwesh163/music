@@ -78,7 +78,10 @@ RUN chown nextjs:nodejs musics/downloads
 
 RUN chown nextjs:nodejs /venv && chown -R nextjs:nodejs /venv/*
 
-RUN mkdir /nonexisten/.spotdl
+RUN mkdir -p /nonexistent/.spotdl \
+  && chown nextjs:nodejs /nonexistent \
+  && chown nextjs:nodejs /nonexistent/.spotdl
+
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
