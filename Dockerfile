@@ -78,6 +78,9 @@ RUN chown nextjs:nodejs musics/downloads
 
 RUN chown nextjs:nodejs /venv && chown -R nextjs:nodejs /venv/*
 
+RUN mkdir /nonexisten
+RUN chown nextjs:nodejs /nonexisten
+
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
