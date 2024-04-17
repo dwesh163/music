@@ -7,6 +7,7 @@ import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import fs from 'fs';
 
+const path = require('path');
 const { spawn } = require('child_process');
 
 async function connectMySQL() {
@@ -26,7 +27,7 @@ export default async function Track(req, res) {
 	}
 
 	if (req.method === 'POST') {
-		const { songName, artistName, spotifyId } = JSON.parse(req.body);
+		const { spotifyId } = JSON.parse(req.body);
 		const connection = await connectMySQL();
 		const id = uuidv4();
 		let searchResult;
@@ -43,22 +44,23 @@ export default async function Track(req, res) {
 
 			spotifyApi.setAccessToken(accessToken);
 
-			if (!spotifyId) {
-				searchResult = await spotifyApi.searchTracks('track:' + songName + (artistName ? ' artist:' + artistName : ''), { limit: 1 });
-				songInfo = searchResult.body.tracks.items[0];
-			} else {
-				searchResult = await spotifyApi.getTrack(spotifyId);
-				songInfo = searchResult.body;
-			}
+			searchResult = await spotifyApi.getTrack(spotifyId);
+			songInfo = searchResult.body;
 
 			if (!songInfo) {
 				res.status(404).send('Music not found');
 				return;
 			}
 
+			let [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
+			if (track) {
+				res.status(200).json({ downlod: false, id: track.track_public_id });
+				return;
+			}
+
 			let [[album]] = await connection.execute('SELECT * FROM albums WHERE spotify_id = ?', [songInfo.album.id]);
 			if (!album) {
-				await connection.execute('INSERT INTO albums (album_name, album_image, album_type, spotify_id, public_id, release_date, total_tracks) VALUES (?, ?, ?, ?, ?, ?, ?)', [songInfo.album.name, songInfo.album.images[0].url, songInfo.album.album_type, songInfo.album.id, uuidv4(), songInfo.album.release_date, songInfo.album.total_tracks]);
+				await connection.execute('INSERT INTO albums (album_name, album_image, album_type, spotify_id, public_id, release_date, total_tracks) VALUES (?, ?, ?, ?, ?, ?, ?)', [songInfo.album.name, songInfo.album.images[0].url, songInfo.album.album_type, songInfo.album.id, uuidv4(), new Date(songInfo.album.release_date), songInfo.album.total_tracks]);
 				[[album]] = await connection.execute('SELECT * FROM albums WHERE spotify_id = ?', [songInfo.album.id]);
 			}
 			[[album]] = await connection.execute('SELECT * FROM albums WHERE spotify_id = ?', [songInfo.album.id]);
@@ -76,7 +78,6 @@ export default async function Track(req, res) {
 				}
 			}
 
-			let [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
 			if (!track) {
 				await connection.execute('INSERT INTO tracks (name, duration, disc_number, track_number, popularity, album_id, spotify_id, track_public_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [songInfo.name, songInfo.duration_ms.toString().slice(0, 3), songInfo.disc_number, songInfo.track_number, songInfo.popularity, album.album_id, songInfo.id, id]);
 				[[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
@@ -98,22 +99,46 @@ export default async function Track(req, res) {
 			}
 
 			const command = 'spotdl';
-			const args = [`https://open.spotify.com/intl-fr/track/${spotifyId}`, '--output musics'];
+			const args = ['--output', `musics/downloads/${id}`, `https://open.spotify.com/intl-fr/track/${spotifyId}`];
 			const download = spawn(command, args);
 
-			download.stdout.on('data', (data) => {
-				console.log(`stdout: ${data}`);
-			});
+			console.log('Start download');
 
-			download.stderr.on('data', (data) => {
-				console.error(`stderr: ${data}`);
+			download.stdout.on('data', (data) => {
+				if (data.toString().includes('Downloaded')) {
+					const folderPath = `musics/downloads/${id}`;
+
+					fs.readdir(folderPath, (err, files) => {
+						if (err) {
+							console.error('Error', err);
+							return;
+						}
+
+						if (files.length === 1) {
+							const filename = files[0];
+							const oldPath = path.join(folderPath, filename);
+							const newPath = path.join('musics', `${id}.mp3`);
+							fs.rename(oldPath, newPath, (err) => {
+								if (err) {
+									console.error('Error renaming the file:', err);
+									return;
+								}
+								console.log('The file has been renamed successfully.');
+							});
+						} else {
+							console.error('There is not a single file in the folder.');
+						}
+					});
+
+					fs.rm(folderPath);
+				}
 			});
 
 			download.on('close', (code) => {
 				console.log(`child process exited with code ${code}`);
 			});
 
-			res.status(200).json(songInfo);
+			res.status(200).json({ download: true, id: id });
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ error: 'Internal Server Error' });
