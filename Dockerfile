@@ -15,9 +15,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash -
 RUN apt-get install -y nodejs
 
 RUN python3 -m venv /venv
-
-RUN chown nextjs:nodejs /venv
-
 WORKDIR /app
 
 ENV PATH="/venv/bin:$PATH"
@@ -77,6 +74,8 @@ RUN chown nextjs:nodejs musics
 
 RUN mkdir musics/downloads
 RUN chown nextjs:nodejs musics/downloads
+
+RUN chown nextjs:nodejs /venv
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
