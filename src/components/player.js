@@ -13,7 +13,7 @@ export default function Player({ songId, setSongId, playlist }) {
 
 	const fetchAudioData = async () => {
 		setIsLoading(true);
-		if (songId == '' || !playlist) {
+		if (songId == '') {
 			return;
 		}
 		try {
@@ -48,12 +48,7 @@ export default function Player({ songId, setSongId, playlist }) {
 				album: audioData.album.name,
 				artwork: [
 					{ src: audioData.album.image, sizes: '640x640', type: 'image/png' },
-					{ src: 'https://dummyimage.com/96x96', sizes: '96x96', type: 'image/png' },
-					{ src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
-					{ src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
-					{ src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
-					{ src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
-					{ src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+					{ src: audioData.album.image, sizes: '(max-width: 96px) 96px, (max-width: 128px) 128px, (max-width: 192px) 192px, (max-width: 256px) 256px, (max-width: 384px) 384px, (max-width: 512px) 512px, 640px, 128px', type: 'image/png' }, // Taille par défaut de 128px
 				],
 			});
 
@@ -100,6 +95,12 @@ export default function Player({ songId, setSongId, playlist }) {
 	};
 
 	const nextSong = (songId, setSongId, playlist) => {
+		if (!playlist) {
+			setSongId('');
+			togglePlay();
+			setCurrentTime(0);
+			return;
+		}
 		const currentIndex = playlist.tracks.findIndex((track) => track.track_public_id === songId);
 		if (currentIndex === -1) {
 			return;
@@ -113,6 +114,10 @@ export default function Player({ songId, setSongId, playlist }) {
 	};
 
 	const prevSong = (songId, setSongId, playlist) => {
+		if (!playlist) {
+			setSongId('');
+			return;
+		}
 		const currentIndex = playlist.tracks.findIndex((track) => track.track_public_id === songId);
 		if (currentIndex === -1) {
 			return;
@@ -127,10 +132,10 @@ export default function Player({ songId, setSongId, playlist }) {
 
 	return (
 		<div className="flex justify-start items-center w-full absolute left-0 bottom-0 overflow-hidden md:gap-28 px-4 py-3.5 bg-[#1f1f22] z-20 shadow-2xl">
-			<div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-4 w-72">
+			<div className="hidden sm:flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-4 w-72">
 				<audio ref={audioRef} src={audioData ? audioData.track.src : ''} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong(songId, setSongId, playlist)}></audio>
 				<img src={audioData ? audioData.album.image : ''} className="flex-grow-0 flex-shrink-0 w-16 h-[65px] object-cover mt-2" />
-				<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-1.5">
+				<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-1.5 overflow-visible">
 					<div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2">
 						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData ? audioData.track.name : ''}</p>
 						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
@@ -163,7 +168,7 @@ export default function Player({ songId, setSongId, playlist }) {
 					<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {playlist != undefined ? (playlist.error != undefined ? playlist.playlist.name : '') : ''}</p>
 				</div>
 			</div>
-			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-4 px-8">
+			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-4 md:px-8">
 				<div className="flex justify-center items-center flex-grow-0 flex-shrink-0 overflow-hidden gap-8">
 					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
@@ -228,7 +233,7 @@ export default function Player({ songId, setSongId, playlist }) {
 					</p>
 				</div>
 			</div>
-			<div className="flex justify-end items-center flex-grow-0 flex-shrink-0 relative overflow-hidden gap-8 px-8">
+			<div className="hidden sm:flex justify-end items-center flex-grow-0 flex-shrink-0 relative overflow-hidden gap-8 px-8">
 				<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-grow-0 flex-shrink-0 w-6 h-6 relative" preserveAspectRatio="none">
 					<path d="M16.7334 8.06302L16.7334 8.06305C16.5196 8.23792 16.4881 8.55294 16.663 8.76665C17.494 9.78227 18 11.0717 18 12.5C18 13.9324 17.4913 15.271 16.663 16.2834C16.4882 16.4971 16.5196 16.8121 16.7334 16.987C16.947 17.1618 17.262 17.1304 17.437 16.9167L16.7334 8.06302ZM16.7334 8.06302C16.9471 7.88821 17.2621 7.91964 17.4371 8.13344M16.7334 8.06302L17.4371 8.13344M17.4371 8.13344C18.4061 9.31789 19 10.8285 19 12.5M17.4371 8.13344L19 12.5M19 12.5C19 14.1675 18.4087 15.7289 17.4371 16.9166L19 12.5ZM13.726 3.05399L13.726 3.05401C13.8941 3.13918 14 3.31156 14 3.50001V21.5C14 21.6884 13.8941 21.8609 13.7261 21.946L13.726 21.946C13.5579 22.0312 13.3562 22.0146 13.2043 21.9032L13.2043 21.9032L5.91974 16.5612L5.81203 16.4822L5.67927 16.4675L3.25182 16.1978L3.25183 16.1977L3.24542 16.1971C1.9291 16.068 1 14.9417 1 13.7V11.3C1 9.99161 1.99526 8.93056 3.24524 8.80299L3.24524 8.80301L3.2497 8.80252L5.67928 8.53257L5.81203 8.51782L5.91974 8.43883L13.2043 3.09681C13.3562 2.98537 13.558 2.96884 13.726 3.05399ZM13 5.47342V4.48671L12.2043 5.07021L6.29568 9.40321C6.2251 9.45497 6.14219 9.48728 6.05524 9.49694L6.05521 9.49694L3.35521 9.79694L3.35493 9.79698L3.3521 9.79729L3.34975 9.79753C2.60086 9.87241 2 10.5114 2 11.3V13.7C2 14.4606 2.57159 15.1273 3.34538 15.2021C3.34605 15.2021 3.34673 15.2022 3.34741 15.2023L3.35738 15.2033L6.05521 15.503L6.05529 15.5031C6.14212 15.5127 6.22503 15.545 6.29568 15.5968L12.2043 19.9298L13 20.5133V19.5266V5.47342ZM19.4117 5.03186L19.4117 5.03181C19.615 4.84502 19.9313 4.85834 20.1181 5.06169C21.9004 7.00114 23 9.62092 23 12.5C23 15.3791 21.9004 17.9988 20.1181 19.9383L20.1181 19.9383C19.9313 20.1417 19.615 20.155 19.4117 19.9682L19.4117 19.9681C19.2083 19.7813 19.195 19.465 19.3818 19.2618L19.3819 19.2617C20.9997 17.5012 22 15.1209 22 12.5C22 9.87911 20.9997 7.49889 19.3819 5.73832L19.0137 6.07663L19.3819 5.73831C19.195 5.53496 19.2084 5.21868 19.4117 5.03186Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 				</svg>
