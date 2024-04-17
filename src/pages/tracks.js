@@ -31,6 +31,11 @@ export default function Tracks() {
 	const downloadSong = async (id) => {
 		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
 		const tracksData = await response.json();
+		if (!tracksData.download) {
+			setSongId(tracksData.id);
+		} else {
+			console.log('No Song');
+		}
 	};
 
 	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
