@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
   ffmpeg \
   vim \
   python3-venv \
-  build-base libressl libffi-dev libressl-dev libxslt-dev libxml2-dev xmlsec-dev xmlsec \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
