@@ -16,6 +16,8 @@ RUN apt-get install -y nodejs
 
 RUN python3 -m venv /venv
 
+RUN chown nextjs:nodejs /venv
+
 WORKDIR /app
 
 ENV PATH="/venv/bin:$PATH"
@@ -40,8 +42,6 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -74,6 +74,9 @@ RUN chown nextjs:nodejs .next
 
 RUN mkdir musics
 RUN chown nextjs:nodejs musics
+
+RUN mkdir musics/downloads
+RUN chown nextjs:nodejs musics/downloads
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
