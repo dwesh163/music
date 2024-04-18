@@ -169,6 +169,31 @@ export default function Player({ songId, setSongId, playlist }) {
 				</div>
 			</div>
 			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-4 md:px-8">
+				<div className="flex justify-start sm:hidden items-center flex-grow-0 flex-shrink-0 relative gap-1">
+					<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData ? audioData.track.name : ''}</p>
+					<p className="flex gap-2 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
+						{audioData?.artists?.slice(0, 1).map((item, index) => (
+							<span key={index} className="font-normal" onClick={() => router.push('/artists' + item.id)}>
+								{item.name}
+								{index !== audioData.artists.length - 1 && <span>,</span>}
+							</span>
+						))}
+						{audioData.artists.length > 2 && <span onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
+					</p>
+					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like()}>
+						<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
+							<path d="M2.30001 8.96658C1.00001 7.56658 1.00001 5.29991 2.30001 3.89991C2.96668 3.16658 3.80001 2.83325 4.66668 2.83325C5.33335 2.83325 6.03334 3.06658 6.60001 3.49991C6.83334 3.69991 7.03335 3.93325 7.23335 4.16658L8.03335 5.23325L8.83334 4.16658C9.03334 3.89991 9.23334 3.66658 9.46668 3.49991C10 3.03325 10.6667 2.83325 11.3667 2.83325C12.2 2.83325 13.0667 3.16658 13.7 3.89991C15 5.29991 15 7.56658 13.7 8.96658L8.46668 14.2999C8.23334 14.5666 7.80001 14.5666 7.56668 14.2999L2.30001 8.96658Z" stroke="#FCFCFC" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
+						</svg>
+					</div>
+					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5 ml-1">
+						<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
+							<path d="M4.16666 8.5C4.16666 8.77614 3.9428 9 3.66666 9C3.39051 9 3.16666 8.77614 3.16666 8.5C3.16666 8.22386 3.39051 8 3.66666 8C3.9428 8 4.16666 8.22386 4.16666 8.5Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+							<path d="M8.5 8.5C8.5 8.77614 8.27614 9 8 9C7.72386 9 7.5 8.77614 7.5 8.5C7.5 8.22386 7.72386 8 8 8C8.27614 8 8.5 8.22386 8.5 8.5Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+							<path d="M12.8333 8.5C12.8333 8.77614 12.6095 9 12.3333 9C12.0572 9 11.8333 8.77614 11.8333 8.5C11.8333 8.22386 12.0572 8 12.3333 8C12.6095 8 12.8333 8.22386 12.8333 8.5Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+						</svg>
+					</div>
+				</div>
+
 				<div className="flex justify-center items-center flex-grow-0 flex-shrink-0 overflow-hidden gap-8">
 					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
