@@ -90,7 +90,7 @@ export default function Home() {
 														</svg>
 													</div>
 												</td>
-												<th scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+												<td scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 													<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track.album.album_image} alt={track.album.album_name} />
 													<div>
 														<p>{track.name}</p>
@@ -108,9 +108,9 @@ export default function Home() {
 														</p>
 														<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</p>
 													</div>
-												</th>
+												</td>
 												<td className="hidden md:table-cell px-6 py-4">{track.album.album_name}</td>
-												<td className="hidden md:table-cell px-6 py-4">Today</td>
+												<td className="hidden md:table-cell px-6 py-4">{new Date(track.date).toLocaleDateString('en-US')}</td>
 												<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</td>
 											</tr>
 										))}
