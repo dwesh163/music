@@ -54,7 +54,15 @@ export default async function Track(req, res) {
 
 			let [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
 			if (track) {
-				res.status(200).json({ downlod: false, id: track.track_public_id });
+				if (track.track_public_id) {
+					const filePath = path.join('musics', `${track.track_public_id}.mp3`);
+					console.log(filePath);
+					if (fs.existsSync(filePath)) {
+						res.status(200).json({ download: 'true', id: track.track_public_id });
+					} else {
+						res.status(200).json({ download: 'progress', id: track.track_public_id });
+					}
+				}
 				return;
 			}
 
@@ -138,7 +146,7 @@ export default async function Track(req, res) {
 				console.log(`child process exited with code ${code}`);
 			});
 
-			res.status(200).json({ download: true, id: id });
+			res.status(200).json({ download: 'progress', id: id });
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ error: 'Internal Server Error' });
