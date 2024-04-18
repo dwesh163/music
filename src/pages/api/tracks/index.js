@@ -116,6 +116,10 @@ export default async function Track(req, res) {
 				if (data.toString().includes('Downloaded')) {
 					const folderPath = `musics/downloads/${id}`;
 
+					if (!fs.existsSync('musics/downloads')) {
+						fs.mkdirSync('musics/downloads', { recursive: true });
+					}
+
 					fs.readdir(folderPath, (err, files) => {
 						if (err) {
 							console.error('Error', err);

@@ -70,18 +70,11 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-RUN mkdir musics
-RUN chown nextjs:nodejs musics
-
-RUN mkdir musics/downloads
-RUN chown nextjs:nodejs musics/downloads
-
 RUN chown nextjs:nodejs /venv && chown -R nextjs:nodejs /venv/*
 
 RUN mkdir -p /nonexistent/.spotdl \
   && chown nextjs:nodejs /nonexistent \
   && chown nextjs:nodejs /nonexistent/.spotdl
-
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
