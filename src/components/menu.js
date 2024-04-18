@@ -121,7 +121,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 				)}
 			</div> */}
 
-			<div className={'lg:w-1/5 md:w-1/4 md:max-w-96 sm:w-[30%] h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-hidden' + (isOpen ? '' : ' hidden')}>
+			<div className={'lg:w-1/5 md:w-1/4 md:max-w-96 sm:w-[30%] h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-hidden' + (isOpen ? '' : ' sm:flex hidden')}>
 				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-hidden gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
 					<div className="flex justify-between items-center flex-grow-0 flex-shrink-0 w-full relative p-3 pb-0 rounded-lg">
 						<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5 p-0.5 rounded-[999px] bg-[#63676f]">
