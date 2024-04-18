@@ -198,7 +198,7 @@ export default function Player({ songId, setSongId, playlist }) {
 									{index !== audioData.artists.length - 1 && <span>,</span>}
 								</span>
 							))}
-							{audioData?.artists?.length > 2 && <span onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
+							{audioData?.artists?.length > 2 && <span className="font-normal" onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
 						</p>
 						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like()}>
 							<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
