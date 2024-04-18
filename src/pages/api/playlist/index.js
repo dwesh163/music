@@ -45,7 +45,7 @@ export default async function Track(req, res) {
 		}
 	} else if (req.method === 'POST') {
 		try {
-			const { playlistName } = req.body;
+			const { playlistName } = JSON.parse(JSON.stringify(req.body));
 
 			if (!playlistName) {
 				return res.status(400).json({ error: 'Missing playlist name' });
