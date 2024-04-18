@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 
 export default function Loading({ status }) {
 	const router = useRouter();
-	console.log(router);
 	if (status == 'loading') {
 		return (
 			<>
