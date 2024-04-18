@@ -2,7 +2,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { Router, useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
-export default function Menu({}) {
+export default function Menu({ isOpen, setIsOpen }) {
 	const router = useRouter();
 	const { data: session, status } = useSession();
 
@@ -11,13 +11,8 @@ export default function Menu({}) {
 	const [menus, setMenus] = useState(['Home', 'Explore']);
 	const [playlists, setPlaylists] = useState([]);
 	const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-	const [isOpen, setIsOpen] = useState(false);
 
 	const buttonRef = useRef(null);
-
-	const toggleDropdown = () => {
-		setIsOpen(!isOpen);
-	};
 
 	const [collections, setCollections] = useState([
 		{ name: 'Playlists', svg: '/playlists.svg', url: 'playlists' },
@@ -26,36 +21,36 @@ export default function Menu({}) {
 		{ name: 'Artists', svg: '/artists.svg', url: 'artists' },
 	]);
 
-	useEffect(() => {
-		const handleResize = () => {
-			if (buttonRef.current) {
-				const buttonPosition = buttonRef.current.getBoundingClientRect();
-				const menuLeft = buttonPosition.left;
-				const menuTop = buttonPosition.top + buttonPosition.height;
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		if (buttonRef.current) {
+	// 			const buttonPosition = buttonRef.current.getBoundingClientRect();
+	// 			const menuLeft = buttonPosition.left;
+	// 			const menuTop = buttonPosition.top + buttonPosition.height;
 
-				setMenuPosition({ left: menuLeft, top: menuTop });
-			}
-		};
+	// 			setMenuPosition({ left: menuLeft, top: menuTop });
+	// 		}
+	// 	};
 
-		window.addEventListener('resize', handleResize);
-		handleResize();
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	}, [isOpen]);
+	// 	window.addEventListener('resize', handleResize);
+	// 	handleResize();
+	// 	return () => {
+	// 		window.removeEventListener('resize', handleResize);
+	// 	};
+	// }, [isOpen]);
 
-	useEffect(() => {
-		const handleOutsideClick = (event) => {
-			if (!buttonRef.current.contains(event.target)) {
-				setIsOpen(false);
-			}
-		};
+	// useEffect(() => {
+	// 	const handleOutsideClick = (event) => {
+	// 		if (!buttonRef.current.contains(event.target)) {
+	// 			setIsOpen(false);
+	// 		}
+	// 	};
 
-		window.addEventListener('click', handleOutsideClick);
-		return () => {
-			window.removeEventListener('click', handleOutsideClick);
-		};
-	}, [isOpen]);
+	// 	window.addEventListener('click', handleOutsideClick);
+	// 	return () => {
+	// 		window.removeEventListener('click', handleOutsideClick);
+	// 	};
+	// }, [isOpen]);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -99,7 +94,7 @@ export default function Menu({}) {
 
 	return (
 		<>
-			<div className={'absolute' + (isOpen ? 'w-full h-full' : 'w-0 h-0')}>
+			{/* <div className={'absolute' + (isOpen ? 'w-full h-full' : 'w-0 h-0')}>
 				{isOpen && (
 					<div className="z-30  divide-y absolute bg-[#1f1f1f] shadow w-44" style={{ top: menuPosition.top, left: menuPosition.left }}>
 						<ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
@@ -124,9 +119,9 @@ export default function Menu({}) {
 						</div>
 					</div>
 				)}
-			</div>
+			</div> */}
 
-			<div className="lg:w-1/5 md:w-1/4 md:max-w-96 sm:w-[30%] h-full w-0 left-0 top-0 overflow-hidden">
+			<div className={'lg:w-1/5 md:w-1/4 md:max-w-96 sm:w-[30%] h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-hidden' + (isOpen ? '' : ' hidden')}>
 				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-hidden gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
 					<div className="flex justify-between items-center flex-grow-0 flex-shrink-0 w-full relative p-3 pb-0 rounded-lg">
 						<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5 p-0.5 rounded-[999px] bg-[#63676f]">
@@ -138,11 +133,11 @@ export default function Menu({}) {
 							</p>
 						</div>
 						<div>
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" ref={buttonRef} onClick={toggleDropdown} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative" preserveAspectRatio="none">
+							{/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" ref={buttonRef} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative cursor-pointer" preserveAspectRatio="none">
 								<path d="M6.5 12C6.5 12.5523 6.05228 13 5.5 13C4.94772 13 4.5 12.5523 4.5 12C4.5 11.4477 4.94772 11 5.5 11C6.05228 11 6.5 11.4477 6.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 								<path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 								<path d="M19.5 12C19.5 12.5523 19.0523 13 18.5 13C17.9477 13 17.5 12.5523 17.5 12C17.5 11.4477 17.9477 11 18.5 11C19.0523 11 19.5 11.4477 19.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
-							</svg>
+							</svg> */}
 						</div>
 					</div>
 					<div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0">
