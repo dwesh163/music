@@ -84,6 +84,8 @@ export default async function Track(req, res) {
 		}
 
 		await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
+
+		res.status(200).json({ status: 'ok' });
 	} else {
 		res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 	}
