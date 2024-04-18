@@ -16,7 +16,7 @@ export default function Tracks() {
 	const [results, setResults] = useState([]);
 	const [songId, setSongId] = useState('');
 
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
