@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS playlists (
 CREATE TABLE IF NOT EXISTS playlist_tracks (
                                                playlist_id INT REFERENCES playlists(playlist_id),
                                                track_id INT REFERENCES tracks(track_id),
-                                               added_date DATE NOT NULL,
+                                               added_date DATETIME NOT NULL,
                                                PRIMARY KEY (playlist_id, track_id)
 );
 -- Création de la table de relation "album_artist"
