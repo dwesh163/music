@@ -39,12 +39,32 @@ export default async function Info(req, res) {
 			const [[album]] = await connection.execute('SELECT * FROM albums WHERE album_id = ?', [track.album_id]);
 			const [artists] = await connection.execute('SELECT * FROM artists INNER JOIN track_artist ON artists.artist_id = track_artist.artist_id WHERE track_artist.track_id = ?', [track.track_id]);
 
+			const query = `
+				SELECT
+				t.*,
+				pt.playlist_id,
+				u.user_id,
+				u.user_email
+			FROM
+				tracks AS t
+					JOIN
+				playlists AS p ON p.playlist_name = 'Liked'
+					JOIN
+				users AS u ON u.user_id = p.playlist_user
+					LEFT JOIN
+				playlist_tracks AS pt ON pt.playlist_id = p.playlist_id AND pt.track_id = t.track_id
+			WHERE
+				t.track_public_id = ? AND  u.user_email = ?`;
+
+			const [[result]] = await connection.execute(query, [track.track_public_id, session.user.email]);
+
 			const trackInfo = {
 				track: {
 					name: track.name,
 					duration: track.duration,
 					id: track.track_public_id,
 					src: process.env.NEXTAUTH_URL + '/api/tracks/' + track.track_public_id,
+					isLiked: result?.playlist_id ? true : false,
 				},
 				album: {
 					name: album.album_name,
