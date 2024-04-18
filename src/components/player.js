@@ -213,7 +213,7 @@ export default function Player({ songId, setSongId, playlist }) {
 							))}
 							{audioData?.artists?.length > 2 && <span className="font-normal" onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
 						</p>
-						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like()}>
+						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like(songId)}>
 							<svg width="16" height="17" viewBox="0 0 16 17" fill={audioData?.track.isLiked ? '#fff' : 'none'} xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
 								<path d="M2.30001 8.96658C1.00001 7.56658 1.00001 5.29991 2.30001 3.89991C2.96668 3.16658 3.80001 2.83325 4.66668 2.83325C5.33335 2.83325 6.03334 3.06658 6.60001 3.49991C6.83334 3.69991 7.03335 3.93325 7.23335 4.16658L8.03335 5.23325L8.83334 4.16658C9.03334 3.89991 9.23334 3.66658 9.46668 3.49991C10 3.03325 10.6667 2.83325 11.3667 2.83325C12.2 2.83325 13.0667 3.16658 13.7 3.89991C15 5.29991 15 7.56658 13.7 8.96658L8.46668 14.2999C8.23334 14.5666 7.80001 14.5666 7.56668 14.2999L2.30001 8.96658Z" stroke="#FCFCFC" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
 							</svg>
