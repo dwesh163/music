@@ -171,7 +171,7 @@ export default function Tracks() {
 																		{index !== track.artists.length - 1 && <span className="hidden sm:inline opacity-60 font-normal text-gray-100">, </span>}
 																	</span>
 																))}
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '  -  ' + track.album.name : ''}</p>
+																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '' : ''}</p>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</p>
 														</div>
