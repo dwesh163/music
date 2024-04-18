@@ -26,9 +26,8 @@ export default async function Track(req, res) {
 			const searchResult = await spotifyApi.searchTracks('track:' + songName + (artistName ? ' artist:' + artistName : ''), { limit: 8 });
 			const songInfo = searchResult.body.tracks.items;
 
-			if (!songInfo) {
-				res.status(404).send('Music not found');
-				return;
+			if (songInfo.length == 0 || !songInfo) {
+				res.status(200).json({ error: 'Music not found' });
 			}
 
 			res.status(200).json(songInfo);
