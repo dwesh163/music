@@ -21,11 +21,8 @@ export default function Tracks() {
 			const response = await fetch('/api/tracks/search/', { method: 'POST', body: JSON.stringify({ songName: search }) });
 			const tracksData = await response.json();
 			setResults(tracksData);
-			console.log(tracksData);
 			setIsLoading(false);
-		} catch (error) {
-			console.error('Error fetching audio data:', error);
-		}
+		} catch (error) {}
 	};
 
 	const downloadSong = async (id) => {
@@ -60,16 +57,28 @@ export default function Tracks() {
 						</div>
 
 						<div className="w-full px-6 py-3">
-							<label for="default-search" className="mb-2 text-sm font-medium  sr-only text-white">
+							<label htmlFor="default-search" className="mb-2 text-sm font-medium  sr-only text-white">
 								Search
 							</label>
 							<div className="relative">
 								<div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
 									<svg className="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+										<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
 									</svg>
 								</div>
-								<input type="search" className="block w-full p-4 ps-10 text-sm text-gray-100 rounded bg-[#27272b] focus:outline-none" placeholder="Search Tracks, Artists, Albums..." value={search} onChange={(event) => setSearch(event.target.value)} required />
+								<input
+									type="search"
+									onKeyDown={(event) => {
+										if (event.key === 'Enter') {
+											fetchData();
+										}
+									}}
+									className="block w-full p-4 ps-10 text-sm text-gray-100 rounded bg-[#27272b] focus:outline-none"
+									placeholder="Search Tracks, Artists, Albums..."
+									value={search}
+									onChange={(event) => setSearch(event.target.value)}
+									required
+								/>
 								<button onClick={() => fetchData()} className="text-white absolute end-2.5 bottom-2 bg-[#00a5a5] hover:bg-[#038080] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-4 py-2">
 									Search
 								</button>
@@ -114,7 +123,7 @@ export default function Tracks() {
 												<th scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 													<img className="md:w-14 md:h-14 w-8 h-8 rounded" src={track.album.images[0].url} alt={track.album.album_name} />
 													<div>
-														<p>{track.name}</p>
+														<p className="text-white">{track.name}</p>
 														{track.artists.slice(0, 2).map((item, index) => (
 															<span className="font-normal text-gray-100 opacity-60 cursor-pointer" key={index} onClick={() => router.push('/artists/' + item.public_id)}>
 																{item.name}
