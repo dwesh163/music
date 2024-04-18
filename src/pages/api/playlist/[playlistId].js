@@ -38,7 +38,7 @@ export default async function Track(req, res) {
 			playlist.playlist = { name: playlistInfo.playlist_name, id: playlistInfo.public_id };
 			playlist.tracks = [];
 
-			const [tracksId] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? ORDER BY added_date', [playlistInfo.playlist_id]);
+			const [tracksId] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? ORDER BY added_date DESC', [playlistInfo.playlist_id]);
 
 			for (const trackId of tracksId) {
 				let [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_id = ?', [trackId.track_id]);
