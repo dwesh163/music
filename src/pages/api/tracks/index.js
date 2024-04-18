@@ -113,6 +113,7 @@ export default async function Track(req, res) {
 			console.log('Start download');
 
 			download.stdout.on('data', (data) => {
+				console.log(data.toString());
 				if (data.toString().includes('Downloaded')) {
 					const folderPath = `musics/downloads/${id}`;
 
