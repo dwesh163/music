@@ -40,7 +40,7 @@ export const authOptions = (req) => ({
 				if (existingUser) {
 					await connection.execute('UPDATE users SET user_username = ?, user_image = ?, user_provider = ?, user_company = ?, user_name = ? WHERE user_email = ?', [profile.login, user.image, account.provider, profile.company, profile.name, user.email]);
 				} else {
-					await connection.execute('INSERT INTO users (user_id_public, user_email, user_username, user_image, user_provider, user_company, user_name) VALUES (?, ?, ?, ?, ?, ?, ?)', [uuidv4(), user.email, profile.login, user.image, account.provider, profile.company, profile.name]);
+					await connection.execute('INSERT INTO users (user_id_public, user_email, user_username, user_image, user_provider, user_company, user_name) VALUES (?, ?, ?, ?, ?, ?, ?)', [uuidv4(), user.email, profile.login ? profile.login : '', user.image ? user.image : '', account.provider ? account.provider : '', profile.company ? profile.company : '', profile.name ? profile.name : '']);
 					const [[insertedUser]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [user.email]);
 					await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?, ?)', ['Liked', uuidv4(), insertedUser.user_id]);
 				}
