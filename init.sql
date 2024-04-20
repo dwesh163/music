@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS tracks (
 -- Création de la table "playlists"
 CREATE TABLE IF NOT EXISTS playlists (
                                          playlist_id INT NOT NULL UNIQUE AUTO_INCREMENT,
-                                         playlist_name VARCHAR(100) NOT NULL UNIQUE,
+                                         playlist_name VARCHAR(100) NOT NULL,
                                          public_id VARCHAR(100),
                                          playlist_user INT REFERENCES users(user_id),
                                          PRIMARY KEY (playlist_id)
