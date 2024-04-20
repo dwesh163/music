@@ -1,5 +1,7 @@
-import NextAuth from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
+
+import NextAuth from 'next-auth';
 import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
@@ -19,6 +21,10 @@ export const authOptions = (req) => ({
 		GithubProvider({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
+		}),
+		GoogleProvider({
+			clientId: process.env.GOOGLE_ID,
+			clientSecret: process.env.GOOGLE_SECRET,
 		}),
 	],
 	pages: {
