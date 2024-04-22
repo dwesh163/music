@@ -7,10 +7,6 @@ import { authOptions } from '../../auth/[...nextauth]';
 export default async function getTrack(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (req.headers.origin != process.env.NEXTAUTH_URL) {
-		return res.status(401).json({ error: 'The orgin is not authorized' });
-	}
-
 	if (req.method === 'GET') {
 		if (!session) {
 			return res.status(401).json({ error: 'Unauthorized' });
