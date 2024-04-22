@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS playlists (
                                          public_id VARCHAR(100),
                                          playlist_user INT REFERENCES users(user_id),
                                          PRIMARY KEY (playlist_id)
+                                         UNIQUE (playlist_name, playlist_user)
 );
 
 -- Création de la table de relation "playlist_tracks"
