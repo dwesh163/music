@@ -130,8 +130,8 @@ export default function Player({ songId, setSongId, playlist }) {
 		setSongId(playlist.tracks[nextIndex].track_public_id);
 	};
 
-	const Like = async (songId) => {
-		if (!songId) {
+	const Like = async (likedSongId) => {
+		if (!likedSongId) {
 			return;
 		}
 		const fetchLikedPlaylist = async () => {
@@ -148,7 +148,7 @@ export default function Player({ songId, setSongId, playlist }) {
 
 		const playlistData = await fetchLikedPlaylist();
 
-		const response = await fetch('/api/playlist/' + playlistData.id, { method: 'POST', body: JSON.stringify({ trackId: songId }) });
+		const response = await fetch('/api/playlist/' + playlistData.id, { method: audioData.track.isLiked ? 'DELETE' : 'POST', body: JSON.stringify({ songId: likedSongId }) });
 		const data = await response.json();
 
 		if (data.status == 'ok') {
