@@ -65,8 +65,13 @@ export default async function Track(req, res) {
 	}
 	if (req.method === 'POST') {
 		const connection = await connectMySQL();
+		let songId;
 
-		const { songId } = JSON.parse(req.body);
+		if (req.body.songId) {
+			songId = req.body.songId;
+		} else {
+			songId = JSON.parse(req.body).songId;
+		}
 
 		if (!songId) {
 			return res.status(404).json({ error: 'Song not found' });
@@ -81,6 +86,10 @@ export default async function Track(req, res) {
 		}
 
 		const [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_public_id = ?', [songId]);
+		if (!track) {
+			return res.status(404).json({ error: 'Song not found' });
+		}
+
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 
 		if (playlist_tracks) {
@@ -92,8 +101,13 @@ export default async function Track(req, res) {
 	}
 	if (req.method == 'DELETE') {
 		const connection = await connectMySQL();
+		let songId;
 
-		const { songId } = JSON.parse(req.body);
+		if (req.body.songId) {
+			songId = req.body.songId;
+		} else {
+			songId = JSON.parse(req.body).songId;
+		}
 
 		if (!songId) {
 			return res.status(404).json({ error: 'Song not found' });
@@ -108,6 +122,10 @@ export default async function Track(req, res) {
 		}
 
 		const [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_public_id = ?', [songId]);
+		if (!track) {
+			return res.status(404).json({ error: 'Song not found' });
+		}
+
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 
 		if (playlist_tracks) {
