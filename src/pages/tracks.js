@@ -22,11 +22,23 @@ export default function Tracks() {
 		setIsOpen(!isOpen);
 	};
 
-	const fetchData = async () => {
+	useEffect(() => {
+		if (!router.query.s || router.query.s === search || router.query.s === '') {
+			return;
+		}
+
+		setSearch(router.query.s);
+		fetchData(router.query.s);
+	}, [router.query.s]);
+
+	const fetchData = async (search) => {
 		try {
 			const response = await fetch('/api/tracks/search/', { method: 'POST', body: JSON.stringify({ songName: search }) });
 			const tracksData = await response.json();
 			setResults(tracksData);
+			if (router.query.s != search) {
+				router.push({ query: { s: search } });
+			}
 			setIsLoading(false);
 		} catch (error) {}
 	};
@@ -99,7 +111,7 @@ export default function Tracks() {
 										type="search"
 										onKeyDown={(event) => {
 											if (event.key === 'Enter') {
-												fetchData();
+												fetchData(search);
 											}
 										}}
 										className="block w-full p-4 ps-10 text-sm text-gray-100 bg-[#27272b] focus:outline-none"
@@ -108,7 +120,7 @@ export default function Tracks() {
 										onChange={(event) => setSearch(event.target.value)}
 										required
 									/>
-									<button onClick={() => fetchData()} className="text-white absolute end-2.5 bottom-2 bg-[#00a5a5] hover:bg-[#038080] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-4 py-2">
+									<button onClick={() => fetchData(search)} className="text-white absolute end-2.5 bottom-2 bg-[#00a5a5] hover:bg-[#038080] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-4 py-2">
 										Search
 									</button>
 								</div>
@@ -171,7 +183,7 @@ export default function Tracks() {
 																		{index !== track.artists.length - 1 && <span className="hidden sm:inline opacity-60 font-normal text-gray-100">, </span>}
 																	</span>
 																))}
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '' : ''}</p>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '' : ''}</span>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</p>
 														</div>
