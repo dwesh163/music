@@ -66,7 +66,12 @@ export default async function Track(req, res) {
 	if (req.method === 'POST') {
 		const connection = await connectMySQL();
 
-		const { trackId } = JSON.parse(req.body);
+		const { songId } = JSON.parse(req.body);
+
+		if (!songId) {
+			return res.status(404).json({ error: 'Song not found' });
+		}
+
 		const playlistId = req.query.playlistId;
 		const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
 		const [[playlistInfo]] = await connection.execute('SELECT * FROM playlists WHERE playlist_user = ? AND public_id = ?', [user.user_id, playlistId]);
@@ -75,17 +80,42 @@ export default async function Track(req, res) {
 			return res.status(404).json({ error: 'Playlist not found' });
 		}
 
-		const [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_public_id = ?', [trackId]);
+		const [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_public_id = ?', [songId]);
+		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
+
+		if (playlist_tracks) {
+			res.status(403).json({ error: 'Song already in playlist "' + playlistInfo.playlist_name + '"' });
+		} else {
+			await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
+			res.status(200).json({ status: 'ok' });
+		}
+	}
+	if (req.method == 'DELETE') {
+		const connection = await connectMySQL();
+
+		const { songId } = JSON.parse(req.body);
+
+		if (!songId) {
+			return res.status(404).json({ error: 'Song not found' });
+		}
+
+		const playlistId = req.query.playlistId;
+		const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
+		const [[playlistInfo]] = await connection.execute('SELECT * FROM playlists WHERE playlist_user = ? AND public_id = ?', [user.user_id, playlistId]);
+
+		if (!playlistInfo) {
+			return res.status(404).json({ error: 'Playlist not found' });
+		}
+
+		const [[track]] = await connection.execute('SELECT * FROM tracks WHERE track_public_id = ?', [songId]);
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 
 		if (playlist_tracks) {
 			await connection.execute('DELETE FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 			res.status(200).json({ status: 'remove' });
 		} else {
-			await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
-			res.status(200).json({ status: 'ok' });
+			res.status(403).json({ error: 'Song not in playlist "' + playlistInfo.playlist_name + '"' });
 		}
-	} else {
-		res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 	}
+	res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 }
