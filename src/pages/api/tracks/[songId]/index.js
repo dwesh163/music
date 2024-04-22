@@ -1,9 +1,12 @@
 import fs from 'fs';
+import { getServerSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import path from 'path';
+import { authOptions } from '../../auth/[...nextauth]';
 
 export default async function getTrack(req, res) {
-	const session = await getSession({ req });
+	const session = await getServerSession(req, res, authOptions);
+
 
 	if (req.method === 'GET') {
 		if (!session) {
