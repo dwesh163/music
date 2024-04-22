@@ -1,6 +1,6 @@
 {
-    "name": "My awesome PWA app",
-    "short_name": "PWA App",
+    "name": "Musics",
+    "short_name": "Musics",
     "theme_color": "#FFFFFF",
     "background_color": "#FFFFFF",
     "start_url": "/",
