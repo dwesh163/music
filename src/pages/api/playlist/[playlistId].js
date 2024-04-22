@@ -79,13 +79,12 @@ export default async function Track(req, res) {
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 
 		if (playlist_tracks) {
-			res.status(403).json({ error: 'Invalid opration' });
-			return;
+			await connection.execute('DELETE FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
+			res.status(200).json({ status: 'remove' });
+		} else {
+			await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
+			res.status(200).json({ status: 'ok' });
 		}
-
-		await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
-
-		res.status(200).json({ status: 'ok' });
 	} else {
 		res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 	}

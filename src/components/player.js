@@ -160,6 +160,16 @@ export default function Player({ songId, setSongId, playlist }) {
 				},
 			}));
 		}
+
+		if (data.status == 'remove') {
+			setAudioData((prevAudioData) => ({
+				...prevAudioData,
+				track: {
+					...prevAudioData.track,
+					isLiked: false,
+				},
+			}));
+		}
 	};
 
 	return (
