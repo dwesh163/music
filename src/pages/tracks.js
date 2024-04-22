@@ -33,7 +33,7 @@ export default function Tracks() {
 
 	const fetchData = async (search) => {
 		try {
-			const response = await fetch('/api/tracks/search/', { method: 'POST', body: JSON.stringify({ songName: search.split(';')[0], artistName: search.split(';')[1] }) });
+			const response = await fetch(`/api/tracks/search/?songName=${search.split(';')[0]}&artistName=${search.split(';')[1]}`);
 			const tracksData = await response.json();
 			setResults(tracksData);
 			if (router.query.s != search) {
