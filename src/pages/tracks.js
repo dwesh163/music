@@ -189,7 +189,7 @@ export default function Tracks() {
 														</div>
 													</td>
 													<td className="hidden md:table-cell px-6 py-4">{track.album.name}</td>
-													<td className="hidden md:table-cell px-6 py-4">Today</td>
+													<td className="hidden md:table-cell px-6 py-4">{new Date(track.album.release_date).toLocaleDateString('en-US')}</td>
 													<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</td>
 												</tr>
 											))}
