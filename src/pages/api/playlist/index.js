@@ -48,18 +48,31 @@ export default async function Track(req, res) {
 			const { playlistName } = JSON.parse(JSON.stringify(req.body));
 
 			if (!playlistName) {
-				return res.status(400).json({ error: 'Missing playlist name' });
+				return res.status(400).send({ error: 'Missing playlist name' });
 			}
 
 			const connection = await connectMySQL();
-			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_id_public = ?', [session.user.id]);
+			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
 
-			await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?)', [playlistName, uuidv4(), user.user_id]);
+			const [[playlist]] = await connection.execute('SELECT * FROM playlists WHERE playlist_name = ? AND playlist_user = ?', [playlistName.trim(), user.user_id]);
 
-			res.status(201).json({ message: 'Playlist created successfully' });
+			if (playlist) {
+				return res.status(400).send({ error: 'Playlist already exists' });
+			}
+
+			const [[rows]] = await connection.execute('SELECT COUNT(*) AS playlistCount FROM playlists WHERE playlist_user = ?', [user.user_id]);
+			const { playlistCount } = rows;
+
+			if (playlistCount >= 5) {
+				return res.status(400).send({ error: 'Maximum limit of playlist created' });
+			}
+
+			await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?, ?)', [playlistName.trim(), uuidv4(), user.user_id]);
+
+			res.status(201).send({ message: 'Playlist created successfully' });
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).send({ error: 'Internal Server Error' });
 		}
 	} else {
 		res.setHeader('Allow', ['GET', 'POST']);
