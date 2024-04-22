@@ -15,6 +15,7 @@ export default function Home() {
 	const [songId, setSongId] = useState('');
 
 	const [isOpen, setIsOpen] = useState(false);
+	const [error, setError] = useState('');
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
@@ -29,6 +30,10 @@ export default function Home() {
 				const response = await fetch('/api/playlist/' + router.query.playlistId);
 				const playlistData = await response.json();
 				setPlaylist(playlistData);
+				if (!playlistData.error) {
+				} else {
+					setError(playlistData.error);
+				}
 				setIsLoading(false);
 			} catch (error) {
 				console.error('Error fetching audio data:', error);
@@ -38,8 +43,8 @@ export default function Home() {
 		fetchData();
 	}, [router.query.playlistId]);
 
-	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
-		return <Loading status={isLoading ? 'loading' : status} />;
+	if (status == 'loading' || status == 'unauthenticated' || isLoading || error != '') {
+		return <Loading status={isLoading ? 'loading' : error != '' ? 'error' : status} error={error} />;
 	}
 
 	return (
