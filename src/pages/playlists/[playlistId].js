@@ -114,7 +114,7 @@ export default function Home() {
 													<td scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 														<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track.album.album_image} alt={track.album.album_name} />
 														<div>
-															<p>{track.name}</p>
+															<p className="text-white">{track.name}</p>
 															<p className="flex flex-wrap">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
