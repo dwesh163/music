@@ -74,8 +74,42 @@ export default async function Track(req, res) {
 			console.error(error);
 			res.status(500).send({ error: 'Internal Server Error' });
 		}
+	} else if (req.method === 'DELETE') {
+		try {
+			let playlistName;
+
+			if (req.body.playlistName) {
+				playlistName = req.body.playlistName;
+			} else {
+				playlistName = JSON.parse(req.body).playlistName;
+			}
+
+			if (!playlistName) {
+				return res.status(400).send({ error: 'Missing playlist name' });
+			}
+
+			if (playlistName == 'Liked') {
+				return res.status(403).send({ error: 'unauthorized' });
+			}
+
+			const connection = await connectMySQL();
+			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
+
+			const [[playlist]] = await connection.execute('SELECT * FROM playlists WHERE playlist_name = ? AND playlist_user = ?', [playlistName.trim(), user.user_id]);
+
+			if (!playlist) {
+				return res.status(400).send({ error: 'Playlist not exists' });
+			}
+
+			await connection.execute('DELETE FROM playlists WHERE playlist_name = ? AND playlist_user = ?', [playlistName.trim(), user.user_id]);
+
+			res.status(201).send({ message: 'Playlist delete successfully' });
+		} catch (error) {
+			console.error(error);
+			res.status(500).send({ error: 'Internal Server Error' });
+		}
 	} else {
-		res.setHeader('Allow', ['GET', 'POST']);
+		res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
 		res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 	}
 }
