@@ -9,8 +9,8 @@ export default async function Track(req, res) {
 		return res.status(401).json({ error: 'Unauthorized' });
 	}
 
-	if (req.method === 'POST') {
-		const { songName, artistName } = JSON.parse(req.body);
+	if (req.method === 'GET') {
+		const { songName, artistName } = req.query;
 
 		const spotifyApi = new SpotifyWebApi({
 			clientId: process.env.CLIENTID,
@@ -23,7 +23,7 @@ export default async function Track(req, res) {
 
 			spotifyApi.setAccessToken(accessToken);
 
-			const searchResult = await spotifyApi.searchTracks('track:' + songName + (artistName ? ' artist:' + artistName : ''), { limit: 8 });
+			const searchResult = await spotifyApi.searchTracks('track:' + songName + (artistName != 'undefined' ? ' artist:' + artistName : ''));
 			const songInfo = searchResult.body.tracks.items;
 
 			if (songInfo.length == 0 || !songInfo) {
@@ -36,7 +36,7 @@ export default async function Track(req, res) {
 			res.status(500).json({ error: 'Internal Server Error' });
 		}
 	} else {
-		res.setHeader('Allow', ['POST']);
+		res.setHeader('Allow', ['GET']);
 		res.status(405).json({ error: `La méthode ${req.method} n'est pas autorisée` });
 	}
 }
