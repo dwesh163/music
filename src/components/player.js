@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function Player({ isStarted, setIsStarted }) {
 	const [isLoading, setIsLoading] = useState(true);
-	const [currentTime, setCurrentTime] = useState(localStorage.getItem('currentTime'));
+	const [currentTime, setCurrentTime] = useState(parseFloat(localStorage.getItem('currentTime')));
 	const [audioData, setAudioData] = useState(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [songId, setSongId] = useState('');
+	const [onLoad, setOnLoad] = useState(false);
+	const [onPageLoad, setOnPageLoad] = useState(true);
 	const [playlist, setPlaylist] = useState('');
 	const audioRef = useRef();
 	const progressRef = useRef();
@@ -73,16 +76,23 @@ export default function Player({ isStarted, setIsStarted }) {
 	}, [audioData]);
 
 	useEffect(() => {
-		const songData = JSON.parse(localStorage.getItem('songData'));
-		if (songData?.status != 'play') {
+		const handleRouteChange = (url) => {
 			localStorage.setItem('songData', JSON.stringify({ status: 'load' }));
-		}
-	}, []);
+			setCurrentTime(0);
+			localStorage.setItem('currentTime', 0);
+		};
+
+		router.events.on('routeChangeComplete', handleRouteChange);
+
+		return () => {
+			router.events.off('routeChangeComplete', handleRouteChange);
+		};
+	}, [router.events]);
 
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
 		if (isStarted || songData?.status == 'play') {
-			setCurrentTime(localStorage.getItem('currentTime'));
+			setCurrentTime(parseFloat(localStorage.getItem('currentTime')));
 			setSongId(songData.songId);
 			fetchAudioData(songData.songId);
 			setIsStarted(false);
@@ -100,6 +110,10 @@ export default function Player({ isStarted, setIsStarted }) {
 
 	const handleTimeUpdate = () => {
 		if (audioRef.current) {
+			if (currentTime != 0 && onPageLoad) {
+				audioRef.current.currentTime = currentTime;
+				setOnPageLoad(false);
+			}
 			setCurrentTime(audioRef.current.currentTime);
 			localStorage.setItem('currentTime', currentTime);
 		}
@@ -144,7 +158,6 @@ export default function Player({ isStarted, setIsStarted }) {
 		let songData = JSON.parse(localStorage.getItem('songData'));
 
 		if (!songData?.playlist?.list) {
-			console.log('Aucune liste de lecture disponible');
 			setSongId('');
 			setCurrentTime(0);
 			return;
@@ -154,7 +167,6 @@ export default function Player({ isStarted, setIsStarted }) {
 		const prevIndex = currentIndex - 1;
 
 		if (prevIndex < 0) {
-			console.log('Début de la liste de lecture');
 			setSongId('');
 			setCurrentTime(0);
 			return;
