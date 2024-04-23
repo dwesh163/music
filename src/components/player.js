@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Player({ isStarted, setIsStarted }) {
 	const [isLoading, setIsLoading] = useState(true);
-	const [currentTime, setCurrentTime] = useState(0);
+	const [currentTime, setCurrentTime] = useState(localStorage.getItem('currentTime'));
 	const [audioData, setAudioData] = useState(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [songId, setSongId] = useState('');
@@ -229,9 +229,9 @@ export default function Player({ isStarted, setIsStarted }) {
 					<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {JSON.parse(localStorage.getItem('songData'))?.playlist?.name}</p>
 				</div>
 			</div>
-			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-4 md:px-8">
+			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-1 md:px-8 w-24">
 				{audioData ? (
-					<div className="flex justify-start sm:hidden items-center flex-grow-0 flex-shrink-0 relative gap-1">
+					<div className="flex justify-start sm:hidden items-center flex-grow-0 flex-shrink-0 relative gap-1 sm:mb-0 mb-1">
 						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData.track.name}</p>
 						<p className="flex gap-0.5 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
 							{audioData?.artists?.slice(0, 1).map((item, index) => (
@@ -310,8 +310,10 @@ export default function Player({ isStarted, setIsStarted }) {
 							: '00:00'}
 					</p>
 
-					<div onClick={handleProgressClick} ref={progressRef} className="flex-grow w-[515px] h-1 relative overflow-hidden rounded-[999px] bg-[#4c4e54]">
-						<div className="absolute top-0 left-0 h-full bg-blue-500" style={{ width: audioData ? `${(currentTime / audioData.track.duration) * 100}%` : '0' }}></div>
+					<div onClick={handleProgressClick} ref={progressRef} className="flex-grow w-[515px] h-6 flex justify-center align-center relative overflow-hidden pt-[0.70rem] sm:pt-[0.65rem]">
+						<div className="flex-grow w-full h-1 relative overflow-hidden rounded-[999px] bg-[#4c4e54]">
+							<div className="absolute top-0 left-0 h-full bg-blue-500" style={{ width: audioData ? `${(currentTime / audioData.track.duration) * 100}%` : '0' }}></div>
+						</div>
 					</div>
 
 					<p className="flex-grow-0 flex-shrink-0 text-xs font-semibold text-center text-white">
