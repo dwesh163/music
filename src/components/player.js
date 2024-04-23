@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function Player({ isStarted, setIsStarted }) {
@@ -74,20 +73,6 @@ export default function Player({ isStarted, setIsStarted }) {
 			navigator.mediaSession.setActionHandler('previoustrack', () => prevSong(setSongId));
 		}
 	}, [audioData]);
-
-	useEffect(() => {
-		const handleRouteChange = (url) => {
-			localStorage.setItem('songData', JSON.stringify({ status: 'load' }));
-			setCurrentTime(0);
-			localStorage.setItem('currentTime', 0);
-		};
-
-		router.events.on('routeChangeComplete', handleRouteChange);
-
-		return () => {
-			router.events.off('routeChangeComplete', handleRouteChange);
-		};
-	}, [router.events]);
 
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
