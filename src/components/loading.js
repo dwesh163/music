@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-export default function Loading({ status, error }) {
+export default function Loading({ status }) {
 	const router = useRouter();
+
 	if (status == 'loading') {
 		return (
 			<>
