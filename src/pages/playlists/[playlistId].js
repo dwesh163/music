@@ -115,17 +115,17 @@ export default function Home() {
 														<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track.album.album_image} alt={track.album.album_name} />
 														<div>
 															<p className="text-white">{track.name}</p>
-															<p className="flex flex-wrap">
+															<p className="flex flex-wrap gap-1">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
 																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.public_id)}>
 																			{item.artist_name}
+																			{index !== track.artists.slice(0, 2).length - 1 && ','}
 																		</span>
-																		{index !== track.artists.length - 1 && <span className="hidden sm:inline opacity-60 font-normal text-gray-100">, </span>}
 																	</span>
 																))}
-
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '  -  ' + track.album.album_name : ''}</p>
+																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '-' : ''}</p>
+																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? track.album.album_name : ''}</p>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</p>
 														</div>
