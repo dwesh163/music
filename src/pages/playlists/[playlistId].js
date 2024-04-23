@@ -13,7 +13,7 @@ export default function Home() {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [playlist, setPlaylist] = useState({});
-	const [songId, setSongId] = useState('');
+	const [isStarted, setIsStarted] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [error, setError] = useState('');
@@ -62,7 +62,7 @@ export default function Home() {
 			</Head>
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
-					<Player songId={songId} setSongId={setSongId} playlist={playlist} />
+					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div className=" relative flex overflow-hidden bg-[#171719] w-full h-full">
 						{playlist.error ? (
@@ -109,7 +109,12 @@ export default function Home() {
 											{playlist.tracks.map((track, index) => (
 												<tr key={index + '-track'} className="bg-[#11111170] hover:bg-[#1d1d1d70] group">
 													<td className="relative">
-														<div className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer" onClick={() => setSongId(track.track_public_id)}>
+														<div
+															className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer"
+															onClick={() => {
+																localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: track.track_public_id, playlist: { name: playlist.playlist.name, list: playlist.tracks.map((track) => track.track_public_id) } }));
+																setIsStarted(true);
+															}}>
 															<p className="text-base opacity-100 transition-opacity">{index + 1}</p>
 															<svg width="20" height="20" viewBox="0 0 25 25" fill="#fff" xmlns="http://www.w3.org/2000/svg" className="absolute opacity-0 group-hover:opacity-100">
 																<path d="M6.76693 21.9879L6.75583 21.9956L6.74514 22.0038C6.45991 22.2232 6 22.0313 6 21.6001V3.40009C6 2.96889 6.45991 2.77699 6.74514 2.99641L6.75634 3.00501L6.76799 3.01298L20.018 12.063L20.018 12.063L20.0226 12.0661C20.3258 12.2682 20.3258 12.682 20.0226 12.8841L20.0226 12.884L20.0169 12.8879L6.76693 21.9879Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
@@ -129,8 +134,8 @@ export default function Home() {
 																		</span>
 																	</span>
 																))}
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '-' : ''}</p>
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? track.album.album_name : ''}</p>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '-' : ''}</span>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? track.album.album_name : ''}</span>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</p>
 														</div>
