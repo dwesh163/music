@@ -5,6 +5,7 @@ import Player from '@/components/player';
 import Menu from '@/components/menu';
 import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
+import packageJson from '/package.json';
 
 export default function Tracks() {
 	const { data: session, status } = useSession();
