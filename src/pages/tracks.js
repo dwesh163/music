@@ -14,6 +14,7 @@ export default function Tracks() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [search, setSearch] = useState('');
 	const [results, setResults] = useState([]);
+	const [isStarted, setIsStarted] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -54,6 +55,7 @@ export default function Tracks() {
 				setResults(updatedResults);
 			}
 			localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: tracksData.id, playlist: { name: 'search' } }));
+			setIsStarted(true);
 		}
 		if (tracksData.download == 'progress') {
 			if (trackIndex !== -1) {
@@ -86,7 +88,7 @@ export default function Tracks() {
 			</Head>
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
-					<Player />
+					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div className="w-full h-full overflow-hidden">
 						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
