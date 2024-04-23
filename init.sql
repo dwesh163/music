@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS comments (
                                             Comments_title VARCHAR(255) NOT NULL,
                                             Comments_text TEXT NOT NULL,
                                             comments_public_id VARCHAR(100),
+                                            comments_date DATETIME,
                                             Comments_user INT REFERENCES users(user_id),
                                             PRIMARY KEY (comments_id)
 )

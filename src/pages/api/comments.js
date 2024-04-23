@@ -31,7 +31,7 @@ export default async function Comments(req, res) {
 				res.status(200).send({ error: 'The comment must not be blank' });
 			}
 
-			await connection.execute('INSERT INTO comments (Comments_title, Comments_text, comments_public_id, Comments_user) VALUES (?, ?, ?, ?)', [title ? title : '', comment, id, user.user_id]);
+			await connection.execute('INSERT INTO comments (Comments_title, Comments_text, comments_date, comments_public_id, Comments_user) VALUES (?, ?, ?, ?, ?)', [title ? title : '', comment, new Date(), id, user.user_id]);
 
 			res.status(200).send({ status: 'ok' });
 		} catch (error) {
@@ -42,7 +42,7 @@ export default async function Comments(req, res) {
 		const connection = await connectMySQL();
 
 		if (session.user.email == process.env.ADMIN) {
-			const [comments] = await connection.execute('SELECT Comments_text AS comments, comments_public_id AS id FROM comments');
+			const [comments] = await connection.execute('SELECT Comments_text AS comments, comments_public_id AS id, Comments_date AS date FROM comments');
 			res.status(200).send(comments);
 		}
 		res.status(401).send({ error: 'unauthorized' });
