@@ -23,13 +23,6 @@ CREATE TABLE IF NOT EXISTS artists (
                                        PRIMARY KEY (artist_id)
 );
 
--- Création de la table "genres"
-CREATE TABLE IF NOT EXISTS genres (
-                                      genre_id INT NOT NULL UNIQUE AUTO_INCREMENT,
-                                      genre_name VARCHAR(50) NOT NULL,
-                                      PRIMARY KEY (genre_id)
-);
-
 -- Création de la table "albums"
 CREATE TABLE IF NOT EXISTS albums (
                                       album_id INT NOT NULL UNIQUE AUTO_INCREMENT,
@@ -65,7 +58,6 @@ CREATE TABLE IF NOT EXISTS playlists (
                                          public_id VARCHAR(100),
                                          playlist_user INT REFERENCES users(user_id),
                                          PRIMARY KEY (playlist_id)
-                                         UNIQUE (playlist_name, playlist_user)
 );
 
 -- Création de la table de relation "playlist_tracks"
