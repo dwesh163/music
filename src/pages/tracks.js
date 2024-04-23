@@ -13,9 +13,7 @@ export default function Tracks() {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [search, setSearch] = useState('');
-	const [playlist, setPlaylist] = useState(undefined);
 	const [results, setResults] = useState([]);
-	const [songId, setSongId] = useState('');
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -49,14 +47,13 @@ export default function Tracks() {
 		const tracksData = await response.json();
 		const trackIndex = results.findIndex((track) => track.id === id);
 
-		console.log(tracksData);
 		if (tracksData.download == 'true') {
 			if (trackIndex !== -1) {
 				const updatedResults = [...results];
 				updatedResults[trackIndex].loading = false;
 				setResults(updatedResults);
 			}
-			setSongId(tracksData.id);
+			localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: tracksData.id, playlist: { name: 'search' } }));
 		}
 		if (tracksData.download == 'progress') {
 			if (trackIndex !== -1) {
@@ -75,9 +72,11 @@ export default function Tracks() {
 		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
-	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-		router.push('/auth/signin?callbackUrl=' + router.asPath);
-	}
+	useEffect(() => {
+		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+			router.push('/auth/signin?callbackUrl=' + router.asPath);
+		}
+	});
 
 	return (
 		<>
@@ -89,7 +88,7 @@ export default function Tracks() {
 			</Head>
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
-					<Player songId={songId} setSongId={setSongId} playlist={playlist} />
+					<Player />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div className="w-full h-full overflow-hidden">
 						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
@@ -113,7 +112,6 @@ export default function Tracks() {
 										</svg>
 									</div>
 									<input
-										type="search"
 										onKeyDown={(event) => {
 											if (event.key === 'Enter') {
 												fetchData(search);
@@ -125,7 +123,7 @@ export default function Tracks() {
 										onChange={(event) => setSearch(event.target.value)}
 										required
 									/>
-									<button onClick={() => fetchData(search)} className="text-white absolute end-2.5 bottom-2 bg-[#00a5a5] hover:bg-[#038080] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-4 py-2">
+									<button onClick={() => fetchData(search)} className="text-white absolute end-2.5 bottom-2 bg-[#00a5a5] hover:bg-[#038080] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium -webkit-border-radius-0 rounded text-sm px-4 py-2">
 										Search
 									</button>
 								</div>
@@ -188,8 +186,8 @@ export default function Tracks() {
 																		</span>
 																	</span>
 																))}
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '-' : ''}</p>
-																<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? track.album.name : ''}</p>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? '-' : ''}</span>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.name != track.name ? track.album.name : ''}</span>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</p>
 														</div>
