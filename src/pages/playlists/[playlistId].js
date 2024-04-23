@@ -126,6 +126,7 @@ export default function Home() {
 																		},
 																	})
 																);
+																localStorage.setItem('currentTime', 0);
 																setIsStarted(true);
 															}}>
 															<p className="text-base opacity-100 transition-opacity">{index + 1}</p>

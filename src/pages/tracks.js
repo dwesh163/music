@@ -55,6 +55,7 @@ export default function Tracks() {
 				setResults(updatedResults);
 			}
 			localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: tracksData.id, playlist: { name: 'search' } }));
+			localStorage.setItem('currentTime', 0);
 			setIsStarted(true);
 		}
 		if (tracksData.download == 'progress') {

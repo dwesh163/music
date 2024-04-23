@@ -8,7 +8,7 @@ export default function Player({ isStarted, setIsStarted }) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [songId, setSongId] = useState('');
 	const [onLoad, setOnLoad] = useState(false);
-	const [onPageLoad, setOnPageLoad] = useState(true);
+	const [isNewSong, setIsNewSong] = useState(true);
 	const [playlist, setPlaylist] = useState('');
 	const audioRef = useRef();
 	const progressRef = useRef();
@@ -42,10 +42,13 @@ export default function Player({ isStarted, setIsStarted }) {
 			} else {
 				setAudioData(audioData);
 				setIsLoading(false);
-				setIsPlaying(true);
-				setTimeout(() => {
-					audioRef.current.play();
-				}, 200);
+				const songData = JSON.parse(localStorage.getItem('songData'));
+				if (isStarted || songData?.status == 'play') {
+					setIsPlaying(true);
+					setTimeout(() => {
+						audioRef.current.play();
+					}, 200);
+				}
 			}
 		} catch (error) {
 			console.error('Error fetching audio data:', error);
@@ -76,28 +79,37 @@ export default function Player({ isStarted, setIsStarted }) {
 
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
-		if (isStarted || songData?.status == 'play') {
-			setCurrentTime(parseFloat(localStorage.getItem('currentTime')));
-			setSongId(songData.songId);
-			fetchAudioData(songData.songId);
-			setIsStarted(false);
-		}
+		setCurrentTime(parseFloat(localStorage.getItem('currentTime')));
+		setSongId(songData.songId);
+		fetchAudioData(songData.songId);
+		setIsStarted(false);
+		setIsNewSong(true);
 	}, [isStarted]);
 
 	const togglePlay = () => {
 		if (audioData.track.src == ' ') {
 			return;
 		}
-		if (isPlaying) audioRef.current.pause();
-		else audioRef.current.play();
+		if (isPlaying) {
+			audioRef.current.pause();
+			let songData = JSON.parse(localStorage.getItem('songData'));
+			songData.status = 'pause';
+
+			localStorage.setItem('songData', JSON.stringify(songData));
+		} else {
+			let songData = JSON.parse(localStorage.getItem('songData'));
+			songData.status = 'play';
+			localStorage.setItem('songData', JSON.stringify(songData));
+			audioRef.current.play();
+		}
 		setIsPlaying(!isPlaying);
 	};
 
 	const handleTimeUpdate = () => {
 		if (audioRef.current) {
-			if (currentTime != 0 && onPageLoad) {
+			if (isNewSong) {
 				audioRef.current.currentTime = currentTime;
-				setOnPageLoad(false);
+				setIsNewSong(false);
 			}
 			setCurrentTime(audioRef.current.currentTime);
 			localStorage.setItem('currentTime', currentTime);
@@ -231,7 +243,7 @@ export default function Player({ isStarted, setIsStarted }) {
 						</div>
 					</div>
 					{audioData ? (
-						<p className="flex gap-2 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
+						<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
 							{audioData.artists.slice(0, 2).map((item, index) => (
 								<span key={index} onClick={() => router.push('/artists' + item.id)}>
 									{item.name}
