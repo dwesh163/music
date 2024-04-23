@@ -186,7 +186,7 @@ export default function Tracks() {
 																	<span key={index}>
 																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.public_id)}>
 																			{item.name}
-																			{index !== track.artists.slice(0, 2).length - 1 && ','}
+																			{index !== track.artists.slice(0, 2).length - 1 && <span className="sm:visble hidden">,</span>}
 																		</span>
 																	</span>
 																))}
