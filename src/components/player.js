@@ -80,10 +80,12 @@ export default function Player({ isStarted, setIsStarted }) {
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
 		setCurrentTime(parseFloat(localStorage.getItem('currentTime')));
-		setSongId(songData.songId);
-		fetchAudioData(songData.songId);
-		setIsStarted(false);
-		setIsNewSong(true);
+		if (songData?.songId) {
+			setSongId(songData.songId);
+			fetchAudioData(songData.songId);
+			setIsStarted(false);
+			setIsNewSong(true);
+		}
 	}, [isStarted]);
 
 	const togglePlay = () => {
