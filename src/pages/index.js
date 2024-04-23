@@ -42,7 +42,11 @@ export default function PlayList() {
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
 					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
-					<div className="w-full h-full overflow-hidden">
+					<div
+						className="w-full h-full overflow-hidden"
+						onClick={() => {
+							if (isOpen) setIsOpen(false);
+						}}>
 						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
 							<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">Index</h1>
 							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={toggleMenu} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative cursor-pointer sm:hidden" preserveAspectRatio="none">
