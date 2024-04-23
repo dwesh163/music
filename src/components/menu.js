@@ -15,10 +15,10 @@ export default function Menu({ isOpen, setIsOpen }) {
 	const buttonRef = useRef(null);
 
 	const [collections, setCollections] = useState([
-		{ name: 'Playlists', svg: '/playlists.svg', url: 'playlists' },
-		{ name: 'Albums', svg: '/albums.svg', url: 'albums' },
-		{ name: 'Tracks', svg: '/tracks.svg', url: 'tracks' },
-		{ name: 'Artists', svg: '/artists.svg', url: 'artists' },
+		{ name: 'Playlists', svg: '/svg/playlists.svg', url: 'playlists' },
+		{ name: 'Albums', svg: '/svg/albums.svg', url: 'albums' },
+		{ name: 'Tracks', svg: '/svg/tracks.svg', url: 'tracks' },
+		{ name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
 	]);
 
 	useEffect(() => {
