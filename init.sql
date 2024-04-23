@@ -91,4 +91,4 @@ CREATE TABLE IF NOT EXISTS comments (
                                             comments_date DATETIME,
                                             Comments_user INT REFERENCES users(user_id),
                                             PRIMARY KEY (comments_id)
-)
+);
