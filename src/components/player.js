@@ -179,7 +179,7 @@ export default function Player({ songId, setSongId, playlist }) {
 				<img src={audioData ? audioData.album.image : ''} className="flex-grow-0 flex-shrink-0 w-16 h-[65px] object-cover mt-2" />
 				<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-1.5 overflow-visible">
 					<div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2">
-						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData ? audioData.track.name : ''}</p>
+						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData ? audioData.track.name.slice(0, 18) : ''}</p>
 						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like(songId)}>
 							<svg width="16" height="17" viewBox="0 0 16 17" fill={audioData?.track.isLiked ? '#fff' : 'none'} xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
 								<path d="M2.30001 8.96658C1.00001 7.56658 1.00001 5.29991 2.30001 3.89991C2.96668 3.16658 3.80001 2.83325 4.66668 2.83325C5.33335 2.83325 6.03334 3.06658 6.60001 3.49991C6.83334 3.69991 7.03335 3.93325 7.23335 4.16658L8.03335 5.23325L8.83334 4.16658C9.03334 3.89991 9.23334 3.66658 9.46668 3.49991C10 3.03325 10.6667 2.83325 11.3667 2.83325C12.2 2.83325 13.0667 3.16658 13.7 3.89991C15 5.29991 15 7.56658 13.7 8.96658L8.46668 14.2999C8.23334 14.5666 7.80001 14.5666 7.56668 14.2999L2.30001 8.96658Z" stroke="#FCFCFC" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -214,14 +214,14 @@ export default function Player({ songId, setSongId, playlist }) {
 				{audioData ? (
 					<div className="flex justify-start sm:hidden items-center flex-grow-0 flex-shrink-0 relative gap-1">
 						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData.track.name}</p>
-						<p className="flex gap-2 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
+						<p className="flex gap-0.5 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
 							{audioData?.artists?.slice(0, 1).map((item, index) => (
 								<span key={index} className="font-normal" onClick={() => router.push('/artists' + item.id)}>
 									{item.name}
 									{index !== audioData.artists.length - 1 && <span>,</span>}
 								</span>
 							))}
-							{audioData?.artists?.length > 2 && <span className="font-normal" onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
+							{audioData?.artists?.length > 2 && <span className="font-normal" onClick={() => router.push('/artists')}>{`${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
 						</p>
 						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like(songId)}>
 							<svg width="16" height="17" viewBox="0 0 16 17" fill={audioData?.track.isLiked ? '#fff' : 'none'} xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
