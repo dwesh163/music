@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Player from '@/components/player';
 import Menu from '@/components/menu';
 import Loading from '@/components/loading';
+import Comments from '@/components/comments';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
@@ -56,7 +57,10 @@ export default function PlayList() {
 
 						<div className="sm:px-7 px-4 overflow-y-scroll">
 							<div className="w-full py-3">
-								<span className="text-white">Index</span>
+								<div className="mb-3">
+									<span className="text-white ">This site is under development. If you can see this, it's because we've granted you access to the demo. If you find a bug or want a new feature or option, write to us here. </span>
+								</div>
+								<Comments />
 							</div>
 						</div>
 					</div>
