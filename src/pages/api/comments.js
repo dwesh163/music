@@ -41,8 +41,11 @@ export default async function Comments(req, res) {
 	} else if (req.method === 'GET') {
 		const connection = await connectMySQL();
 
-		const [comments] = await connection.execute('SELECT Comments_text AS comments, comments_public_id AS id FROM comments');
-		res.status(200).send(comments);
+		if (session.user.email == process.env.ADMIN) {
+			const [comments] = await connection.execute('SELECT Comments_text AS comments, comments_public_id AS id FROM comments');
+			res.status(200).send(comments);
+		}
+		res.status(401).send({ error: 'unauthorized' });
 	} else {
 		res.setHeader('Allow', ['POST', 'GET']);
 		res.status(405).send({ error: `The ${req.method} method is not allowed` });
