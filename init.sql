@@ -82,3 +82,12 @@ CREATE TABLE IF NOT EXISTS track_artist (
                                             artist_id INT REFERENCES artists(artist_id),
                                             PRIMARY KEY (track_id, artist_id)
 );
+
+CREATE TABLE IF NOT EXISTS comments (
+                                            comments_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+                                            Comments_title VARCHAR(255) NOT NULL,
+                                            Comments_text TEXT NOT NULL,
+                                            comments_public_id VARCHAR(100),
+                                            Comments_user INT REFERENCES users(user_id),
+                                            PRIMARY KEY (comments_id)
+)
