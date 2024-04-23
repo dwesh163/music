@@ -24,7 +24,6 @@ export default function Player({ isStarted, setIsStarted }) {
 	};
 
 	const fetchAudioData = async (songId) => {
-		pauseHandler();
 		setIsLoading(true);
 		if (songId == '') {
 			return;
@@ -68,8 +67,8 @@ export default function Player({ isStarted, setIsStarted }) {
 			navigator.mediaSession.setActionHandler('play', playHandler);
 			navigator.mediaSession.setActionHandler('pause', pauseHandler);
 			navigator.mediaSession.setActionHandler('stop', pauseHandler);
-			navigator.mediaSession.setActionHandler('nexttrack', () => nextSong(songId, setSongId, playlist));
-			navigator.mediaSession.setActionHandler('previoustrack', () => prevSong(songId, setSongId, playlist));
+			navigator.mediaSession.setActionHandler('nexttrack', () => nextSong(setSongId));
+			navigator.mediaSession.setActionHandler('previoustrack', () => prevSong(setSongId));
 		}
 	}, [audioData]);
 
@@ -113,40 +112,62 @@ export default function Player({ isStarted, setIsStarted }) {
 		if (audioRef.current) audioRef.current.currentTime = newTime;
 	};
 
-	const nextSong = (songId, setSongId, playlist) => {
-		if (!playlist) {
+	const nextSong = async (setSongId) => {
+		let songData = JSON.parse(localStorage.getItem('songData'));
+
+		if (!songData?.playlist?.list) {
 			setSongId('');
-			togglePlay();
 			setCurrentTime(0);
 			return;
 		}
-		const currentIndex = playlist.tracks.findIndex((track) => track.track_public_id === songId);
-		if (currentIndex === -1) {
+
+		const currentIndex = songData.playlist.currentIndex || 0;
+		const nextIndex = currentIndex + 1;
+
+		if (nextIndex >= songData.playlist.list.length) {
+			setSongId('');
+			setCurrentTime(0);
 			return;
 		}
-		const nextIndex = (currentIndex + 1) % playlist.tracks.length;
-		if (nextIndex == playlist.tracks.length - 1) {
-			setSongId(playlist.tracks[0].track_public_id);
-			return;
-		}
-		setSongId(playlist.tracks[nextIndex].track_public_id);
+
+		const nextSongId = songData.playlist.list[nextIndex];
+
+		setSongId(nextSongId);
+		setCurrentTime(0);
+		fetchAudioData(nextSongId);
+
+		songData.playlist.currentIndex = nextIndex;
+		localStorage.setItem('songData', JSON.stringify(songData));
 	};
 
-	const prevSong = (songId, setSongId, playlist) => {
-		if (!playlist) {
+	const prevSong = async (setSongId) => {
+		let songData = JSON.parse(localStorage.getItem('songData'));
+
+		if (!songData?.playlist?.list) {
+			console.log('Aucune liste de lecture disponible');
 			setSongId('');
+			setCurrentTime(0);
 			return;
 		}
-		const currentIndex = playlist.tracks.findIndex((track) => track.track_public_id === songId);
-		if (currentIndex === -1) {
+
+		const currentIndex = songData.playlist.currentIndex || 0;
+		const prevIndex = currentIndex - 1;
+
+		if (prevIndex < 0) {
+			console.log('Début de la liste de lecture');
+			setSongId('');
+			setCurrentTime(0);
 			return;
 		}
-		const nextIndex = (currentIndex - 1) % playlist.tracks.length;
-		if (nextIndex == -1) {
-			setSongId(playlist.tracks[playlist.tracks.length - 1].track_public_id);
-			return;
-		}
-		setSongId(playlist.tracks[nextIndex].track_public_id);
+
+		const prevSongId = songData.playlist.list[prevIndex];
+
+		setSongId(prevSongId);
+		setCurrentTime(0);
+		fetchAudioData(prevSongId);
+
+		songData.playlist.currentIndex = prevIndex;
+		localStorage.setItem('songData', JSON.stringify(songData));
 	};
 
 	const Like = async (likedSongId) => {
@@ -194,7 +215,7 @@ export default function Player({ isStarted, setIsStarted }) {
 	return (
 		<div className="flex justify-start items-center w-full absolute left-0 bottom-0 overflow-hidden md:gap-28 px-4 py-3.5 bg-[#1f1f22] z-20 shadow-2xl">
 			<div className="hidden sm:flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-4 w-72">
-				<audio ref={audioRef} src={audioData ? audioData.track.src : ''} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong(songId, setSongId, playlist)}></audio>
+				<audio ref={audioRef} src={audioData ? audioData.track.src : ''} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong(setSongId)}></audio>
 				<img src={audioData ? audioData.album.image : ''} className="flex-grow-0 flex-shrink-0 w-16 h-[65px] object-cover mt-2" />
 				<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-1.5 overflow-visible">
 					<div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2">
@@ -265,7 +286,7 @@ export default function Player({ isStarted, setIsStarted }) {
 							<path d="M15.2562 4.35569L15.2671 4.36659L15.2752 4.3747L15.3003 4.39987L15.3336 4.43317L15.3502 4.44976L15.4 4.49969L15.2562 4.35569ZM15.2562 4.35569L15.315 4.33491L15.2562 4.35569ZM15.2556 4.35502L15.3161 4.33386L15.3932 4.30686L15.4 4.30448L15.413 4.29992L15.2556 4.35502ZM15.2556 4.35502L15.2169 4.31632L15.2006 4.29992L15.1801 4.2794L15.1787 4.28073C15.1755 4.28394 15.1684 4.29095 15.1598 4.29992C15.1516 4.30845 15.142 4.31876 15.133 4.32926C15.1248 4.33873 15.1146 4.35119 15.1034 4.36659C15.0924 4.38169 15.0806 4.39962 15.0689 4.42034M15.2556 4.35502L15.0689 4.42034M15.0689 4.42034L15.04 4.43047C15.0378 4.41803 15.0363 4.40664 15.0353 4.39654C15.0341 4.3846 15.0336 4.3733 15.0334 4.36659C15.0333 4.36286 15.0333 4.36055 15.0333 4.36032C15.0333 4.36009 15.0333 4.36195 15.0333 4.36659V4.43281L15.0255 4.43553C15.0104 4.39239 15.0046 4.35513 15.0021 4.33116C15.0015 4.32529 15.0011 4.32022 15.0008 4.31605C15.0003 4.30889 15.0001 4.30317 15.0001 4.29992C15 4.29858 15 4.29766 15 4.29723L15 4.29634C15 4.29634 15 4.29722 15 4.29992V4.33325V4.40484C14.993 4.38734 14.987 4.36939 14.9821 4.35111C14.972 4.31293 14.9667 4.2733 14.9667 4.23325V4.33962C14.9509 4.30055 14.9435 4.26671 14.9396 4.24356C14.9369 4.22757 14.9354 4.21314 14.9345 4.20076C14.9341 4.19449 14.9338 4.18851 14.9336 4.18285L14.9334 4.17454L14.9333 4.17052L14.9333 4.16853L14.9333 4.16755L14.9333 4.16728L15.0689 4.42034ZM13.5536 5.52014L14.4071 4.66659H13.2H11.3C10.4672 4.66659 9.63449 5.11716 9.20592 5.84038L5.77886 11.3303C5.23124 12.1632 4.35152 12.6666 3.36667 12.6666H2.16667C2.07614 12.6666 2 12.5904 2 12.4999C2 12.4094 2.07614 12.3333 2.16667 12.3333H3.36667C4.22936 12.3333 5.02886 11.9189 5.49198 11.1628L8.92113 5.66952C9.46874 4.83664 10.3485 4.33325 11.3333 4.33325H13.2333H14.4404L13.5869 3.4797L12.7202 2.61303L12.3667 2.96659L12.7202 2.61303C12.6777 2.57047 12.6667 2.5298 12.6667 2.49992C12.6667 2.47003 12.6777 2.42936 12.7202 2.38681L12.3667 2.03325L12.7202 2.38681C12.7628 2.34425 12.8034 2.33325 12.8333 2.33325C12.8632 2.33325 12.9039 2.34425 12.9464 2.38681L14.9464 4.38681L14.9667 4.40703V4.44062L15 4.47389V4.50703L15.0168 4.52381C15.012 4.53421 15.0073 4.54514 15.0029 4.5566L14.9464 4.61303L12.9464 6.61303C12.9039 6.65559 12.8632 6.66659 12.8333 6.66659C12.8109 6.66659 12.7589 6.66004 12.6711 6.59567C12.6415 6.55953 12.6333 6.52571 12.6333 6.49992C12.6333 6.47003 12.6443 6.42936 12.6869 6.38681L13.5536 5.52014ZM15.0261 4.43711L15.0333 4.43455L15.0318 4.45235C15.0298 4.4474 15.0279 4.44232 15.0261 4.43711ZM15.0403 4.43208L15.0678 4.42235C15.0608 4.43506 15.0538 4.4488 15.0472 4.46357C15.0444 4.45251 15.0421 4.44197 15.0403 4.43208ZM5.37077 5.65708C4.89665 5.01542 4.15826 4.66659 3.36667 4.66659H2.16667C2.09198 4.66659 2 4.60656 2 4.46659C2 4.37607 2.07614 4.29993 2.16667 4.29993H3.36667C4.22424 4.29993 5.01614 4.68107 5.56273 5.35315L5.37077 5.65708ZM14.9333 12.4404V12.6261L12.9464 14.613C12.9039 14.6556 12.8632 14.6666 12.8333 14.6666C12.8109 14.6666 12.7589 14.66 12.6711 14.5957C12.6415 14.5595 12.6333 14.5257 12.6333 14.4999C12.6333 14.47 12.6443 14.4294 12.6869 14.3868L13.5536 13.5201L14.4071 12.6666H13.2H11.3C10.4446 12.6666 9.65461 12.2874 9.10817 11.6186L9.3199 11.2967C9.79364 11.9465 10.5365 12.2999 11.3333 12.2999H13.2333H14.4404L13.5869 11.4464L12.7202 10.5797C12.6777 10.5371 12.6667 10.4965 12.6667 10.4666C12.6667 10.4367 12.6777 10.396 12.7202 10.3535C12.7628 10.3109 12.8034 10.2999 12.8333 10.2999C12.8632 10.2999 12.9039 10.3109 12.9464 10.3535L14.9333 12.3404V12.4404Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 						</svg>
 					</div>
-					<div onClick={() => prevSong(songId, setSongId, playlist)} className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
+					<div onClick={() => prevSong(setSongId)} className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
 							<path d="M4.66667 9.35662V14.8333C4.66667 14.9239 4.59053 15 4.5 15H2.5C2.40948 15 2.33334 14.9239 2.33334 14.8333V2.16667C2.33334 2.07614 2.40948 2 2.5 2H4.5C4.59053 2 4.66667 2.07614 4.66667 2.16667V7.61005V8.04853V8.91813V9.35662ZM5.53919 8.58462L5.44851 8.48333L5.53919 8.38204C5.54895 8.37114 5.56137 8.36001 5.57725 8.34943L5.57727 8.34945L5.58201 8.34622L14.4153 2.31288L14.427 2.30492L14.4382 2.29631C14.4678 2.27354 14.4913 2.26783 14.5087 2.26674C14.5285 2.26551 14.5527 2.26985 14.5781 2.28334C14.6301 2.31093 14.6667 2.36413 14.6667 2.43333V14.5667C14.6667 14.6359 14.6301 14.6891 14.5781 14.7167C14.5527 14.7301 14.5285 14.7345 14.5087 14.7333C14.4913 14.7322 14.4678 14.7265 14.4382 14.7037L14.4275 14.6955L14.4164 14.6878L5.58307 8.62118L5.5831 8.62114L5.57725 8.61724C5.56137 8.60666 5.54895 8.59553 5.53919 8.58462Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 						</svg>
@@ -281,7 +302,7 @@ export default function Player({ isStarted, setIsStarted }) {
 							</svg>
 						)}
 					</div>
-					<div onClick={() => nextSong(songId, setSongId, playlist)} className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
+					<div onClick={() => nextSong(setSongId)} className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
 							<path d="M11.4607 8.38191L11.5514 8.48333L11.4607 8.58475C11.4511 8.5955 11.4387 8.60661 11.4228 8.61723L11.4227 8.61719L11.4169 8.62118L2.5836 14.6878L2.57249 14.6955L2.56181 14.7037C2.53221 14.7265 2.50874 14.7322 2.49134 14.7333C2.47152 14.7345 2.44728 14.7301 2.42185 14.7167C2.36986 14.6891 2.33333 14.6359 2.33333 14.5667V2.43333C2.33333 2.36413 2.36986 2.31093 2.42185 2.28334C2.44728 2.26985 2.47152 2.26551 2.49134 2.26674C2.50874 2.26783 2.53221 2.27354 2.56181 2.29631L2.573 2.30492L2.58465 2.31288L11.418 8.34622L11.418 8.34624L11.4228 8.34944C11.4387 8.36006 11.4511 8.37117 11.4607 8.38191ZM12.3333 8.04853V7.60937V2.16667C12.3333 2.07614 12.4095 2 12.5 2H14.5C14.5905 2 14.6667 2.07614 14.6667 2.16667V14.8333C14.6667 14.9239 14.5905 15 14.5 15H12.5C12.4095 15 12.3333 14.9239 12.3333 14.8333V9.35731V8.91813V8.04853Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 						</svg>

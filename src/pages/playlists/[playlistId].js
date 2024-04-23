@@ -112,7 +112,20 @@ export default function Home() {
 														<div
 															className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer"
 															onClick={() => {
-																localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: track.track_public_id, playlist: { name: playlist.playlist.name, list: playlist.tracks.map((track) => track.track_public_id) } }));
+																const trackIds = playlist.tracks.map((track) => track.track_public_id);
+
+																localStorage.setItem(
+																	'songData',
+																	JSON.stringify({
+																		status: 'play',
+																		songId: track.track_public_id,
+																		playlist: {
+																			name: playlist.playlist.name,
+																			list: trackIds,
+																			currentIndex: index,
+																		},
+																	})
+																);
 																setIsStarted(true);
 															}}>
 															<p className="text-base opacity-100 transition-opacity">{index + 1}</p>
