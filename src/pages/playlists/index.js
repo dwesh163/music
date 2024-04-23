@@ -4,28 +4,38 @@ import { useEffect, useState } from 'react';
 import Player from '@/components/player';
 import Menu from '@/components/menu';
 import Loading from '@/components/loading';
+import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
-export default function Home() {
+export default function PlayList() {
 	const { data: session, status } = useSession();
+	const router = useRouter();
 
-	const [isLoading, setIsLoading] = useState(false);
-	const [playlists, setPlaylists] = useState({});
+	const [isLoading, setIsLoading] = useState(true);
+	const [isStarted, setIsStarted] = useState(false);
+	const [playlists, setPlaylists] = useState(false);
+
+	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleMenu = () => {
+		setIsOpen(!isOpen);
+	};
 
 	useEffect(() => {
-		setIsLoading(true);
-		const fetchData = async () => {
-			try {
-				const response = await fetch('/api/playlist');
-				const playlistsData = await response.json();
+		fetch('/api/playlist')
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then((playlistsData) => {
 				setPlaylists(playlistsData);
 				setIsLoading(false);
-			} catch (error) {
-				console.error('Error fetching audio data:', error);
-			}
-		};
-
-		fetchData();
+			})
+			.catch((error) => {
+				console.error('Error fetching playlist data:', error);
+			});
 	}, []);
 
 	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
@@ -48,59 +58,40 @@ export default function Home() {
 			</Head>
 			<main className="w-screen h-screen">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
-					<Player songId={'0dea8019-26ff-49b1-b704-c89a78a5c6da'} />
-					<Menu />
+					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
+					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div className="w-full h-full overflow-hidden">
-						<div className="w-full p-7 pb-0">
-							<h1 class=" text-3xl mb-0 font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-6xl dark:text-white">Playlists</h1>
-							<p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">Yours playlists</p>
+						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
+							<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">PlayLists</h1>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={toggleMenu} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative cursor-pointer sm:hidden" preserveAspectRatio="none">
+								<path d="M6.5 12C6.5 12.5523 6.05228 13 5.5 13C4.94772 13 4.5 12.5523 4.5 12C4.5 11.4477 4.94772 11 5.5 11C6.05228 11 6.5 11.4477 6.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+								<path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+								<path d="M19.5 12C19.5 12.5523 19.0523 13 18.5 13C17.9477 13 17.5 12.5523 17.5 12C17.5 11.4477 17.9477 11 18.5 11C19.0523 11 19.5 11.4477 19.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+							</svg>
 						</div>
-						<div className="px-7">
-							<div class="relative overflow-x-auto">
-								<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-									<thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
-										<tr>
-											<th scope="col" class="px-6 py-3">
-												Product name
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Color
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Category
-											</th>
-											<th scope="col" class="px-6 py-3">
-												Price
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="bg-white dark:bg-gray-800">
-											<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Apple MacBook Pro 17"
-											</th>
-											<td class="px-6 py-4">Silver</td>
-											<td class="px-6 py-4">Laptop</td>
-											<td class="px-6 py-4">$2999</td>
-										</tr>
-										<tr class="bg-white dark:bg-gray-800">
-											<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Microsoft Surface Pro
-											</th>
-											<td class="px-6 py-4">White</td>
-											<td class="px-6 py-4">Laptop PC</td>
-											<td class="px-6 py-4">$1999</td>
-										</tr>
-										<tr class="bg-white dark:bg-gray-800">
-											<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												Magic Mouse 2
-											</th>
-											<td class="px-6 py-4">Black</td>
-											<td class="px-6 py-4">Accessories</td>
-											<td class="px-6 py-4">$99</td>
-										</tr>
-									</tbody>
-								</table>
+
+						<div className="sm:px-7 px-4 overflow-y-scroll">
+							<div className="w-full py-3">
+								<div className="relative overflow-x-auto">
+									<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+										<thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
+											<tr>
+												<th scope="col" className="px-6 py-3">
+													Name
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{playlists.map((playlist, index) => (
+												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer" onClick={() => router.push('/playlists/' + playlist.id)}>
+													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+														{playlist.name}
+													</th>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
