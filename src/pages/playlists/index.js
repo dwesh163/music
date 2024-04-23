@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Player from '@/components/player';
 import Menu from '@/components/menu';
 import Loading from '@/components/loading';
+import packageJson from '/package.json';
 
 export default function Home() {
 	const { data: session, status } = useSession();
@@ -30,6 +31,12 @@ export default function Home() {
 	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
 		return <Loading status={isLoading ? 'loading' : status} />;
 	}
+
+	useEffect(() => {
+		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+			router.push('/auth/signin?callbackUrl=' + router.asPath);
+		}
+	});
 
 	return (
 		<>
