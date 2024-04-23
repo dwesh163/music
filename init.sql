@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
                                      user_provider VARCHAR(30) NOT NULL,
                                      user_company VARCHAR(30) NOT NULL,
                                      user_name VARCHAR(150) NOT NULL,
+                                     user_version VARCHAR(10) NOT NULL,
                                      PRIMARY KEY (user_id)
 );
 

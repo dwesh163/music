@@ -74,6 +74,10 @@ export default function Tracks() {
 		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
+	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	}
+
 	return (
 		<>
 			<Head>
