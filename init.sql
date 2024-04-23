@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
                                      user_company VARCHAR(30) NOT NULL,
                                      user_name VARCHAR(150) NOT NULL,
                                      user_version VARCHAR(10) NOT NULL,
+                                     user_access BOOLEAN NOT NULL,
                                      PRIMARY KEY (user_id)
 );
 
