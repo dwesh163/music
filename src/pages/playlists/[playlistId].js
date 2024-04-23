@@ -68,7 +68,11 @@ export default function Home() {
 						{playlist.error ? (
 							<div className="h-[calc(100vh-101px)] w-full flex items-center justify-center text-white">Playlist not Found</div>
 						) : (
-							<div className="w-full h-full overflow-hidden">
+							<div
+								className="w-full h-full overflow-hidden"
+								onClick={() => {
+									if (isOpen) setIsOpen(false);
+								}}>
 								<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
 									<div>
 										<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">{playlist.playlist.name}</h1>
