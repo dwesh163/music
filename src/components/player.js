@@ -1,17 +1,31 @@
 import { useRouter } from 'next/router';
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function Player({ songId, setSongId, playlist }) {
+export default function Player() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [audioData, setAudioData] = useState(null);
+
+	const [songId, setSongId] = useState('');
+	const [playlist, setPlaylist] = useState('');
 	const audioRef = useRef();
 	const progressRef = useRef();
 
 	const router = useRouter();
 
-	const fetchAudioData = async () => {
+	const playHandler = () => {
+		audioRef.current.play();
+		setIsPlaying(true);
+	};
+
+	const pauseHandler = () => {
+		audioRef.current.pause();
+		setIsPlaying(false);
+	};
+
+	const fetchAudioData = async (songId) => {
+		pauseHandler();
 		setIsLoading(true);
 		if (songId == '') {
 			return;
@@ -52,16 +66,6 @@ export default function Player({ songId, setSongId, playlist }) {
 				],
 			});
 
-			const playHandler = () => {
-				audioRef.current.play();
-				setIsPlaying(true);
-			};
-
-			const pauseHandler = () => {
-				audioRef.current.pause();
-				setIsPlaying(false);
-			};
-
 			navigator.mediaSession.setActionHandler('play', playHandler);
 			navigator.mediaSession.setActionHandler('pause', pauseHandler);
 			navigator.mediaSession.setActionHandler('stop', pauseHandler);
@@ -71,8 +75,16 @@ export default function Player({ songId, setSongId, playlist }) {
 	}, [audioData]);
 
 	useEffect(() => {
-		fetchAudioData();
-	}, [songId]);
+		localStorage.setItem('songData', JSON.stringify({ status: 'load' }));
+	}, []);
+
+	useEffect(() => {
+		const songData = JSON.parse(localStorage.getItem('songData'));
+		if (songData?.status == 'play') {
+			setSongId(songData.songId);
+			fetchAudioData(songData.songId);
+		}
+	}, [localStorage.getItem('songData')]);
 
 	const togglePlay = () => {
 		if (audioData.track.src == ' ') {
@@ -207,7 +219,7 @@ export default function Player({ songId, setSongId, playlist }) {
 						<p className="flex gap-2 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">Loading</p>
 					)}
 
-					<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {playlist != undefined ? (playlist.error != undefined ? playlist.playlist.name : '') : ''}</p>
+					<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {JSON.parse(localStorage.getItem('songData'))?.playlist?.name}</p>
 				</div>
 			</div>
 			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-4 md:px-8">
