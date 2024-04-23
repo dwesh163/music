@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router';
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function Player() {
+export default function Player({ isStarted, setIsStarted }) {
 	const [isLoading, setIsLoading] = useState(true);
-	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [audioData, setAudioData] = useState(null);
-
+	const [isPlaying, setIsPlaying] = useState(false);
 	const [songId, setSongId] = useState('');
 	const [playlist, setPlaylist] = useState('');
 	const audioRef = useRef();
@@ -75,16 +74,21 @@ export default function Player() {
 	}, [audioData]);
 
 	useEffect(() => {
-		localStorage.setItem('songData', JSON.stringify({ status: 'load' }));
+		const songData = JSON.parse(localStorage.getItem('songData'));
+		if (songData?.status != 'play') {
+			localStorage.setItem('songData', JSON.stringify({ status: 'load' }));
+		}
 	}, []);
 
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
-		if (songData?.status == 'play') {
+		if (isStarted || songData?.status == 'play') {
+			setCurrentTime(localStorage.getItem('currentTime'));
 			setSongId(songData.songId);
 			fetchAudioData(songData.songId);
+			setIsStarted(false);
 		}
-	}, [localStorage.getItem('songData')]);
+	}, [isStarted]);
 
 	const togglePlay = () => {
 		if (audioData.track.src == ' ') {
@@ -96,7 +100,10 @@ export default function Player() {
 	};
 
 	const handleTimeUpdate = () => {
-		if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
+		if (audioRef.current) {
+			setCurrentTime(audioRef.current.currentTime);
+			localStorage.setItem('currentTime', currentTime);
+		}
 	};
 
 	const handleProgressClick = (e) => {
