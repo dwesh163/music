@@ -48,11 +48,9 @@ export default function Home() {
 		return <Loading status={isLoading ? 'loading' : error != '' ? 'error' : status} error={error} />;
 	}
 
-	useEffect(() => {
-		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-			router.push('/auth/signin?callbackUrl=' + router.asPath);
-		}
-	});
+	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	}
 
 	return (
 		<>

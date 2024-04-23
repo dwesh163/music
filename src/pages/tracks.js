@@ -72,11 +72,9 @@ export default function Tracks() {
 		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
-	useEffect(() => {
-		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-			router.push('/auth/signin?callbackUrl=' + router.asPath);
-		}
-	});
+	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	}
 
 	return (
 		<>
