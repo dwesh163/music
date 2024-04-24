@@ -23,8 +23,46 @@ export default function PlayList() {
 		setIsOpen(!isOpen);
 	};
 
+	const downloadSong = async (id) => {
+		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
+		const tracksData = await response.json();
+		const trackIndex = artist.songs.tracks.findIndex((track) => track.id === id);
+
+		if (tracksData.download === 'true') {
+			if (trackIndex !== -1) {
+				const updatedTracks = [...artist.songs.tracks];
+				updatedTracks[trackIndex].loading = false;
+				setArtist((prevArtist) => ({
+					...prevArtist,
+					songs: {
+						...prevArtist.songs,
+						tracks: updatedTracks,
+					},
+				}));
+			}
+			localStorage.setItem('songData', JSON.stringify({ status: 'play', songId: tracksData.id, playlist: { name: 'search' } }));
+			localStorage.setItem('currentTime', 0);
+			setIsStarted(true);
+		} else if (tracksData.download === 'progress') {
+			if (trackIndex !== -1) {
+				const updatedTracks = [...artist.songs.tracks];
+				updatedTracks[trackIndex].loading = true;
+				setArtist((prevArtist) => ({
+					...prevArtist,
+					songs: {
+						...prevArtist.songs,
+						tracks: updatedTracks,
+					},
+				}));
+			}
+
+			setTimeout(() => {
+				downloadSong(id);
+			}, 8000);
+		}
+	};
+
 	useEffect(() => {
-		console.log(router.query.artistId);
 		if (!router.query.artistId) {
 			return;
 		}
