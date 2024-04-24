@@ -11,14 +11,32 @@ export default function PlayList() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [isStarted, setIsStarted] = useState(false);
+	const [playlists, setPlaylists] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
 	};
+
+	useEffect(() => {
+		fetch('/api/artists/')
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then((playlistsData) => {
+				setPlaylists(playlistsData);
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error('Error fetching playlist data:', error);
+			});
+	}, []);
 
 	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
 		return <Loading status={isLoading ? 'loading' : status} />;
@@ -46,7 +64,7 @@ export default function PlayList() {
 							if (isOpen) setIsOpen(false);
 						}}>
 						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
-							<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">Artists</h1>
+							<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">PlayLists</h1>
 							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={toggleMenu} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative cursor-pointer sm:hidden" preserveAspectRatio="none">
 								<path d="M6.5 12C6.5 12.5523 6.05228 13 5.5 13C4.94772 13 4.5 12.5523 4.5 12C4.5 11.4477 4.94772 11 5.5 11C6.05228 11 6.5 11.4477 6.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 								<path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
@@ -56,7 +74,26 @@ export default function PlayList() {
 
 						<div className="sm:px-7 px-4 overflow-y-scroll">
 							<div className="w-full py-3">
-								<span className="text-white">Artists</span>
+								<div className="relative overflow-x-auto">
+									<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+										<thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
+											<tr>
+												<th scope="col" className="px-6 py-3">
+													Name
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{playlists.map((playlist, index) => (
+												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer" onClick={() => router.push('/playlists/' + playlist.id)}>
+													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+														{playlist.name}
+													</th>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
