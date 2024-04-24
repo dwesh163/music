@@ -179,7 +179,7 @@ export default function Tracks() {
 														)}
 													</td>
 													<td scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium whitespace-nowrap text-white overflow-hidden">
-														<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track.album.images[0].url} alt={track.album.album_name} />
+														<img className="md:w-14 md:h-14 w-16 h-16 rounded" src={track?.album?.images[0]?.url} alt={track.album.album_name} />
 														<div>
 															<p>{track.name}</p>
 															<p className="flex flex-wrap gap-1">

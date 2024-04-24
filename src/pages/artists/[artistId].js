@@ -114,8 +114,8 @@ export default function PlayList() {
 							onClick={() => {
 								if (isOpen) setIsOpen(false);
 							}}>
-							<div class="container w-full h-32 sm:h-64 relative">
-								<img src={artist.artist.images[0].url} class="absolute inset-0 w-full h-full object-cover" />
+							<div class={'container w-full relative' + (artist?.artist?.images[0]?.url ? ' h-32 sm:h-64' : '')}>
+								{artist?.artist?.images[0]?.url ? <img src={artist.artist.images[0].url} class="absolute inset-0 w-full h-full object-cover" /> : <></>}
 								<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between relative z-10">
 									<div className="flex items-center gap-2">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-6 h-6 visble sm:hidden sm:hidden cursor-pointer" onClick={() => window.history.back()}>
