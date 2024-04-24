@@ -117,7 +117,13 @@ export default function PlayList() {
 							<div class="container w-full h-32 sm:h-64 relative">
 								<img src={artist.artist.images[0].url} class="absolute inset-0 w-full h-full object-cover" />
 								<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between relative z-10">
-									<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl z-10 text-white">{artist.artist.name}</h1>
+									<div className="flex items-center gap-2">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-6 h-6 visble sm:hidden sm:hidden cursor-pointer" onClick={() => window.history.back()}>
+											<path fill="#ffffff" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+										</svg>
+										<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl z-10 text-white">{artist.artist.name}</h1>
+									</div>
+
 									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={toggleMenu} className="flex-grow-0 flex-shrink-0 w-6 h-6 relative cursor-pointer sm:hidden" preserveAspectRatio="none">
 										<path d="M6.5 12C6.5 12.5523 6.05228 13 5.5 13C4.94772 13 4.5 12.5523 4.5 12C4.5 11.4477 4.94772 11 5.5 11C6.05228 11 6.5 11.4477 6.5 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 										<path d="M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
@@ -175,9 +181,9 @@ export default function PlayList() {
 															<p className="flex flex-wrap gap-1">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
-																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.public_id)}>
+																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
 																			{item.name}
-																			{index !== track.artists.slice(0, 2).length - 1 && <span className="sm:visble hidden">,</span>}
+																			{index !== track.artists.slice(0, 2).length - 1 && <span className="visble">,</span>}
 																		</span>
 																	</span>
 																))}
