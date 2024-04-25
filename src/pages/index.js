@@ -25,6 +25,10 @@ export default function PlayList() {
 	};
 
 	useEffect(() => {
+		if (JSON.parse(localStorage.getItem('recommendations'))) {
+			setRecommandations(JSON.parse(localStorage.getItem('recommendations')));
+			return;
+		}
 		fetch('/api/home')
 			.then((response) => {
 				if (!response.ok) {
@@ -35,6 +39,7 @@ export default function PlayList() {
 			.then((data) => {
 				console.log(data.recommendations.tracks);
 				setRecommandations(data.recommendations.tracks);
+				localStorage.setItem('recommendations', JSON.stringify(data.recommendations.tracks));
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -82,7 +87,7 @@ export default function PlayList() {
 										<p className="absolute left-0 top-1.5 text-lg font-semibold text-left text-[#fcfcfc]">For you</p>
 									</div>
 									<div className="sm:h-[383px] h-[170px] w-full overflow-scroll">
-										<div className="flex sm:w-[2770px] w-[1230px] gap-6">
+										<div className="flex sm:w-[2770px] w-[1215px] gap-6">
 											{recommandations.map((track, index) => (
 												<div key={index} className="sm:w-[255px] w-[100px] h-[165px] sm:h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
 													<div className="sm:w-[255px] w-[100px] h-[100px] sm:h-[257px] absolute left-0 top-0 overflow-hidden">
@@ -96,7 +101,7 @@ export default function PlayList() {
 															<p className="absolute left-px top-0 sm:text-[10px] text-[7px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
 															<p className="absolute left-px sm:top-5 top-3 sm:text-lg text-[0.6rem] font-semibold text-left text-[#fcfcfc]">{track.name.slice(0, 23)}</p>
 
-															<sapn className="w-[197px] absolute flex gap-1 left-px sm:top-[47px] top-[25px] sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
+															<span className="w-[197px] absolute flex gap-1 left-px sm:top-[47px] top-[25px] sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
 																		<span className={'cursor-pointer  ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
@@ -105,7 +110,7 @@ export default function PlayList() {
 																		</span>
 																	</span>
 																))}
-															</sapn>
+															</span>
 														</div>
 													</div>
 													<div className="w-10 h-10 absolute left-[199px] top-[237px] overflow-hidden rounded-[999px] bg-[#fcfcfc]" style={{ boxShadow: '0px 2.200000047683716px 5.5px 0 rgba(0,0,0,0.1)' }}>
@@ -126,14 +131,14 @@ export default function PlayList() {
 										<div className="flex justify-center items-center w-6 absolute left-[1104px] top-8 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
 											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M6.00001 13.2L11.2 7.99995L6.00001 2.79995" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
+													<path d="M6.00001 13.2L11.2 7.99995L6.00001 2.79995" stroke="#FCFCFC" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="round" strokeLinejoin="round" />
 												</svg>
 											</div>
 										</div>
 										<div className="flex justify-center items-center w-6 absolute left-[1048px] top-2 opacity-60 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
 											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M9.99999 2.80005L4.79999 8.00005L9.99999 13.2" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
+													<path d="M9.99999 2.80005L4.79999 8.00005L9.99999 13.2" stroke="#FCFCFC" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="round" strokeLinejoin="round" />
 												</svg>
 											</div>
 										</div>
@@ -247,14 +252,14 @@ export default function PlayList() {
 										<div className="flex justify-center items-center w-6 absolute left-[1104px] top-8 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
 											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M6.00001 13.2L11.2 7.99995L6.00001 2.79995" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
+													<path d="M6.00001 13.2L11.2 7.99995L6.00001 2.79995" stroke="#FCFCFC" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="round" strokeLinejoin="round" />
 												</svg>
 											</div>
 										</div>
 										<div className="flex justify-center items-center w-6 absolute left-[1048px] top-2 opacity-60 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
 											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
 												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M9.99999 2.80005L4.79999 8.00005L9.99999 13.2" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
+													<path d="M9.99999 2.80005L4.79999 8.00005L9.99999 13.2" stroke="#FCFCFC" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="round" strokeLinejoin="round" />
 												</svg>
 											</div>
 										</div>
