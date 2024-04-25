@@ -247,7 +247,7 @@ export default function Player({ isStarted, setIsStarted }) {
 					{audioData ? (
 						<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
 							{audioData.artists.slice(0, 2).map((item, index) => (
-								<span key={index} onClick={() => router.push('/artists' + item.id)}>
+								<span key={index} className="cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
 									{item.name}
 									{index !== audioData.artists.length - 1 && <span>,</span>}
 								</span>
@@ -267,12 +267,12 @@ export default function Player({ isStarted, setIsStarted }) {
 						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData.track.name}</p>
 						<p className="flex gap-0.5 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
 							{audioData?.artists?.slice(0, 1).map((item, index) => (
-								<span key={index} className="font-normal" onClick={() => router.push('/artists' + item.id)}>
+								<span key={index} className="font-normal cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
 									{item.name}
 									{index !== audioData.artists.length - 1 && <span>,</span>}
 								</span>
 							))}
-							{audioData?.artists?.length > 2 && <span className="font-normal" onClick={() => router.push('/artists')}>{`${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
+							{audioData?.artists?.length > 2 && <span className="font-normal">{`${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
 						</p>
 						<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 ml-1 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => Like(songId)}>
 							<svg width="16" height="17" viewBox="0 0 16 17" fill={audioData?.track.isLiked ? '#fff' : 'none'} xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
