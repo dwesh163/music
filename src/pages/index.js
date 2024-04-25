@@ -82,23 +82,22 @@ export default function PlayList() {
 
 						<div className="sm:px-7 px-4 overflow-scroll">
 							<div className="flex flex-col justify-start items-center w-full gap-6 pb-32">
-								<div className="flex-grow-0 flex-shrink-0 w-full sm:h-[464px] h-[164px] relative">
+								<div className="flex-grow-0 flex-shrink-0 w-full relative">
 									<div className="w-full h-[38px] overflow-hidden">
 										<p className="text-lg font-semibold text-left text-[#fcfcfc] mt-1.5">For you</p>
 									</div>
-									<div className="sm:h-[383px] h-[170px] w-full overflow-scroll">
-										<div className="flex sm:w-[2770px] w-[1075px] sm:gap-6 gap-2">
+									<div className="sm:h-[383px] w-full overflow-scroll">
+										<div className="flex sm:w-[2770px] w-[1575px] sm:gap-6 gap-2">
 											{recommandations.map((track, index) => (
-												<div key={index} className="sm:w-[255px] w-[100px] h-[165px] sm:h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
-													<div className="sm:w-[255px] w-[100px] h-[100px] sm:h-[257px] overflow-hidden">
-														<img src={track.album.images[0].url} className="sm:w-[255px] w-[100px] sm:h-[257px] h-[100px] object-cover" />
+												<div key={index} className="sm:w-[255px] w-[150px] h-[210px] sm:h-[350px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
+													<div className="sm:w-[255px] w-[150px] overflow-hidden">
+														<img src={track.album.images[0].url} className="sm:w-[255px] w-[150px] sm:h-[257px] h-[150px] object-cover" />
 													</div>
-													<div className="sm:w-[255px] w-[100px] h-[118px] h-[100px] overflow-hidden sm:p-2 p-1">
-														<div className="w-[228px] h-[88px] overflow-hidden">
-															<p className="sm:text-[10px] text-[7px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
-															<p className="sm:text-[1.1rem] text-[0.6rem] w-full font-semibold text-left text-[#fcfcfc] overflow-x-auto whitespace-nowrap">{track.name}</p>
-
-															<span className="w-[197px] flex gap-1 sm:text-sm text-[0.5rem] font-semibold text-left text-[#9898a6]">
+													<div className="sm:w-[255px] w-[150px] sm:h-[100px] h-[70px] overflow-hidden sm:p-2 p-1">
+														<div className="w-[228px] overflow-hidden">
+															<p className="sm:text-[10px] text-[9px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
+															<p className="sm:text-[1.1rem] text-[0.7rem] w-full font-semibold text-left text-[#fcfcfc] overflow-x-auto whitespace-nowrap">{track.name}</p>
+															<span className="w-[197px] flex gap-1 sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
 																		<span className={'cursor-pointer ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
@@ -127,7 +126,7 @@ export default function PlayList() {
 								</div>
 
 								<div className="flex-grow-0 flex-shrink-0 w-[1156px] h-[360px] relative overflow-hidden">
-									<div className="w-[1104px] h-[38px] absolute left-8 top-0 overflow-hidden">
+									<div className="w-[1104px] h-[38px] left-8 top-0 overflow-hidden">
 										<p className="absolute left-0 top-1.5 text-lg font-semibold text-left text-[#fcfcfc]">Section Title </p>
 										<div className="flex justify-center items-center w-6 absolute left-[1104px] top-8 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
 											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
