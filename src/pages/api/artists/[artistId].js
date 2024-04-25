@@ -2,8 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
 import SpotifyWebApi from 'spotify-web-api-node';
+import { authOptions } from '../auth/[...nextauth]';
 
 async function connectMySQL() {
 	try {
@@ -41,7 +41,7 @@ export default async function Comments(req, res) {
 			function (data) {
 				if (data.body) {
 					artistData.artist = data.body;
-					spotifyApi.getArtistTopTracks(artist ? artist.spotify_id : req.query.artistId, 'US').then(
+					spotifyApi.getArtistTopTracks(artist ? artist.spotify_id : req.query.artistId, 'FR').then(
 						function (data) {
 							if (data.body) {
 								artistData.songs = data.body;
@@ -64,7 +64,7 @@ export default async function Comments(req, res) {
 			}
 		);
 	} else {
-		res.setHeader('Allow', ['POST', 'GET']);
+		res.setHeader('Allow', ['GET']);
 		res.status(405).send({ error: `The ${req.method} method is not allowed` });
 	}
 }
