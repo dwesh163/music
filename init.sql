@@ -92,3 +92,23 @@ CREATE TABLE IF NOT EXISTS comments (
                                             Comments_user INT REFERENCES users(user_id),
                                             PRIMARY KEY (comments_id)
 );
+
+CREATE VIEW app_info AS
+SELECT
+    (SELECT COUNT(*) FROM artists) AS total_artists,
+    (SELECT COUNT(*) FROM playlists) AS total_playlists,
+    (SELECT AVG(playlist_count) FROM (SELECT COUNT(*) AS playlist_count FROM playlists GROUP BY playlist_user) AS sub) AS avg_playlists_per_user,
+    (SELECT COUNT(*) FROM users) AS total_users,
+    (SELECT COUNT(*) FROM tracks) AS total_tracks,
+    (SELECT COUNT(*) FROM albums) AS total_albums,
+    (SELECT COUNT(*) FROM comments) AS total_comments,
+    (SELECT COUNT(DISTINCT artist_id) FROM album_artist) AS total_unique_album_artists,
+    (SELECT COUNT(DISTINCT artist_id) FROM track_artist) AS total_unique_track_artists,
+    (SELECT COUNT(*) FROM playlist_tracks) AS total_playlist_tracks,
+    (SELECT COUNT(DISTINCT album_id) FROM album_artist) AS total_albums_with_artists,
+    (SELECT COUNT(DISTINCT track_id) FROM track_artist) AS total_tracks_with_artists,
+    (SELECT AVG(total_tracks) FROM (SELECT COUNT(*) AS total_tracks FROM albums GROUP BY release_date) AS avg_tracks_per_album) AS avg_tracks_per_album,
+    (SELECT AVG(total_artists) FROM (SELECT COUNT(DISTINCT artist_id) AS total_artists FROM album_artist GROUP BY album_id) AS avg_artists_per_album),
+    (SELECT AVG(total_tracks) FROM (SELECT COUNT(*) AS total_tracks FROM tracks GROUP BY release_date) AS avg_tracks_per_release_date),
+    (SELECT AVG(total_artists) FROM (SELECT COUNT(DISTINCT artist_id) AS total_artists FROM track_artist GROUP BY track_id) AS avg_artists_per_track),
+    (SELECT AVG(track_count) FROM (SELECT COUNT(*) AS track_count FROM playlist_tracks GROUP BY playlist_id) AS avg_tracks_per_playlist);
