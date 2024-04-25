@@ -245,7 +245,7 @@ export default function Player({ isStarted, setIsStarted }) {
 						</div>
 					</div>
 					{audioData ? (
-						<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
+						<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65] flex gap-1">
 							{audioData.artists.slice(0, 2).map((item, index) => (
 								<span key={index} className="cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
 									{item.name}
@@ -265,7 +265,7 @@ export default function Player({ isStarted, setIsStarted }) {
 				{audioData ? (
 					<div className="flex justify-start sm:hidden items-center flex-grow-0 flex-shrink-0 relative gap-1 sm:mb-0 mb-1">
 						<p className="flex-grow-0 flex-shrink-0 text-sm font-semibold text-left text-[#fcfcfc]">{audioData.track.name}</p>
-						<p className="flex gap-0.5 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">
+						<p className="flex gap-0.5 text-sm font-semibold text-left text-[#fcfcfc]/[0.65] flex gap-1">
 							{audioData?.artists?.slice(0, 2).map((item, index) => (
 								<span key={index} className="font-normal cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
 									{item.name}
