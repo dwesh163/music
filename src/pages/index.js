@@ -87,18 +87,18 @@ export default function PlayList() {
 										<p className="text-lg font-semibold text-left text-[#fcfcfc] mt-1.5">For you</p>
 									</div>
 									<div className="sm:h-[383px] h-[170px] w-full overflow-scroll">
-										<div className="flex sm:w-[2770px] w-[1215px] gap-6">
+										<div className="flex sm:w-[2770px] w-[1075px] sm:gap-6 gap-2">
 											{recommandations.map((track, index) => (
 												<div key={index} className="sm:w-[255px] w-[100px] h-[165px] sm:h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
 													<div className="sm:w-[255px] w-[100px] h-[100px] sm:h-[257px] overflow-hidden">
 														<img src={track.album.images[0].url} className="sm:w-[255px] w-[100px] sm:h-[257px] h-[100px] object-cover" />
 													</div>
-													<div className="sm:w-[255px] w-[100px] h-[118px] h-[100px] overflow-hidden p-2">
+													<div className="sm:w-[255px] w-[100px] h-[118px] h-[100px] overflow-hidden sm:p-2 p-1">
 														<div className="w-[228px] h-[88px] overflow-hidden">
 															<p className="sm:text-[10px] text-[7px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
-															<p className="sm:text-[1.1rem] text-[0.8rem] w-full font-semibold text-left text-[#fcfcfc] overflow-x-auto whitespace-nowrap">{track.name}</p>
+															<p className="sm:text-[1.1rem] text-[0.6rem] w-full font-semibold text-left text-[#fcfcfc] overflow-x-auto whitespace-nowrap">{track.name}</p>
 
-															<span className="w-[197px] flex gap-1 sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
+															<span className="w-[197px] flex gap-1 sm:text-sm text-[0.5rem] font-semibold text-left text-[#9898a6]">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
 																		<span className={'cursor-pointer ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
