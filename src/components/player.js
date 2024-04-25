@@ -224,7 +224,7 @@ export default function Player({ isStarted, setIsStarted }) {
 	};
 
 	return (
-		<div className="flex justify-start items-center w-full absolute left-0 bottom-0 overflow-hidden md:gap-28 px-4 py-3.5 bg-[#1f1f22] z-20 shadow-2xl">
+		<div className="flex justify-start items-center w-full absolute left-0 top-[calc(100vh-100px)] overflow-hidden md:gap-28 px-4 py-3.5 bg-[#1f1f22] z-20 shadow-2xl">
 			<div className="hidden sm:flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-4 w-72">
 				<audio ref={audioRef} src={audioData ? audioData.track.src : ''} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong(setSongId)}></audio>
 				<img src={audioData ? audioData.album.image : ''} className="flex-grow-0 flex-shrink-0 w-16 h-[65px] object-cover mt-2" />

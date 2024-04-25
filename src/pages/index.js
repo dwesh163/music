@@ -63,7 +63,7 @@ export default function PlayList() {
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<main className="w-screen h-screen">
+			<main className="">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
 					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
