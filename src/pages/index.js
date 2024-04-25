@@ -86,7 +86,7 @@ export default function PlayList() {
 									<div className="w-full h-[38px] overflow-hidden">
 										<p className="text-lg font-semibold text-left text-[#fcfcfc] mt-1.5">For you</p>
 									</div>
-									<div className="sm:h-[383px] w-full overflow-scroll">
+									<div className="w-full overflow-scroll">
 										<div className="flex sm:w-[2770px] w-[1575px] sm:gap-6 gap-2">
 											{recommandations.map((track, index) => (
 												<div key={index} className="sm:w-[255px] w-[150px] h-[210px] sm:h-[350px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
@@ -112,9 +112,9 @@ export default function PlayList() {
 															<img src={track.album.images[0].url} className="w-[274px] h-[237px] object-cover blur opacity-60" />
 														</div>
 													</div>
-													<div className="w-10 h-10 rounded-[999px] bg-[#fcfcfc]" style={{ boxShadow: '0px 2.200000047683716px 5.5px 0 rgba(0,0,0,0.1)' }}>
-														<div className="flex justify-start items-start w-4 h-4 gap-2.5">
-															<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
+													<div className="sm:w-10 sm:h-10 w-7 h-7 rounded-[999px] bg-[#fcfcfc] flex items-center justify-center left-[7rem] top-[136px] sm:left-48 sm:top-[236.5px] absolute" style={{ boxShadow: '0px 2.200000047683716px 5.5px 0 rgba(0,0,0,0.1)' }}>
+														<div className="flex sm:w-4 sm:h-4 sm:gap-2.5 sm:mt-[-2px] sm:ml-0 ml-[0.1rem] items-center justify-center">
+															<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative sm:w-4 sm:h-4 w-3 h-3" preserveAspectRatio="none">
 																<path d="M4.0836 14.1878L4.07249 14.1954L4.06181 14.2036C4.03221 14.2264 4.00874 14.2321 3.99134 14.2332C3.97153 14.2344 3.94728 14.2301 3.92186 14.2166C3.86986 14.189 3.83333 14.1358 3.83333 14.0666V1.93327C3.83333 1.86407 3.86987 1.81087 3.92186 1.78328C3.94728 1.76979 3.97153 1.76545 3.99134 1.76668C4.00874 1.76777 4.03221 1.77348 4.06181 1.79625L4.073 1.80486L4.08466 1.81282L12.918 7.84616L12.918 7.84618L12.9226 7.8493C12.9798 7.88739 13 7.93754 13 7.98327C13 8.029 12.9798 8.07916 12.9226 8.11725L12.9226 8.11721L12.9169 8.12112L4.0836 14.1878Z" fill="#171719" stroke="#171719" />
 															</svg>
 														</div>
