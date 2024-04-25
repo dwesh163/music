@@ -77,12 +77,12 @@ export default function PlayList() {
 
 						<div className="sm:px-7 px-4 overflow-scroll">
 							<div className="flex flex-col justify-start items-center w-full gap-6 pb-32">
-								<div className="flex-grow-0 flex-shrink-0 w-full h-[464px] relative">
+								<div className="flex-grow-0 flex-shrink-0 w-full sm:h-[464px] h-[164px] relative">
 									<div className="w-full h-[38px] top-0 overflow-hidden">
 										<p className="absolute left-0 top-1.5 text-lg font-semibold text-left text-[#fcfcfc]">For you</p>
 									</div>
-									<div className="h-[383px] w-full overflow-scroll">
-										<div className="flex w-[2770px] gap-6">
+									<div className="sm:h-[383px] h-[170px] w-full overflow-scroll">
+										<div className="flex sm:w-[2770px] w-[1230px] gap-6">
 											{recommandations.map((track, index) => (
 												<div key={index} className="sm:w-[255px] w-[100px] h-[165px] sm:h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
 													<div className="sm:w-[255px] w-[100px] h-[100px] sm:h-[257px] absolute left-0 top-0 overflow-hidden">
