@@ -80,42 +80,28 @@ export default function PlayList() {
 								<div className="flex-grow-0 flex-shrink-0 w-full h-[464px] relative">
 									<div className="w-full h-[38px] top-0 overflow-hidden">
 										<p className="absolute left-0 top-1.5 text-lg font-semibold text-left text-[#fcfcfc]">For you</p>
-										<div className="flex justify-center items-center w-6 absolute left-[1104px] top-8 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
-											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
-												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M6.00001 13.2L11.2 7.99995L6.00001 2.79995" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
-												</svg>
-											</div>
-										</div>
-										<div className="flex justify-center items-center w-6 absolute left-[1048px] top-2 opacity-60 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
-											<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
-												<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-													<path d="M9.99999 2.80005L4.79999 8.00005L9.99999 13.2" stroke="#FCFCFC" stroke-width={2} stroke-miterlimit={10} stroke-linecap="round" stroke-linejoin="round" />
-												</svg>
-											</div>
-										</div>
 									</div>
 									<div className="h-[383px] w-full overflow-scroll">
-										<div className="flex absolute gap-6">
+										<div className="flex w-[2770px] gap-6">
 											{recommandations.map((track, index) => (
-												<div key={index} className="w-[255px] h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
-													<div className="w-[255px] h-[257px] absolute left-0 top-0 overflow-hidden">
-														<img src={track.album.images[0].url} className="w-[255px] h-[257px] absolute left-[-1px] top-[-1px] object-cover" />
+												<div key={index} className="sm:w-[255px] w-[100px] h-[165px] sm:h-[375px] overflow-hidden rounded-lg" style={{ filter: 'drop-shadow(0px 8px 28px rgba(0,0,0,0.4))' }}>
+													<div className="sm:w-[255px] w-[100px] h-[100px] sm:h-[257px] absolute left-0 top-0 overflow-hidden">
+														<img src={track.album.images[0].url} className="sm:w-[255px] w-[100px] sm:h-[257px] h-[100px] absolute left-[-1px] top-[-1px] object-cover" />
 													</div>
-													<div className="w-[255px] h-[118px] absolute left-0 top-[257px] overflow-hidden">
+													<div className="sm:w-[255px] w-[100px] sm:h-[118px] h-[100px] absolute left-0 sm:top-[257px] top-[99px] overflow-hidden">
 														<div className="w-[266px] h-[266px] absolute left-[-6px] top-[-77px] opacity-40">
-															<img src={track.album.images[0].url} className="w-[274px] h-[237px] absolute left-[-3px] top-[-2px] object-cover blur" />
+															<img src={track.album.images[0].url} className="w-[274px] h-[237px] absolute left-[-3px] top-[-2px] object-cover blur opacity-60" />
 														</div>
-														<div className="w-[228px] h-[88px] absolute left-3.5 top-4 overflow-hidden">
-															<p className="absolute left-px top-0 text-[10px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
-															<p className="absolute left-px top-5 text-lg font-semibold text-left text-[#fcfcfc]">{track.name.slice(0, 23)}</p>
+														<div className="w-[228px] h-[88px] absolute sm:left-3.5 left-1 sm:top-4 top-2 overflow-hidden">
+															<p className="absolute left-px top-0 sm:text-[10px] text-[7px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
+															<p className="absolute left-px sm:top-5 top-3 sm:text-lg text-[0.6rem] font-semibold text-left text-[#fcfcfc]">{track.name.slice(0, 23)}</p>
 
-															<sapn className="w-[197px] absolute left-px top-[47px] text-sm font-semibold text-left text-[#9898a6]">
+															<sapn className="w-[197px] absolute flex gap-1 left-px sm:top-[47px] top-[25px] sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
-																		<span className={'cursor-pointer ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
+																		<span className={'cursor-pointer  ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
 																			{item.name}
-																			{index !== track.artists.slice(0, 2).length - 1 && <span className="sm:visble hidden">,</span>}
+																			{index !== track.artists.slice(0, 2).length - 1 && <span className="visble">,</span>}
 																		</span>
 																	</span>
 																))}
