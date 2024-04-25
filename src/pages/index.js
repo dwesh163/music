@@ -96,7 +96,7 @@ export default function PlayList() {
 													<div className="sm:w-[255px] w-[100px] h-[118px] h-[100px] overflow-hidden p-2">
 														<div className="w-[228px] h-[88px] overflow-hidden">
 															<p className="sm:text-[10px] text-[7px] font-semibold text-left uppercase text-[#ef2f62]">{forYouText[Math.floor(Math.random() * 4)].text}</p>
-															<p className="sm:text-[1.1rem] text-[0.8rem] font-semibold text-left text-[#fcfcfc]">{track.name.slice(0, 23)}</p>
+															<p className="sm:text-[1.1rem] text-[0.8rem] w-full font-semibold text-left text-[#fcfcfc] overflow-x-auto whitespace-nowrap">{track.name}</p>
 
 															<span className="w-[197px] flex gap-1 sm:text-sm text-[0.6rem] font-semibold text-left text-[#9898a6]">
 																{track.artists.slice(0, 2).map((item, index) => (
