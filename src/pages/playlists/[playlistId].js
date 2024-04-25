@@ -153,12 +153,16 @@ export default function Home() {
 																	</span>
 																))}
 																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? '-' : ''}</span>
-																<span className="font-normal text-gray-100 opacity-60 visible md:hidden">{track.album.album_name != track.name ? track.album.album_name : ''}</span>
+																<span className="font-normal text-gray-100 opacity-60 visible md:hidden cursor-pointer" onClick={() => router.push('/albums/' + track.album.spotify_id)}>
+																	{track.album.album_name != track.name ? track.album.album_name : ''}
+																</span>
 															</p>
 															<p className="font-normal text-gray-100 opacity-60 visible md:hidden">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</p>
 														</div>
 													</td>
-													<td className="hidden md:table-cell px-6 py-4">{track.album.album_name}</td>
+													<td className="hidden md:table-cell px-6 py-4 cursor-pointer" onClick={() => router.push('/albums/' + track.album.spotify_id)}>
+														{track.album.album_name}
+													</td>
 													<td className="hidden md:table-cell px-6 py-4">{new Date(track.date).toLocaleDateString('en-US')}</td>
 													<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</td>
 												</tr>
