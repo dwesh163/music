@@ -181,7 +181,7 @@ export default function PlayList() {
 															<p className="flex flex-wrap gap-1">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
-																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.id)}>
+																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60'} onClick={() => router.push('/artists/' + item.id)}>
 																			{item.name}
 																			{index !== track.artists.slice(0, 2).length - 1 && <span className="visble">,</span>}
 																		</span>
