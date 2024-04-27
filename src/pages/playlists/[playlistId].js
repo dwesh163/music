@@ -146,9 +146,9 @@ export default function Home() {
 															<p className="flex flex-wrap gap-1">
 																{track.artists.slice(0, 2).map((item, index) => (
 																	<span key={index}>
-																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60 ' + (index !== 0 ? 'hidden sm:inline' : '')} onClick={() => router.push('/artists/' + item.public_id)}>
+																		<span className={'font-normal text-gray-100 cursor-pointer opacity-60'} onClick={() => router.push('/artists/' + item.public_id)}>
 																			{item.artist_name}
-																			{index !== track.artists.slice(0, 2).length - 1 && <span className="sm:visible hidden">,</span>}
+																			{index !== track.artists.slice(0, 2).length - 1 && <span className="visble">,</span>}
 																		</span>
 																	</span>
 																))}
