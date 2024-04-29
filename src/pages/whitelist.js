@@ -76,45 +76,51 @@ export default function PlayList({ isStarted, setIsStarted }) {
 									<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 										<thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
 											<tr>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-1 sm:px-3 py-0.5 sm:py-1">
+													#
+												</th>
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
 													Name
 												</th>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
 													Email
 												</th>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
 													Username
 												</th>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Provider
 												</th>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Company
 												</th>
-												<th scope="col" className="px-6 py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Version
 												</th>
 											</tr>
 										</thead>
 										<tbody>
 											{whitelist.map((user, index) => (
-												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer">
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm">
+													<th scope="row" className="px-1 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap">
+														{index + 1}
+													</th>
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
 														{user.user_name}
 													</th>
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
 														{user.user_email}
 													</th>
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap ">
 														{user.user_username}
 													</th>
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
 														{user.user_provider}
 													</th>
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
 														{user.user_company.slice(0, 1) === '@' ? user.user_company.slice(1) : user.user_company}
 													</th>
-													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
 														{user.user_version}
 													</th>
 												</tr>
