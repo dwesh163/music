@@ -56,14 +56,17 @@ export default async function Track(req, res) {
 			if (track) {
 				if (track.track_public_id) {
 					const filePath = path.join('musics', `${track.track_public_id}.mp3`);
-					console.log(filePath);
-					if (fs.existsSync(filePath)) {
-						res.status(200).json({ download: 'true', id: track.track_public_id });
-					} else {
+					if (track.status == 3) {
+						if (fs.existsSync(filePath)) {
+							res.status(200).json({ download: 'true', id: track.track_public_id });
+							return;
+						} else {
+							await connection.execute('UPDATE tracks SET status = 2 WHERE spotify_id = ?', [songInfo.id]);
+						}
+					} else if (track.status == 2) {
 						res.status(200).json({ download: 'progress', id: track.track_public_id });
 					}
 				}
-				return;
 			}
 
 			let [[album]] = await connection.execute('SELECT * FROM albums WHERE spotify_id = ?', [songInfo.album.id]);
@@ -87,7 +90,7 @@ export default async function Track(req, res) {
 			}
 
 			if (!track) {
-				await connection.execute('INSERT INTO tracks (name, duration, disc_number, track_number, popularity, album_id, spotify_id, track_public_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [songInfo.name, songInfo.duration_ms.toString().slice(0, 3), songInfo.disc_number, songInfo.track_number, songInfo.popularity, album.album_id, songInfo.id, id]);
+				await connection.execute('INSERT INTO tracks (name, duration, disc_number, track_number, popularity, album_id, spotify_id, track_public_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [songInfo.name, songInfo.duration_ms.toString().slice(0, 3), songInfo.disc_number, songInfo.track_number, songInfo.popularity, album.album_id, songInfo.id, id, 0]);
 				[[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
 			}
 			[[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
@@ -112,9 +115,14 @@ export default async function Track(req, res) {
 
 			console.log('Start download');
 
-			download.stdout.on('data', (data) => {
+			download.stdout.on('data', async (data) => {
 				console.log(data.toString());
 				if (data.toString().includes('Downloaded')) {
+					try {
+						await connection.execute('UPDATE tracks SET status = 2 WHERE spotify_id = ?', [songInfo.id]);
+					} catch (error) {
+						console.error('Error updating download status:', error);
+					}
 					const folderPath = `musics/downloads/${id}`;
 
 					if (!fs.existsSync('musics/downloads')) {
@@ -143,7 +151,17 @@ export default async function Track(req, res) {
 						}
 					});
 
-					fs.rm(folderPath);
+					fs.rm(folderPath, (err) => {
+						if (err) {
+							console.error('Error removing folder:', err);
+						}
+					});
+
+					try {
+						await connection.execute('UPDATE tracks SET status = 3 WHERE spotify_id = ?', [songInfo.id]);
+					} catch (error) {
+						console.error('Error updating download status:', error);
+					}
 				}
 			});
 
