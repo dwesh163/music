@@ -7,14 +7,13 @@ import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
-export default function Tracks() {
+export default function Tracks({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [search, setSearch] = useState('');
 	const [results, setResults] = useState([]);
-	const [isStarted, setIsStarted] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -89,7 +88,6 @@ export default function Tracks() {
 			</Head>
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
-					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div
 						className="w-full h-full overflow-hidden"

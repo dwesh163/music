@@ -7,13 +7,12 @@ import { useRouter } from 'next/router';
 import Loading from '@/components/loading';
 import packageJson from '/package.json';
 
-export default function Home() {
+export default function Playlnaist({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [playlist, setPlaylist] = useState({});
-	const [isStarted, setIsStarted] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [error, setError] = useState('');
@@ -106,7 +105,6 @@ export default function Home() {
 			</Head>
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
-					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div className=" relative flex overflow-hidden bg-[#171719] w-full h-full">
 						{playlist.error ? (

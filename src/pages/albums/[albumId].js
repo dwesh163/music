@@ -7,16 +7,14 @@ import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
-export default function PlayList() {
+export default function Album({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [isStarted, setIsStarted] = useState(false);
 	const [album, setAlbum] = useState(false);
 
 	const [error, setError] = useState('');
-
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleMenu = () => {
@@ -104,7 +102,6 @@ export default function PlayList() {
 			</Head>
 			<main className="w-screen h-screen">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
-					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					{error == '' ? (
 						<div

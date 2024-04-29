@@ -8,12 +8,11 @@ import Comments from '@/components/comments';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
-export default function PlayList() {
+export default function Home({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [isStarted, setIsStarted] = useState(false);
 
 	const [forYouText, setForYouText] = useState([{ text: 'Based on your likes' }, { text: 'New Album' }, { text: 'New Track for you' }, { text: 'New For You' }]);
 	const [recommandations, setRecommandations] = useState([]);
@@ -65,7 +64,6 @@ export default function PlayList() {
 			</Head>
 			<main className="">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
-					<Player isStarted={isStarted} setIsStarted={setIsStarted} />
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<div
 						className="w-full h-full overflow-hidden"
