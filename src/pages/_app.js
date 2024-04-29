@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
 	const [isStarted, setIsStarted] = useState(false);
 	const router = useRouter();
-	const path = ['/', '/playlists', '/playlists/[playlistId]', '/albums', '/albums/[albumId]', '/tracks', '/artists', '/artists/[artistId]'];
+	const path = ['/', '/playlists', '/playlists/[playlistId]', '/albums', '/albums/[albumId]', '/tracks', '/artists', '/artists/[artistId]', '/whitelist'];
 
 	return (
 		<SessionProvider session={session}>
