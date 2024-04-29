@@ -45,10 +45,16 @@ export default async function Track(req, res) {
 		}
 	} else if (req.method === 'POST') {
 		try {
-			const { playlistName } = JSON.parse(JSON.stringify(req.body));
+			let { playlistName } = JSON.parse(req.body);
 
-			if (!playlistName) {
+			playlistName = playlistName.trim().replaceAll(/\ \ +/g, ' ');
+
+			if (!playlistName || playlistName == '') {
 				return res.status(400).send({ error: 'Missing playlist name' });
+			}
+
+			if (playlistName.length > 50) {
+				return res.status(400).send({ error: 'Playlist name to long' });
 			}
 
 			const connection = await connectMySQL();
@@ -62,10 +68,6 @@ export default async function Track(req, res) {
 
 			const [[rows]] = await connection.execute('SELECT COUNT(*) AS playlistCount FROM playlists WHERE playlist_user = ?', [user.user_id]);
 			const { playlistCount } = rows;
-
-			if (playlistCount >= 5) {
-				return res.status(400).send({ error: 'Maximum limit of playlist created' });
-			}
 
 			await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?, ?)', [playlistName.trim(), uuidv4(), user.user_id]);
 
