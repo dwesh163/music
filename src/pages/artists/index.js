@@ -12,7 +12,6 @@ export default function Artists({ isStarted, setIsStarted }) {
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [isStarted, setIsStarted] = useState(false);
 	const [playlists, setPlaylists] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
