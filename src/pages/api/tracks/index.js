@@ -151,7 +151,7 @@ export default async function Track(req, res) {
 						}
 					});
 
-					fs.rm(folderPath, (err) => {
+					fs.rmdir(folderPath, (err) => {
 						if (err) {
 							console.error('Error removing folder:', err);
 						}
