@@ -9,7 +9,7 @@ export default function Player({ isStarted, setIsStarted }) {
 	const [songId, setSongId] = useState('');
 	const [onLoad, setOnLoad] = useState(false);
 	const [isNewSong, setIsNewSong] = useState(true);
-	const [playlist, setPlaylist] = useState('');
+	const [loop, setLoop] = useState(false);
 	const audioRef = useRef();
 	const progressRef = useRef();
 
@@ -135,12 +135,16 @@ export default function Player({ isStarted, setIsStarted }) {
 		}
 
 		const currentIndex = songData.playlist.currentIndex || 0;
-		const nextIndex = currentIndex + 1;
+		let nextIndex = currentIndex + 1;
 
 		if (nextIndex >= songData.playlist.list.length) {
-			setSongId('');
-			setCurrentTime(0);
-			return;
+			if (loop) {
+				nextIndex = 0;
+			} else {
+				setSongId('');
+				setCurrentTime(0);
+				return;
+			}
 		}
 
 		const nextSongId = songData.playlist.list[nextIndex];
@@ -319,18 +323,9 @@ export default function Player({ isStarted, setIsStarted }) {
 							<path d="M11.4607 8.38191L11.5514 8.48333L11.4607 8.58475C11.4511 8.5955 11.4387 8.60661 11.4228 8.61723L11.4227 8.61719L11.4169 8.62118L2.5836 14.6878L2.57249 14.6955L2.56181 14.7037C2.53221 14.7265 2.50874 14.7322 2.49134 14.7333C2.47152 14.7345 2.44728 14.7301 2.42185 14.7167C2.36986 14.6891 2.33333 14.6359 2.33333 14.5667V2.43333C2.33333 2.36413 2.36986 2.31093 2.42185 2.28334C2.44728 2.26985 2.47152 2.26551 2.49134 2.26674C2.50874 2.26783 2.53221 2.27354 2.56181 2.29631L2.573 2.30492L2.58465 2.31288L11.418 8.34622L11.418 8.34624L11.4228 8.34944C11.4387 8.36006 11.4511 8.37117 11.4607 8.38191ZM12.3333 8.04853V7.60937V2.16667C12.3333 2.07614 12.4095 2 12.5 2H14.5C14.5905 2 14.6667 2.07614 14.6667 2.16667V14.8333C14.6667 14.9239 14.5905 15 14.5 15H12.5C12.4095 15 12.3333 14.9239 12.3333 14.8333V9.35731V8.91813V8.04853Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
 						</svg>
 					</div>
-					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-4 h-4 relative overflow-hidden gap-2.5">
-						<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="self-stretch flex-grow relative" preserveAspectRatio="none">
-							<g clipPath="url(#clip0_302_1194)">
-								<path fillRule="evenodd" clipRule="evenodd" d="M11.3619 1.36201C11.6223 1.10166 12.0444 1.10166 12.3047 1.36201L14.3047 3.36201C14.5651 3.62236 14.5651 4.04447 14.3047 4.30482L12.3047 6.30482C12.0444 6.56517 11.6223 6.56517 11.3619 6.30482C11.1016 6.04447 11.1016 5.62236 11.3619 5.36201L12.2239 4.50008H6.16666C3.96818 4.50008 2.16666 6.3016 2.16666 8.50008C2.16666 8.86828 1.86818 9.16675 1.49999 9.16675C1.1318 9.16675 0.833328 8.86828 0.833328 8.50008C0.833328 5.56523 3.23181 3.16675 6.16666 3.16675H12.2239L11.3619 2.30482C11.1016 2.04447 11.1016 1.62236 11.3619 1.36201ZM16.1667 8.50008C16.1667 8.13188 15.8682 7.83342 15.5 7.83342C15.1318 7.83342 14.8333 8.13188 14.8333 8.50008C14.8333 10.6985 13.0318 12.5001 10.8333 12.5001H4.77613L5.63807 11.6381C5.89842 11.3778 5.89842 10.9557 5.63807 10.6953C5.37772 10.435 4.95561 10.435 4.69526 10.6953L2.69526 12.6953C2.43491 12.9557 2.43491 13.3778 2.69526 13.6381L4.69526 15.6381C4.95561 15.8985 5.37772 15.8985 5.63807 15.6381C5.89842 15.3778 5.89842 14.9557 5.63807 14.6953L4.77613 13.8334H10.8333C13.7682 13.8334 16.1667 11.4349 16.1667 8.50008Z" fill="#9898A6"></path>
-							</g>
-							{audioData ? audioData.track.duration : '00:00'}
-							{currentTime ? currentTime : '00:00'}
-							<defs>
-								<clipPath id="clip0_302_1194">
-									<rect width="16" height="16" fill="white" transform="translate(0.5 0.5)"></rect>
-								</clipPath>
-							</defs>
+					<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-3 h-3 relative overflow-hidden gap-2.5 cursor-pointer" onClick={() => setLoop(!loop)}>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+							<path fill={loop ? '#fff' : '#99999a'} d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z" />
 						</svg>
 					</div>
 				</div>
