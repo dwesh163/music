@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Player({ isStarted, setIsStarted }) {
 	const [isLoading, setIsLoading] = useState(true);
-	const [currentTime, setCurrentTime] = useState(parseFloat(localStorage.getItem('currentTime')));
+	const [currentTime, setCurrentTime] = useState(0);
 	const [audioData, setAudioData] = useState(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [songId, setSongId] = useState('');
@@ -245,20 +245,21 @@ export default function Player({ isStarted, setIsStarted }) {
 						</div>
 					</div>
 					{audioData ? (
-						<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65] flex gap-1">
-							{audioData.artists.slice(0, 2).map((item, index) => (
-								<span key={index} className="cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
-									{item.name}
-									{index !== audioData.artists.length - 1 && <span>,</span>}
-								</span>
-							))}
-							{audioData.artists.length > 2 && <span onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
-						</p>
+						<>
+							<p className="flex gap-1 text-sm font-semibold text-left text-[#fcfcfc]/[0.65] flex gap-1">
+								{audioData.artists.slice(0, 2).map((item, index) => (
+									<span key={index} className="cursor-pointer" onClick={() => router.push('/artists/' + item.id)}>
+										{item.name}
+										{index !== audioData.artists.length - 1 && <span>,</span>}
+									</span>
+								))}
+								{audioData.artists.length > 2 && <span onClick={() => router.push('/artists')}>{` ${audioData.artists.length - 2} other${audioData.artists.length > 3 ? 's' : ''}`}</span>}
+							</p>
+							<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {JSON.parse(localStorage.getItem('songData'))?.playlist?.name}</p>
+						</>
 					) : (
 						<p className="flex gap-2 text-sm font-semibold text-left text-[#fcfcfc]/[0.65]">Loading</p>
 					)}
-
-					<p className="flex-grow-0 flex-shrink-0 w-[139px] h-3 text-[10px] font-semibold text-left uppercase text-[#fcfcfc]/[0.65]">PLAING FROM: {JSON.parse(localStorage.getItem('songData'))?.playlist?.name}</p>
 				</div>
 			</div>
 			<div className="flex flex-col justify-center items-center flex-grow overflow-hidden gap-1 md:px-8 w-24">
