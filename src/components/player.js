@@ -152,6 +152,11 @@ export default function Player({ isStarted, setIsStarted }) {
 		setSongId(nextSongId);
 		setCurrentTime(0);
 		fetchAudioData(nextSongId);
+		if (songData.playlist.list[nextIndex + 1]) {
+			fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: songData.playlist.list[nextIndex + 1] }) });
+		}
+
+		songData.songId = nextSongId;
 
 		songData.playlist.currentIndex = nextIndex;
 		localStorage.setItem('songData', JSON.stringify(songData));
@@ -180,6 +185,12 @@ export default function Player({ isStarted, setIsStarted }) {
 		setSongId(prevSongId);
 		setCurrentTime(0);
 		fetchAudioData(prevSongId);
+
+		if (songData.playlist.list[prevSongId - 1]) {
+			fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: songData.playlist.list[prevSongId - 1] }) });
+		}
+
+		songData.songId = prevSongId;
 
 		songData.playlist.currentIndex = prevIndex;
 		localStorage.setItem('songData', JSON.stringify(songData));
