@@ -45,7 +45,9 @@ export default function Playlnaist({ isStarted, setIsStarted }) {
 			);
 			localStorage.setItem('currentTime', 0);
 			setIsStarted(true);
-			const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
+			if (playlist.tracks[trackIndex + 1]) {
+				const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
+			}
 		} else if (tracksData.download === 'progress') {
 			console.log(trackIndex);
 			if (trackIndex !== -1) {
