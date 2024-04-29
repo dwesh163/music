@@ -27,9 +27,9 @@ export default async function Track(req, res) {
 	}
 
 	if (req.method === 'POST') {
-		const { spotifyId } = JSON.parse(req.body);
+		let { spotifyId } = JSON.parse(req.body);
 		const connection = await connectMySQL();
-		const id = uuidv4();
+		let id = uuidv4();
 		let searchResult;
 		let songInfo;
 
@@ -44,23 +44,27 @@ export default async function Track(req, res) {
 
 			spotifyApi.setAccessToken(accessToken);
 
-			searchResult = await spotifyApi.getTrack(spotifyId);
-			songInfo = searchResult.body;
+			try {
+				searchResult = await spotifyApi.getTrack(spotifyId);
+				songInfo = searchResult.body;
+			} catch (error) {}
 
-			if (!songInfo) {
-				res.status(404).send('Music not found');
-				return;
-			}
-
-			let [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ?', [songInfo.id]);
+			let [[track]] = await connection.execute('SELECT * FROM tracks WHERE spotify_id = ? OR track_public_id = ?', [songInfo ? songInfo.id : '0', spotifyId]);
 			if (track) {
+				try {
+					searchResult = await spotifyApi.getTrack(track.spotify_id);
+					songInfo = searchResult.body;
+					spotifyId = track.spotify_id;
+				} catch (error) {}
 				if (track.track_public_id) {
+					id = track.track_public_id;
 					const filePath = path.join('musics', `${track.track_public_id}.mp3`);
 					if (track.status == 2) {
 						if (fs.existsSync(filePath)) {
 							res.status(200).json({ download: 'true', id: track.track_public_id });
 							return;
 						} else {
+							id = track.track_public_id;
 							await connection.execute('UPDATE tracks SET status = 0 WHERE spotify_id = ?', [songInfo.id]);
 						}
 					} else if (track.status == 1) {
@@ -68,6 +72,11 @@ export default async function Track(req, res) {
 						return;
 					}
 				}
+			}
+
+			if (!songInfo && !track) {
+				res.status(404).send('Music not found');
+				return;
 			}
 
 			let [[album]] = await connection.execute('SELECT * FROM albums WHERE spotify_id = ?', [songInfo.album.id]);
@@ -114,16 +123,16 @@ export default async function Track(req, res) {
 			const args = ['--output', `musics/downloads/${id}`, `https://open.spotify.com/intl-fr/track/${spotifyId}`];
 			const download = spawn(command, args);
 
-			console.log('Start download');
+			console.log('Start download :', track.name);
+
+			try {
+				await connection.execute('UPDATE tracks SET status = 1 WHERE spotify_id = ?', [songInfo.id]);
+			} catch (error) {
+				console.error('Error updating download status:', error);
+			}
 
 			download.stdout.on('data', async (data) => {
-				console.log(data.toString());
 				if (data.toString().includes('Downloaded')) {
-					try {
-						await connection.execute('UPDATE tracks SET status = 1 WHERE spotify_id = ?', [songInfo.id]);
-					} catch (error) {
-						console.error('Error updating download status:', error);
-					}
 					const folderPath = `musics/downloads/${id}`;
 
 					if (!fs.existsSync('musics/downloads')) {
@@ -147,15 +156,15 @@ export default async function Track(req, res) {
 								}
 								console.log('The file has been renamed successfully.');
 							});
+							fs.rm(oldPath);
+
+							fs.rmdir(folderPath, (err) => {
+								if (err) {
+									console.error('Error removing folder:', err);
+								}
+							});
 						} else {
 							console.error('There is not a single file in the folder.');
-						}
-					});
-
-					fs.rm(newPath);
-					fs.rmdir(folderPath, (err) => {
-						if (err) {
-							console.error('Error removing folder:', err);
 						}
 					});
 
