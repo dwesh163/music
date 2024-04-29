@@ -65,6 +65,7 @@ export default async function Track(req, res) {
 						}
 					} else if (track.status == 1) {
 						res.status(200).json({ download: 'progress', id: track.track_public_id });
+						return;
 					}
 				}
 			}
@@ -128,6 +129,7 @@ export default async function Track(req, res) {
 					if (!fs.existsSync('musics/downloads')) {
 						fs.mkdirSync('musics/downloads', { recursive: true });
 					}
+					const newPath = path.join('musics', `${id}.mp3`);
 
 					fs.readdir(folderPath, (err, files) => {
 						if (err) {
@@ -138,7 +140,6 @@ export default async function Track(req, res) {
 						if (files.length === 1) {
 							const filename = files[0];
 							const oldPath = path.join(folderPath, filename);
-							const newPath = path.join('musics', `${id}.mp3`);
 							fs.rename(oldPath, newPath, (err) => {
 								if (err) {
 									console.error('Error renaming the file:', err);
@@ -151,6 +152,7 @@ export default async function Track(req, res) {
 						}
 					});
 
+					fs.rm(newPath);
 					fs.rmdir(folderPath, (err) => {
 						if (err) {
 							console.error('Error removing folder:', err);
