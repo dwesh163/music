@@ -22,14 +22,12 @@ export default function Playlnaist({ isStarted, setIsStarted }) {
 	};
 
 	const downloadSong = async (id) => {
-		console.log(playlist);
 		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
 		const tracksData = await response.json();
 		const trackIndex = playlist.tracks.findIndex((track) => track.spotify_id === id);
 
 		const trackIds = playlist.tracks.map((track) => track.track_public_id);
 
-		console.log(tracksData);
 		if (tracksData.download === 'true') {
 			localStorage.setItem(
 				'songData',
@@ -45,15 +43,19 @@ export default function Playlnaist({ isStarted, setIsStarted }) {
 			);
 			localStorage.setItem('currentTime', 0);
 			setIsStarted(true);
+			const updatedTracks = [...playlist.tracks];
+			updatedTracks[trackIndex].loading = false;
+			setPlaylist((prevData) => ({
+				...prevData,
+				tracks: updatedTracks,
+			}));
 			if (playlist.tracks[trackIndex + 1]) {
-				const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
+				fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
 			}
 		} else if (tracksData.download === 'progress') {
 			if (trackIndex !== -1) {
 				const updatedTracks = [...playlist.tracks];
-				console.log(updatedTracks);
 				updatedTracks[trackIndex].loading = true;
-				console.log(updatedTracks[trackIndex]);
 				setPlaylist((prevData) => ({
 					...prevData,
 					tracks: updatedTracks,
