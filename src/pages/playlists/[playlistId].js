@@ -49,7 +49,6 @@ export default function Playlnaist({ isStarted, setIsStarted }) {
 				const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
 			}
 		} else if (tracksData.download === 'progress') {
-			console.log(trackIndex);
 			if (trackIndex !== -1) {
 				const updatedTracks = [...playlist.tracks];
 				console.log(updatedTracks);
