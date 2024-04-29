@@ -22,6 +22,50 @@ export default function Home() {
 		setIsOpen(!isOpen);
 	};
 
+	const downloadSong = async (id) => {
+		console.log(playlist);
+		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
+		const tracksData = await response.json();
+		const trackIndex = playlist.tracks.findIndex((track) => track.spotify_id === id);
+
+		const trackIds = playlist.tracks.map((track) => track.track_public_id);
+
+		console.log(tracksData);
+		if (tracksData.download === 'true') {
+			localStorage.setItem(
+				'songData',
+				JSON.stringify({
+					status: 'play',
+					songId: tracksData.id,
+					playlist: {
+						name: playlist.playlist.name,
+						list: trackIds,
+						currentIndex: trackIndex,
+					},
+				})
+			);
+			localStorage.setItem('currentTime', 0);
+			setIsStarted(true);
+			const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: playlist.tracks[trackIndex + 1].spotify_id }) });
+		} else if (tracksData.download === 'progress') {
+			console.log(trackIndex);
+			if (trackIndex !== -1) {
+				const updatedTracks = [...playlist.tracks];
+				console.log(updatedTracks);
+				updatedTracks[trackIndex].loading = true;
+				console.log(updatedTracks[trackIndex]);
+				setPlaylist((prevData) => ({
+					...prevData,
+					tracks: updatedTracks,
+				}));
+			}
+
+			setTimeout(() => {
+				downloadSong(id);
+			}, 8000);
+		}
+	};
+
 	useEffect(() => {
 		if (!router.query.playlistId) {
 			return;
@@ -113,30 +157,22 @@ export default function Home() {
 											{playlist.tracks.map((track, index) => (
 												<tr key={index + '-track'} className="bg-[#11111170] hover:bg-[#1d1d1d70] group">
 													<td className="relative">
-														<div
-															className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer"
-															onClick={() => {
-																const trackIds = playlist.tracks.map((track) => track.track_public_id);
-
-																localStorage.setItem(
-																	'songData',
-																	JSON.stringify({
-																		status: 'play',
-																		songId: track.track_public_id,
-																		playlist: {
-																			name: playlist.playlist.name,
-																			list: trackIds,
-																			currentIndex: index,
-																		},
-																	})
-																);
-																localStorage.setItem('currentTime', 0);
-																setIsStarted(true);
-															}}>
-															<p className="text-base opacity-100 transition-opacity">{index + 1}</p>
-															<svg width="20" height="20" viewBox="0 0 25 25" fill="#fff" xmlns="http://www.w3.org/2000/svg" className="absolute opacity-0 group-hover:opacity-100">
-																<path d="M6.76693 21.9879L6.75583 21.9956L6.74514 22.0038C6.45991 22.2232 6 22.0313 6 21.6001V3.40009C6 2.96889 6.45991 2.77699 6.74514 2.99641L6.75634 3.00501L6.76799 3.01298L20.018 12.063L20.018 12.063L20.0226 12.0661C20.3258 12.2682 20.3258 12.682 20.0226 12.8841L20.0226 12.884L20.0169 12.8879L6.76693 21.9879Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
-															</svg>
+														<div className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer">
+															{track.loading ? (
+																<div className="text-center flex items-center justify-center" onClick={() => downloadSong(track.spotify_id)}>
+																	<svg aria-hidden="true" className="w-4 h-4 text-gray-800 animate-spin fill-sky-500 bg-opacity-90" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
+																		<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
+																	</svg>
+																</div>
+															) : (
+																<div className="text-center flex items-center justify-center group-hover:text-transparent group-hover:cursor-pointer" onClick={() => downloadSong(track.spotify_id)}>
+																	<p className="text-base opacity-100 transition-opacity">{index + 1}</p>
+																	<svg width="20" height="20" viewBox="0 0 25 25" fill="#fff" xmlns="http://www.w3.org/2000/svg" className="absolute opacity-0 group-hover:opacity-100">
+																		<path d="M6.76693 21.9879L6.75583 21.9956L6.74514 22.0038C6.45991 22.2232 6 22.0313 6 21.6001V3.40009C6 2.96889 6.45991 2.77699 6.74514 2.99641L6.75634 3.00501L6.76799 3.01298L20.018 12.063L20.018 12.063L20.0226 12.0661C20.3258 12.2682 20.3258 12.682 20.0226 12.8841L20.0226 12.884L20.0169 12.8879L6.76693 21.9879Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+																	</svg>
+																</div>
+															)}
 														</div>
 													</td>
 													<td scope="row" className="px-6 pl-1 py-4 flex gap-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
