@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS tracks (
     spotify_id VARCHAR(100),
     track_public_id VARCHAR(100),
     release_date DATE,
+    status INT DEFAULT 0,
     PRIMARY KEY (track_id)
 );
 
