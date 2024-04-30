@@ -10,7 +10,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 	const [selectedMenu, setselectedMenu] = useState('Home');
 	const [menus, setMenus] = useState(['Home', 'Explore']);
 	const [playlists, setPlaylists] = useState([]);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 	const [newPlaylistName, setNewPlaylistName] = useState('');
 	const [error, setError] = useState('');
 
@@ -41,14 +41,14 @@ export default function Menu({ isOpen, setIsOpen }) {
 		setIsLoading(false);
 	}, []);
 
-	const openModal = () => {
-		setIsModalOpen(true);
+	const openCreateModal = () => {
+		setIsCreateModalOpen(true);
 	};
 
-	const closeModal = () => {
+	const closeCreateModal = () => {
 		setError('');
 		setNewPlaylistName('');
-		setIsModalOpen(false);
+		setIsCreateModalOpen(false);
 	};
 
 	if (isLoading) {
@@ -75,11 +75,11 @@ export default function Menu({ isOpen, setIsOpen }) {
 
 	return (
 		<div className="flex items-center justify-center h-screen">
-			{isModalOpen && (
+			{isCreateModalOpen && (
 				<div className="fixed inset-0 z-[100] overflow-hidden">
 					<div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 						<div className="fixed inset-0 transition-opacity">
-							<div className="absolute inset-0 bg-black opacity-75" onClick={() => closeModal()}></div>
+							<div className="absolute inset-0 bg-black opacity-75" onClick={() => closeCreateModal()}></div>
 						</div>
 						<span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
 						<div className="inline-block align-bottom bg-zinc-800 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
@@ -107,7 +107,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 												if (playlistsData.error) {
 													setError(playlistsData.error);
 												} else {
-													closeModal();
+													closeCreateModal();
 												}
 											} catch (error) {
 												console.error('Error fetching audio data:', error);
@@ -120,7 +120,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 									className="w-full inline-flex justify-center rounded-sm border border-transparent shadow-sm px-4 py-2 bg-[#00a5a5] text-base font-medium text-white hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
 									Create
 								</button>
-								<button onClick={closeModal} className="mt-3 w-full inline-flex justify-center rounded-sm shadow-sm px-4 py-2 bg-zinc-600 text-base font-medium text-white hover:bg-zinc-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+								<button onClick={closeCreateModal} className="mt-3 w-full inline-flex justify-center rounded-sm shadow-sm px-4 py-2 bg-zinc-600 text-base font-medium text-white hover:bg-zinc-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
 									Cancel
 								</button>
 							</div>
@@ -166,7 +166,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 					<div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
 						<div className="w-full flex justify-between">
 							<p className="flex-grow-0 flex-shrink-0 h-4 text-xs font-medium text-left text-[#9898a6]">MY PLAYLISTS</p>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="#9898a6" className="w-3 h-3 mt-0.5 cursor-pointer" viewBox="0 0 448 512" onClick={openModal}>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="#9898a6" className="w-3 h-3 mt-0.5 cursor-pointer" viewBox="0 0 448 512" onClick={openCreateModal}>
 								<path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
 							</svg>
 						</div>
