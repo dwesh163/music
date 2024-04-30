@@ -22,9 +22,9 @@ export default function Menu({ isOpen, setIsOpen }) {
 
 	const [collections, setCollections] = useState([
 		{ name: 'Playlists', svg: '/svg/playlists.svg', url: 'playlists' },
-		{ name: 'Albums', svg: '/svg/albums.svg', url: 'albums' },
+		// { name: 'Albums', svg: '/svg/albums.svg', url: 'albums' },
 		{ name: 'Tracks', svg: '/svg/tracks.svg', url: 'tracks' },
-		{ name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
+		// { name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
 	]);
 
 	const fetchPlaylist = async () => {
