@@ -76,7 +76,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 	return (
 		<div className="flex items-center justify-center h-screen">
 			{isModalOpen && (
-				<div className="fixed inset-0 z-[100] overflow-y-auto">
+				<div className="fixed inset-0 z-[100] overflow-hidden">
 					<div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 						<div className="fixed inset-0 transition-opacity">
 							<div className="absolute inset-0 bg-black opacity-75" onClick={() => closeModal()}></div>
@@ -129,8 +129,8 @@ export default function Menu({ isOpen, setIsOpen }) {
 				</div>
 			)}
 
-			<div className={'sm:w-full w-48 h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-scroll' + (isOpen ? '' : ' sm:flex hidden')}>
-				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-scroll gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
+			<div className={'sm:w-full w-48 h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-y-auto overflow-x-hidden' + (isOpen ? '' : ' sm:flex hidden')}>
+				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-y-auto overflow-x-hidden gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
 					<div className="flex justify-between items-center flex-grow-0 flex-shrink-0 w-full relative p-3 pb-0 rounded-lg">
 						<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5 rounded-[999px] bg-[#63676f]">
 							{session.user.image ? (
