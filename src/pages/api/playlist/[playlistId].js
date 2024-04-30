@@ -92,12 +92,10 @@ export default async function Track(req, res) {
 
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
 
-		if (playlist_tracks) {
-			res.status(403).json({ error: 'Song already in playlist "' + playlistInfo.playlist_name + '"' });
-		} else {
+		if (!playlist_tracks) {
 			await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
-			res.status(200).json({ status: 'ok' });
 		}
+		res.status(200).json({ status: 'ok' });
 	}
 	if (req.method == 'DELETE') {
 		const connection = await connectMySQL();
