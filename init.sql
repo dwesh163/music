@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS comments (
 CREATE TABLE IF NOT EXISTS authorization (
     authorization_id INT NOT NULL UNIQUE AUTO_INCREMENT,
     authorization_name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
     PRIMARY KEY (authorization_id)
 );
 
@@ -105,7 +106,6 @@ CREATE TABLE IF NOT EXISTS authorization (
 CREATE TABLE IF NOT EXISTS user_authorization (
     user_id INT REFERENCES users(user_id),
     authorization_id INT REFERENCES authorization(authorization_id),
-    description VARCHAR(255),
     PRIMARY KEY (user_id, authorization_id)
 );
 
