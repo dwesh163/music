@@ -78,32 +78,31 @@ export default async function Track(req, res) {
 		}
 	} else if (req.method === 'DELETE') {
 		try {
-			let playlistName;
+			let playlistId;
 
-			if (req.body.playlistName) {
-				playlistName = req.body.playlistName;
+			if (req.body.playlistId) {
+				playlistId = req.body.playlistId;
 			} else {
-				playlistName = JSON.parse(req.body).playlistName;
+				playlistId = JSON.parse(req.body).playlistId;
 			}
 
-			if (!playlistName) {
-				return res.status(400).send({ error: 'Missing playlist name' });
-			}
-
-			if (playlistName == 'Liked') {
-				return res.status(403).send({ error: 'unauthorized' });
+			if (!playlistId) {
+				return res.status(400).send({ error: 'Missing playlist Id' });
 			}
 
 			const connection = await connectMySQL();
 			const [[user]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
+			const [[playlist]] = await connection.execute('SELECT * FROM playlists WHERE public_id = ? AND playlist_user = ?', [playlistId, user.user_id]);
 
-			const [[playlist]] = await connection.execute('SELECT * FROM playlists WHERE playlist_name = ? AND playlist_user = ?', [playlistName.trim(), user.user_id]);
+			if (playlist.playlist_name == 'Liked') {
+				return res.status(403).send({ error: 'unauthorized' });
+			}
 
 			if (!playlist) {
 				return res.status(400).send({ error: 'Playlist not exists' });
 			}
 
-			await connection.execute('DELETE FROM playlists WHERE playlist_name = ? AND playlist_user = ?', [playlistName.trim(), user.user_id]);
+			await connection.execute('DELETE FROM playlists WHERE public_id = ? AND playlist_user = ?', [playlistId, user.user_id]);
 
 			res.status(201).send({ message: 'Playlist delete successfully' });
 		} catch (error) {
