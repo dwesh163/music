@@ -123,7 +123,7 @@ export default function Home({ isStarted, setIsStarted }) {
 									</div>
 								</div>
 
-								<div className="flex-grow-0 flex-shrink-0 w-[1156px] h-[360px] relative overflow-hidden">
+								{/* <div className="flex-grow-0 flex-shrink-0 w-[1156px] h-[360px] relative overflow-hidden">
 									<div className="w-[1104px] h-[38px] left-8 top-0 overflow-hidden">
 										<p className="absolute left-0 top-1.5 text-lg font-semibold text-left text-[#fcfcfc]">Section Title </p>
 										<div className="flex justify-center items-center w-6 absolute left-[1104px] top-8 p-1 rounded-[999px] bg-[#1f1f22] border border-[#ebebff]/5">
@@ -364,7 +364,7 @@ export default function Home({ isStarted, setIsStarted }) {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
