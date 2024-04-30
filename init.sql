@@ -93,6 +93,22 @@ CREATE TABLE IF NOT EXISTS comments (
     PRIMARY KEY (comments_id)
 );
 
+-- Create table "authorization"
+CREATE TABLE IF NOT EXISTS authorization (
+    authorization_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+    authorization_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (authorization_id)
+);
+
+-- Create table relation "user_authorization"
+CREATE TABLE IF NOT EXISTS user_authorization (
+    user_id INT REFERENCES users(user_id),
+    authorization_id INT REFERENCES authorization(authorization_id),
+    description VARCHAR(255),
+    PRIMARY KEY (user_id, authorization_id)
+);
+
+
 CREATE VIEW app_info AS
 SELECT
     (SELECT COUNT(*) FROM artists) AS total_artists,
