@@ -109,6 +109,11 @@ CREATE TABLE IF NOT EXISTS user_authorization (
     PRIMARY KEY (user_id, authorization_id)
 );
 
+INSERT INTO authorization (authorization_name) VALUES
+   ('deneid'),
+   ('demo'),
+   ('premium'),
+   ('admin');
 
 CREATE VIEW app_info AS
 SELECT
