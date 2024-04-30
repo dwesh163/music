@@ -11,7 +11,11 @@ export default function Menu({ isOpen, setIsOpen }) {
 	const [menus, setMenus] = useState(['Home', 'Explore']);
 	const [playlists, setPlaylists] = useState([]);
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
 	const [newPlaylistName, setNewPlaylistName] = useState('');
+	const [deletePlaylistId, setDeletePlaylistId] = useState({});
+
 	const [error, setError] = useState('');
 
 	const buttonRef = useRef(null);
@@ -49,6 +53,15 @@ export default function Menu({ isOpen, setIsOpen }) {
 		setError('');
 		setNewPlaylistName('');
 		setIsCreateModalOpen(false);
+	};
+
+	const openDeleteModal = (data) => {
+		setDeletePlaylistId(data);
+		setIsDeleteModalOpen(true);
+	};
+
+	const closeDeleteModal = () => {
+		setIsDeleteModalOpen(false);
 	};
 
 	if (isLoading) {
@@ -129,7 +142,57 @@ export default function Menu({ isOpen, setIsOpen }) {
 				</div>
 			)}
 
-			<div className={'sm:w-full w-48 h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-y-auto overflow-x-hidden' + (isOpen ? '' : ' sm:flex hidden')}>
+			{isDeleteModalOpen && (
+				<div className="fixed inset-0 z-[100] overflow-hidden">
+					<div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+						<div className="fixed inset-0 transition-opacity">
+							<div className="absolute inset-0 bg-black opacity-75" onClick={() => closeDeleteModal()}></div>
+						</div>
+						<span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+						<div className="inline-block align-bottom bg-zinc-800 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+							<button onClick={() => closeDeleteModal()} class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+								<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+								</svg>
+								<span class="sr-only">Close modal</span>
+							</button>
+							<div class="p-4 md:p-5 text-center">
+								<svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+								</svg>
+								<h3 class="mb-5 sm:text-lg text-sm font-normal text-gray-500 dark:text-gray-400">
+									Are you sure you want to delete the playlist
+									<br /> <strong>{deletePlaylistId.name}</strong>
+								</h3>
+								<button
+									onClick={() => {
+										const deletePlaylist = async () => {
+											try {
+												const response = await fetch('/api/playlist', { method: 'DELETE', body: JSON.stringify({ playlistId: deletePlaylistId.id }) });
+												const playlistsData = await response.json();
+												fetchPlaylist();
+												closeDeleteModal();
+												setDeletePlaylistId({});
+											} catch (error) {
+												console.error('Error fetching audio data:', error);
+											}
+										};
+
+										deletePlaylist();
+									}}
+									class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+									Yes, I'm sure
+								</button>
+								<button onClick={() => closeDeleteModal()} class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+									No, cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
+			<div className={'sm:w-[216px] w-48 h-full left-0 top-0 sm:relative absolute z-50 sm:z-10 overflow-y-auto overflow-x-hidden' + (isOpen ? '' : ' sm:flex hidden')}>
 				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-y-auto overflow-x-hidden gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
 					<div className="flex justify-between items-center flex-grow-0 flex-shrink-0 w-full relative p-3 pb-0 rounded-lg">
 						<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5 rounded-[999px] bg-[#63676f]">
@@ -171,14 +234,22 @@ export default function Menu({ isOpen, setIsOpen }) {
 							</svg>
 						</div>
 						{playlists.map((playlist, index) => (
-							<div
-								key={index + '-playlist'}
-								onClick={() => {
-									setIsOpen(false);
-									router.push('/playlists/' + playlist.id);
-								}}
-								className="flex justify-start items-center flex-grow-0 flex-shrink-0 w-[216px] relative gap-2.5 p-3 rounded-lg cursor-pointer">
-								<p className="flex-grow w-48 text-sm font-medium text-left text-[#fcfcfc] hover:text-gray-400">{playlist.name}</p>
+							<div key={index + '-playlist'} className="flex w-full justify-between align-item group">
+								<div
+									onClick={() => {
+										setIsOpen(false);
+										router.push('/playlists/' + playlist.id);
+									}}
+									className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2.5 p-3 rounded-lg cursor-pointer">
+									<p className="flex-grow w-24 text-sm font-medium text-left text-[#fcfcfc] group-hover:text-gray-400">{playlist.name}</p>
+								</div>
+								{playlist.name != 'Liked' && (
+									<div className="select-none flex justify-center items-center group-hover:flex hidden">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-3 h-3 cursor-pointer" onClick={() => openDeleteModal(playlist)}>
+											<path fill="#9898a6" d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+										</svg>
+									</div>
+								)}
 							</div>
 						))}
 					</div>
