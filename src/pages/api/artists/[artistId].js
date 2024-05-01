@@ -4,6 +4,7 @@ import { dbConfig } from '/lib/config';
 import { getServerSession } from 'next-auth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from '../auth/[...nextauth]';
+import UserAccess from '../../../../lib/auth';
 
 async function connectMySQL() {
 	try {
