@@ -27,6 +27,13 @@ export default function Menu({ isOpen, setIsOpen }) {
 		// { name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
 	]);
 
+	useEffect(() => {
+		if (session && !collections.some((item) => item.name === 'Whitelist')) {
+			const updatedCollections = [...collections, { name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'whitelist' }];
+			setCollections(updatedCollections);
+		}
+	}, [session, collections]);
+
 	const fetchPlaylist = async () => {
 		try {
 			const response = await fetch('/api/playlist');
