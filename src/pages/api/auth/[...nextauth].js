@@ -72,7 +72,7 @@ export const authOptions = (req) => ({
 					session.user.id = existingUser.user_id_public;
 					session.user.username = existingUser.user_username;
 					session.user.version = existingUser.user_version;
-					session.user.access = existingUser.authorization_id == (4 || 3);
+					session.user.access = existingUser.authorization_id == 4 || existingUser.authorization_id == 3;
 				}
 			} catch (error) {
 				console.error('Error during session creation:', error);
