@@ -23,9 +23,27 @@ export default async function Whitelist(req, res) {
 	if (req.method === 'GET') {
 		const connection = await connectMySQL();
 
-		if (session.user.email == process.env.ADMIN) {
-			const [users] = await connection.execute('SELECT * FROM users');
+		if (session.user.email === process.env.ADMIN) {
+			const [users] = await connection.execute('SELECT * FROM users LEFT JOIN authorization a on a.authorization_id = users.authorization_id;');
+			users.forEach((user) => {
+				if (user.user_email === process.env.ADMIN) {
+					user.isAdmin = true;
+				} else {
+					user.isAdmin = false;
+				}
+			});
 			res.status(200).send(users);
+		}
+
+		res.status(401).send({ error: 'unauthorized' });
+	} else if (req.method == 'POST') {
+		const connection = await connectMySQL();
+		const { userId, authorizationName } = req.body;
+		const [[users]] = await connection.execute('SELECT * FROM users WHERE user_id_public = ?;', [userId]);
+
+		if (process.env.ADMIN != users.user_email) {
+			await connection.execute('UPDATE users SET authorization_id = (SELECT authorization_id FROM authorization WHERE authorization_name = ?) WHERE user_id_public = ?;', [authorizationName, userId]);
+			res.status(200).send({ status: 'ok' });
 		}
 		res.status(401).send({ error: 'unauthorized' });
 	} else {
