@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_company VARCHAR(30) NOT NULL,
     user_name VARCHAR(150) NOT NULL,
     user_version VARCHAR(10) NOT NULL,
+    authorization_id INT REFERENCES authorization(authorization_id),
     PRIMARY KEY (user_id)
 );
 
@@ -102,15 +103,9 @@ CREATE TABLE IF NOT EXISTS authorization (
     PRIMARY KEY (authorization_id)
 );
 
--- Create table relation "user_authorization"
-CREATE TABLE IF NOT EXISTS user_authorization (
-    user_id INT REFERENCES users(user_id),
-    authorization_id INT REFERENCES authorization(authorization_id),
-    PRIMARY KEY (user_id, authorization_id)
-);
 
 INSERT INTO authorization (authorization_name) VALUES
-   ('deneid'),
+   ('denied'),
    ('demo'),
    ('premium'),
    ('admin');
