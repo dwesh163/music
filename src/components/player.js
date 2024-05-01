@@ -80,10 +80,11 @@ export default function Player({ isStarted, setIsStarted }) {
 
 	useEffect(() => {
 		let songData = JSON.parse(localStorage.getItem('songData'));
-		songData.status = 'pause';
-
-		localStorage.setItem('songData', JSON.stringify(songData));
-		setIsPlaying(false);
+		if (songData) {
+			songData.status = 'pause';
+			localStorage.setItem('songData', JSON.stringify(songData));
+			setIsPlaying(false);
+		}
 	}, []);
 
 	useEffect(() => {
