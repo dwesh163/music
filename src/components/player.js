@@ -10,6 +10,7 @@ export default function Player({ isStarted, setIsStarted }) {
 	const [onLoad, setOnLoad] = useState(false);
 	const [isNewSong, setIsNewSong] = useState(true);
 	const [loop, setLoop] = useState(false);
+	const [isFirst, setIsFirst] = useState(true);
 	const audioRef = useRef();
 	const progressRef = useRef();
 
@@ -77,13 +78,13 @@ export default function Player({ isStarted, setIsStarted }) {
 		}
 	}, [audioData]);
 
-	// useEffect(() => {
-	// 	let songData = JSON.parse(localStorage.getItem('songData'));
-	// 	songData.status = 'pause';
+	useEffect(() => {
+		let songData = JSON.parse(localStorage.getItem('songData'));
+		songData.status = 'pause';
 
-	// 	localStorage.setItem('songData', JSON.stringify(songData));
-	// 	setIsPlaying(false);
-	// }, []);
+		localStorage.setItem('songData', JSON.stringify(songData));
+		setIsPlaying(false);
+	}, []);
 
 	useEffect(() => {
 		const songData = JSON.parse(localStorage.getItem('songData'));
