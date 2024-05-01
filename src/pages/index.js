@@ -39,7 +39,7 @@ export default function Home({ isStarted, setIsStarted }) {
 				setRecommandations(data.recommendations.tracks);
 				localStorage.setItem('recommendations', JSON.stringify(data.recommendations.tracks));
 				if (data.error) {
-					router.push('error?error=AccessDenied');
+					router.push('/error?error=AccessDenied');
 				}
 				setIsLoading(false);
 			})
@@ -56,7 +56,7 @@ export default function Home({ isStarted, setIsStarted }) {
 		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (!session.user.access) {
-			router.push('error?error=AccessDenied');
+			router.push('/error?error=AccessDenied');
 		} else {
 			setIsLoading(false);
 		}
