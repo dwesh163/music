@@ -13,6 +13,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [playlists, setPlaylists] = useState(false);
+	const [loginIsLoading, setLoginIsLoading] = useState(true);
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -30,7 +31,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 			})
 			.then((playlistsData) => {
 				setPlaylists(playlistsData);
-				setIsLoading(false);
+				setLoginIsLoading(false);
 			})
 			.catch((error) => {
 				console.error('Error fetching playlist data:', error);
@@ -51,7 +52,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 		}
 	}, [session, status]);
 
-	if (isLoading) {
+	if (isLoading || loginIsLoading) {
 		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
