@@ -92,18 +92,18 @@ export default function artist({ isStarted, setIsStarted }) {
 	}, [router.query.artistId]);
 
 	useEffect(() => {
-		if (!session || status == 'loading' || status == 'unauthenticated') {
+		if (!session && status != 'unauthenticated') {
 			setIsLoading(true);
 			return;
 		}
-		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (!session.user.access) {
 			router.push('error?error=AccessDenied');
 		} else {
 			setIsLoading(false);
 		}
-	}, [session]);
+	}, [session, status]);
 
 	if (isLoading) {
 		return <Loading status={isLoading ? 'loading' : status} />;
