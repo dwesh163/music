@@ -15,6 +15,39 @@ export default function PlayList({ isStarted, setIsStarted }) {
 	const [whitelist, setWhitelist] = useState([]);
 
 	const [isOpen, setIsOpen] = useState(false);
+	const [selectedAuthorizations, setSelectedAuthorizations] = useState({});
+
+	const authorizations = ['denied', 'demo', 'premium', 'admin'];
+
+	const handleAuthorizationChange = (userId, authorizationName) => {
+		console.log(userId, authorizationName);
+		setSelectedAuthorizations((prevState) => ({
+			...prevState,
+			[userId]: authorizationName,
+		}));
+		updateAuthorization(userId, authorizationName);
+	};
+
+	const updateAuthorization = (userId, authorizationName) => {
+		fetch('/api/admin/whitelist', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				userId: userId,
+				authorizationName: authorizationName,
+			}),
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+			})
+			.catch((error) => {
+				console.error('Error updating authorization:', error);
+			});
+	};
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
@@ -29,7 +62,12 @@ export default function PlayList({ isStarted, setIsStarted }) {
 				return response.json();
 			})
 			.then((whitelistData) => {
+				const parsedData = {};
+				whitelistData.forEach((item) => {
+					parsedData[item.user_id_public] = item.authorization_name;
+				});
 				setWhitelist(whitelistData);
+				setSelectedAuthorizations(parsedData);
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -86,6 +124,9 @@ export default function PlayList({ isStarted, setIsStarted }) {
 													Email
 												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
+													Authorization
+												</th>
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
 													Username
 												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
@@ -110,6 +151,19 @@ export default function PlayList({ isStarted, setIsStarted }) {
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
 														{user.user_email}
+													</th>
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
+														{!user.isAdmin ? (
+															<select className="bg-transparent text-white border-none outline-none" value={selectedAuthorizations[user.user_id_public] || ''} onChange={(e) => handleAuthorizationChange(user.user_id_public, e.target.value)}>
+																{authorizations.map((auth, index) => (
+																	<option key={index} value={auth}>
+																		{auth}
+																	</option>
+																))}
+															</select>
+														) : (
+															'Admin'
+														)}
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap ">
 														{user.user_username}
