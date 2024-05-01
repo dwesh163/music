@@ -5,6 +5,7 @@ import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
+import UserAccess from '/lib/auth';
 import fs from 'fs';
 
 const path = require('path');
@@ -19,11 +20,11 @@ async function connectMySQL() {
 	}
 }
 
-export default async function Track(req, res) {
+export default async function Tracks(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
-		return res.status(401).json({ error: 'Unauthorized' });
+	if (!(await UserAccess(session, 'player'))) {
+		return res.status(401).send({ error: 'Unauthorized' });
 	}
 
 	if (req.method === 'POST') {

@@ -94,7 +94,7 @@ export default function Playlnaist({ isStarted, setIsStarted }) {
 		return <Loading status={isLoading ? 'loading' : error != '' ? 'error' : status} error={error} />;
 	}
 
-	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+	if (!session.access || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 		router.push('/auth/signin?callbackUrl=' + router.asPath);
 	}
 

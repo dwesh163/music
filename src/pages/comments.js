@@ -21,12 +21,22 @@ export default function PlayList() {
 		setIsOpen(!isOpen);
 	};
 
-	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
-		return <Loading status={isLoading ? 'loading' : status} />;
-	}
+	useEffect(() => {
+		if (!session || status == 'loading' || status == 'unauthenticated') {
+			setIsLoading(true);
+			return;
+		}
+		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+			router.push('/auth/signin?callbackUrl=' + router.asPath);
+		} else if (!session.user.access) {
+			router.push('error?error=AccessDenied');
+		} else {
+			setIsLoading(false);
+		}
+	}, [session]);
 
-	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	if (isLoading) {
+		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
 	return (

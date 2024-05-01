@@ -7,6 +7,7 @@ import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 
 import packageJson from '/package.json';
+import UserAccess from '../../../../lib/auth';
 
 async function connectMySQL() {
 	try {
@@ -45,9 +46,11 @@ export const authOptions = (req) => ({
 					await connection.execute('INSERT INTO users (user_id_public, user_email, user_username, user_image, user_provider, user_company, user_name, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [uuidv4(), user.email, profile.login ? profile.login : '', user.image ? user.image : '', account.provider ? account.provider : '', profile.company ? profile.company : '', profile.name ? profile.name : '', packageJson.version]);
 					const [[insertedUser]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [user.email]);
 					await connection.execute('INSERT INTO playlists (playlist_name, public_id, playlist_user) VALUES (?, ?, ?)', ['Liked', uuidv4(), insertedUser.user_id]);
+					await connection.execute('INSERT INTO user_authorization (user_id, authorization_id) VALUES (?, ?)', [insertedUser.user_id, 1]);
 				}
 
-				if (JSON.parse(JSON.stringify(process.env.WHITELIST)).includes(user.email)) {
+				const session = { user };
+				if (await UserAccess(session, 'player')) {
 					return Promise.resolve(true);
 				}
 
@@ -69,6 +72,7 @@ export const authOptions = (req) => ({
 					session.user.id = existingUser.user_id_public;
 					session.user.username = existingUser.user_username;
 					session.user.version = existingUser.user_version;
+					session.user.access = existingUser.authorization_id == (4 || 3);
 				}
 			} catch (error) {
 				console.error('Error during session creation:', error);

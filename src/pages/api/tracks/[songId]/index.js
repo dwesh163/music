@@ -3,15 +3,16 @@ import { getServerSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import path from 'path';
 import { authOptions } from '../../auth/[...nextauth]';
+import UserAccess from '/lib/auth';
 
 export default async function getTrack(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (req.method === 'GET') {
-		if (!session) {
-			return res.status(401).json({ error: 'Unauthorized' });
-		}
+	if (!(await UserAccess(session, 'player'))) {
+		return res.status(401).send({ error: 'Unauthorized' });
+	}
 
+	if (req.method === 'GET') {
 		try {
 			const filePath = path.join(process.cwd(), 'musics/' + req.query.songId + '.mp3');
 			const audioFile = fs.readFileSync(filePath);

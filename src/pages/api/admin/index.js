@@ -3,6 +3,7 @@ import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
+import UserAccess from '/lib/auth';
 
 async function connectMySQL() {
 	try {
@@ -16,7 +17,7 @@ async function connectMySQL() {
 export default async function Comments(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
+	if (!(await UserAccess(session, 'admin'))) {
 		return res.status(401).send({ error: 'Unauthorized' });
 	}
 
@@ -41,11 +42,8 @@ export default async function Comments(req, res) {
 	} else if (req.method === 'GET') {
 		const connection = await connectMySQL();
 
-		// if (session.user.email == process.env.ADMIN) {
 		const [[info]] = await connection.execute('SELECT * FROM app_info');
 		res.status(200).send(info);
-		// }
-		res.status(401).send({ error: 'unauthorized' });
 	} else {
 		res.setHeader('Allow', ['POST', 'GET']);
 		res.status(405).send({ error: `The ${req.method} method is not allowed` });

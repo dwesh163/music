@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Player from '@/components/player';
+import AddInPlaylist from '@/components/modal';
 import Menu from '@/components/menu';
 import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
@@ -12,7 +13,7 @@ export default function Artists({ isStarted, setIsStarted }) {
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [playlists, setPlaylists] = useState(false);
+	const [artists, setArtists] = useState(false);
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -28,8 +29,8 @@ export default function Artists({ isStarted, setIsStarted }) {
 				}
 				return response.json();
 			})
-			.then((playlistsData) => {
-				setPlaylists(playlistsData);
+			.then((artistData) => {
+				setArtists(artistData);
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -37,12 +38,22 @@ export default function Artists({ isStarted, setIsStarted }) {
 			});
 	}, []);
 
-	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
-		return <Loading status={isLoading ? 'loading' : status} />;
-	}
+	useEffect(() => {
+		if (!session || status == 'loading' || status == 'unauthenticated') {
+			setIsLoading(true);
+			return;
+		}
+		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+			router.push('/auth/signin?callbackUrl=' + router.asPath);
+		} else if (!session.user.access) {
+			router.push('error?error=AccessDenied');
+		} else {
+			setIsLoading(false);
+		}
+	}, [session]);
 
-	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	if (isLoading) {
+		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
 	return (
@@ -56,6 +67,7 @@ export default function Artists({ isStarted, setIsStarted }) {
 			<main className="w-screen h-screen">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
+					<AddInPlaylist />
 					<div
 						className="w-full h-full overflow-hidden"
 						onClick={() => {
@@ -82,8 +94,8 @@ export default function Artists({ isStarted, setIsStarted }) {
 											</tr>
 										</thead>
 										<tbody>
-											{playlists.map((playlist, index) => (
-												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer" onClick={() => router.push('/playlists/' + playlist.id)}>
+											{artists.map((playlist, index) => (
+												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer" onClick={() => router.push('/artist/' + playlist.id)}>
 													<th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
 														{playlist.name}
 													</th>

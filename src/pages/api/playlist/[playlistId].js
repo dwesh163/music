@@ -4,6 +4,7 @@ import { dbConfig } from '/lib/config';
 import { useRouter } from 'next/router';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
+import UserAccess from '/lib/auth';
 
 async function connectMySQL() {
 	try {
@@ -14,11 +15,11 @@ async function connectMySQL() {
 	}
 }
 
-export default async function Track(req, res) {
+export default async function PlayList(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
-		return res.status(401).json({ error: 'Unauthorized' });
+	if (!(await UserAccess(session, 'player'))) {
+		return res.status(401).send({ error: 'Unauthorized' });
 	}
 
 	if (req.method === 'GET') {

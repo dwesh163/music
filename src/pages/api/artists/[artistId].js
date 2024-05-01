@@ -14,10 +14,10 @@ async function connectMySQL() {
 	}
 }
 
-export default async function Comments(req, res) {
+export default async function Artist(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
+	if (!(await UserAccess(session, 'player'))) {
 		return res.status(401).send({ error: 'Unauthorized' });
 	}
 

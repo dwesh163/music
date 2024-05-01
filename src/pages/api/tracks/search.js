@@ -1,12 +1,13 @@
 import { getServerSession } from 'next-auth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from '../auth/[...nextauth]';
+import UserAccess from '/lib/auth';
 
-export default async function Track(req, res) {
+export default async function Tracks(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
-		return res.status(401).json({ error: 'Unauthorized' });
+	if (!(await UserAccess(session, 'player'))) {
+		return res.status(401).send({ error: 'Unauthorized' });
 	}
 
 	if (req.method === 'GET') {

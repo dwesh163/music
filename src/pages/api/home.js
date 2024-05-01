@@ -3,6 +3,7 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from './auth/[...nextauth]';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
+import UserAccess from '/lib/auth';
 
 async function connectMySQL() {
 	try {
@@ -13,10 +14,10 @@ async function connectMySQL() {
 	}
 }
 
-export default async function Comments(req, res) {
+export default async function Home(req, res) {
 	const session = await getServerSession(req, res, authOptions);
 
-	if (!session) {
+	if (!(await UserAccess(session, 'player'))) {
 		return res.status(401).send({ error: 'Unauthorized' });
 	}
 

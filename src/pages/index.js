@@ -12,7 +12,7 @@ export default function Home({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [forYouText, setForYouText] = useState([{ text: 'Based on your likes' }, { text: 'New Album' }, { text: 'New Track for you' }, { text: 'New For You' }]);
 	const [recommandations, setRecommandations] = useState([]);
@@ -36,7 +36,6 @@ export default function Home({ isStarted, setIsStarted }) {
 				return response.json();
 			})
 			.then((data) => {
-				console.log(data.recommendations.tracks);
 				setRecommandations(data.recommendations.tracks);
 				localStorage.setItem('recommendations', JSON.stringify(data.recommendations.tracks));
 				setIsLoading(false);
@@ -46,12 +45,22 @@ export default function Home({ isStarted, setIsStarted }) {
 			});
 	}, []);
 
-	if (status == 'loading' || status == 'unauthenticated' || isLoading) {
-		return <Loading status={isLoading ? 'loading' : status} />;
-	}
+	useEffect(() => {
+		if (!session || status == 'loading' || status == 'unauthenticated') {
+			setIsLoading(true);
+			return;
+		}
+		if (packageJson && packageJson.version && packageJson.version != session.user.version) {
+			router.push('/auth/signin?callbackUrl=' + router.asPath);
+		} else if (!session.user.access) {
+			router.push('error?error=AccessDenied');
+		} else {
+			setIsLoading(false);
+		}
+	}, [session]);
 
-	if (packageJson && packageJson.version && packageJson.version != session.user.version) {
-		router.push('/auth/signin?callbackUrl=' + router.asPath);
+	if (isLoading) {
+		return <Loading status={isLoading ? 'loading' : status} />;
 	}
 
 	return (

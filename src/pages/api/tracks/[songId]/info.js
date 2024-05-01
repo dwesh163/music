@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/react';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
+import UserAccess from '/lib/auth';
 
 async function connectMySQL() {
 	try {
@@ -17,8 +18,8 @@ export default async function Info(req, res) {
 	if (req.method === 'GET') {
 		const { songId } = req.query;
 
-		if (!session) {
-			return res.status(401).json({ error: 'Unauthorized' });
+		if (!(await UserAccess(session, 'player'))) {
+			return res.status(401).send({ error: 'Unauthorized' });
 		}
 
 		if (!songId) {
