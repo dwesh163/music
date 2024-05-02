@@ -157,11 +157,11 @@ export default function PlayList({ isStarted, setIsStarted }) {
 										<tbody>
 											{whitelist.map((user, index) => (
 												<>
-													<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm" onClick={() => (!selectedUser || selectedUser != user.user_email ? setSelectedUser(user.user_email) : setSelectedUser(null))}>
+													<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm">
 														<th scope="row" className="px-3 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap text-center">
 															{index + 1}
 														</th>
-														<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell">
+														<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell" onClick={() => (!selectedUser || selectedUser != user.user_email ? setSelectedUser(user.user_email) : setSelectedUser(null))}>
 															<p className="text-base">{user.user_name}</p>
 															<p className={user.user_name ? 'text-gray-400 font-normal' : 'text-base'}>{user.user_email}</p>
 														</th>
