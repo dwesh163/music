@@ -22,6 +22,25 @@ export default function Playlist({ isStarted, setIsStarted }) {
 		setIsOpen(!isOpen);
 	};
 
+	const handleDelButtonClick = (songId) => {
+		fetch('/api/playlist/' + playlist.playlist.id, { method: 'DELETE', body: JSON.stringify({ songId }) })
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then((data) => {
+				console.log(data);
+				if (data.status == 'remove') {
+					fetchData();
+				}
+			})
+			.catch((error) => {
+				console.error('Error fetching playlist data:', error);
+			});
+	};
+
 	const downloadSong = async (id) => {
 		const response = await fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: id }) });
 		const tracksData = await response.json();
@@ -69,23 +88,24 @@ export default function Playlist({ isStarted, setIsStarted }) {
 		}
 	};
 
+	const fetchData = async () => {
+		try {
+			const response = await fetch('/api/playlist/' + router.query.playlistId);
+			const playlistData = await response.json();
+			setPlaylist(playlistData);
+			if (playlistData.error) {
+				setError(playlistData.error);
+			}
+			setIsLoading(false);
+		} catch (error) {
+			console.error('Error fetching audio data:', error);
+		}
+	};
+
 	useEffect(() => {
 		if (!router.query.playlistId) {
 			return;
 		}
-		const fetchData = async () => {
-			try {
-				const response = await fetch('/api/playlist/' + router.query.playlistId);
-				const playlistData = await response.json();
-				setPlaylist(playlistData);
-				if (playlistData.error) {
-					setError(playlistData.error);
-				}
-				setIsLoading(false);
-			} catch (error) {
-				console.error('Error fetching audio data:', error);
-			}
-		};
 
 		fetchData();
 	}, [router.query.playlistId]);
@@ -212,6 +232,11 @@ export default function Playlist({ isStarted, setIsStarted }) {
 													</td>
 													<td className="hidden md:table-cell px-6 py-4">{new Date(track.date).toLocaleDateString('en-US')}</td>
 													<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration / 3600) > 0 ? Math.floor(track.duration / 3600) + 'h ' : ''}${Math.floor((track.duration % 3600) / 60)}m ${track.duration % 60}s`}</td>
+													<td className="px-6 py-4">
+														<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-3 h-3 cursor-pointer" onClick={() => handleDelButtonClick(track.track_public_id)}>
+															<path fill="#9898a6" d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+														</svg>
+													</td>
 												</tr>
 											))}
 										</tbody>
