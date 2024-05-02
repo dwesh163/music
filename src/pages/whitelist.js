@@ -13,6 +13,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [whitelist, setWhitelist] = useState([]);
+	const [selectedUser, setSelectedUser] = useState(null);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedAuthorizations, setSelectedAuthorizations] = useState({});
@@ -136,12 +137,6 @@ export default function PlayList({ isStarted, setIsStarted }) {
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Email
 												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 sm:hidden table-cell">
-													Last Login
-												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 sm:hidden table-cell">
-													Auth
-												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Authorization
 												</th>
@@ -161,49 +156,70 @@ export default function PlayList({ isStarted, setIsStarted }) {
 										</thead>
 										<tbody>
 											{whitelist.map((user, index) => (
-												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm">
-													<th scope="row" className="px-3 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap text-center">
-														{index + 1}
-													</th>
-													<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell">
-														<p className="text-base">{user.user_name}</p>
-														<p className={user.user_name ? 'text-gray-400 font-normal' : 'text-base'}>{user.user_email}</p>
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
-														{user.user_name}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
-														{user.user_email}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap sm:hidden table-cell">
-														<p className="text-gray-400 font-normal">{new Date(user.last_connect).toLocaleString('fr-FR')}</p>
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
-														{!user.isAdmin ? (
-															<select className="bg-transparent text-white border-none outline-none" value={selectedAuthorizations[user.user_id_public] || ''} onChange={(e) => handleAuthorizationChange(user.user_id_public, e.target.value)}>
-																{authorizations.map((auth, index) => (
-																	<option key={index} value={auth}>
-																		{auth}
-																	</option>
-																))}
-															</select>
-														) : (
-															'Admin'
-														)}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
-														{user.user_username}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
-														{user.user_provider}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
-														{user.user_company.slice(0, 1) === '@' ? user.user_company.slice(1) : user.user_company}
-													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
-														{new Date(user.last_connect).toLocaleString('fr-FR')}
-													</th>
-												</tr>
+												<>
+													<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm" onClick={() => (!selectedUser || selectedUser != user.user_email ? setSelectedUser(user.user_email) : setSelectedUser(null))}>
+														<th scope="row" className="px-3 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap text-center">
+															{index + 1}
+														</th>
+														<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell">
+															<p className="text-base">{user.user_name}</p>
+															<p className={user.user_name ? 'text-gray-400 font-normal' : 'text-base'}>{user.user_email}</p>
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
+															{user.user_name}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
+															{user.user_email}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
+															{!user.isAdmin ? (
+																<select className="bg-transparent text-white border-none outline-none" value={selectedAuthorizations[user.user_id_public] || ''} onChange={(e) => handleAuthorizationChange(user.user_id_public, e.target.value)}>
+																	{authorizations.map((auth, index) => (
+																		<option key={index} value={auth}>
+																			{auth}
+																		</option>
+																	))}
+																</select>
+															) : (
+																'Admin'
+															)}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
+															{user.user_username}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
+															{user.user_provider}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
+															{user.user_company.slice(0, 1) === '@' ? user.user_company.slice(1) : user.user_company}
+														</th>
+														<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
+															{new Date(user.last_connect).toLocaleString('fr-FR')}
+														</th>
+													</tr>
+													{selectedUser == user.user_email && (
+														<tr className="bg-[#11111170] cursor-pointer" onClick={() => setSelectedUser(null)}>
+															<th scope="row" className="px-2 pl-12" colSpan="3">
+																<span className="flex gap-1">
+																	<p className="">Provider : </p>
+																	<p className="font-normal">{user.user_provider}</p>
+																</span>
+																<span className="flex gap-1">
+																	<p className="">Username : </p>
+																	<p className="font-normal">{user.user_username}</p>
+																</span>
+																<span className="flex gap-1">
+																	<p className="">Company : </p>
+																	<p className="font-normal">{user.user_company.slice(0, 1) === '@' ? user.user_company.slice(1) : user.user_company}</p>
+																</span>
+																<span className="flex gap-1">
+																	<p className="">Last Login : </p>
+																	<p className="font-normal">{new Date(user.last_connect).toLocaleString('fr-FR')}</p>
+																</span>
+															</th>
+														</tr>
+													)}
+												</>
 											))}
 										</tbody>
 									</table>
