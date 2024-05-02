@@ -207,7 +207,7 @@ export default function Album({ isStarted, setIsStarted }) {
 													</td>
 													<td className="hidden md:table-cell px-6 py-4">{new Date(album.release_date).toLocaleDateString('en-US')}</td>
 													<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</td>
-													<td>
+													<td className="px-6 py-4">
 														<svg
 															width="24"
 															height="24"
