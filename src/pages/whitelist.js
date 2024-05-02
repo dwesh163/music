@@ -192,7 +192,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 														{user.user_company.slice(0, 1) === '@' ? user.user_company.slice(1) : user.user_company}
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
-														{new Date(new Date(user.last_connect).getTime() + new Date(user.last_connect).getTimezoneOffset() * -60000).toLocaleString('fr-FR')}
+														{new Date(user.last_connect).toLocaleString('fr-FR')}
 													</th>
 												</tr>
 											))}
