@@ -6,6 +6,7 @@ import Menu from '@/components/menu';
 import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
+import AddInPlaylist from '@/components/modal';
 
 export default function Tracks({ isStarted, setIsStarted }) {
 	const { data: session, status } = useSession();
@@ -16,6 +17,8 @@ export default function Tracks({ isStarted, setIsStarted }) {
 	const [results, setResults] = useState([]);
 
 	const [isOpen, setIsOpen] = useState(false);
+	const [songData, setSongData] = useState({});
+	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
@@ -78,7 +81,7 @@ export default function Tracks({ isStarted, setIsStarted }) {
 		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (!session.user.access) {
-			router.push('error?error=AccessDenied');
+			router.push('/error?error=AccessDenied');
 		} else {
 			setIsLoading(false);
 		}
@@ -99,6 +102,7 @@ export default function Tracks({ isStarted, setIsStarted }) {
 			<main className="w-full h-full overflow-hidden bg-[#171719]">
 				<div className="w-full h-full flex overflow-hidden bg-[#171719]">
 					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
+					<AddInPlaylist songData={songData} isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} />
 					<div
 						className="w-full h-full overflow-hidden"
 						onClick={() => {
@@ -210,6 +214,25 @@ export default function Tracks({ isStarted, setIsStarted }) {
 													</td>
 													<td className="hidden md:table-cell px-6 py-4">{new Date(track.album.release_date).toLocaleDateString('en-US')}</td>
 													<td className="hidden md:table-cell px-6 py-4">{`${Math.floor(track.duration_ms / 1000 / 3600) > 0 ? Math.floor(track.duration_ms / 1000 / 3600) + 'h ' : ''}${Math.floor(((track.duration_ms / 1000) % 3600) / 60)}m ${track.duration_ms % 60}s`}</td>
+													<td>
+														<svg
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none"
+															xmlns="http://www.w3.org/2000/svg"
+															className="self-stretch flex-grow relative cursor-pointer"
+															onClick={() => {
+																setSongData(track);
+																setIsAddModalOpen(true);
+															}}
+															preserveAspectRatio="none">
+															<path d="M6.44504 15.3962L7.25001 16.0158V15V3.5H7.75001V17.9986C7.74633 18.6402 7.55283 19.2664 7.19389 19.7982C6.8347 20.3304 6.32593 20.7442 5.73177 20.9876C5.13762 21.2309 4.48471 21.2928 3.85541 21.1654C3.22612 21.0381 2.64865 20.7272 2.19586 20.272C1.74307 19.8168 1.43526 19.2377 1.31125 18.6077C1.18725 17.9777 1.25262 17.3252 1.4991 16.7323C1.74559 16.1395 2.16215 15.6329 2.69623 15.2765C3.23005 14.9204 3.85737 14.7302 4.49911 14.73C5.20326 14.7326 5.88702 14.9667 6.44504 15.3962ZM2.97219 20.2865C3.42443 20.5887 3.95611 20.75 4.50001 20.75C5.22935 20.75 5.92883 20.4603 6.44455 19.9445C6.96028 19.4288 7.25001 18.7293 7.25001 18C7.25001 17.4561 7.08873 16.9244 6.78655 16.4722C6.48438 16.0199 6.05489 15.6675 5.55239 15.4593C5.04989 15.2512 4.49696 15.1967 3.96351 15.3028C3.43006 15.4089 2.94006 15.6709 2.55547 16.0555C2.17087 16.4401 1.90896 16.9301 1.80285 17.4635C1.69674 17.9969 1.7512 18.5499 1.95934 19.0524C2.16748 19.5549 2.51996 19.9844 2.97219 20.2865Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+															<path d="M12.5 15.3H20.5V15.8H12.5V15.3Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+															<path d="M12.5 7.30005H22.5V7.80005H12.5V7.30005Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+															<path d="M12.5 11.3H21.5V11.8H12.5V11.3Z" fill="#FCFCFC" stroke="#FCFCFC"></path>
+														</svg>
+													</td>
 												</tr>
 											))}
 										</tbody>
