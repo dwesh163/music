@@ -83,7 +83,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (!session.user.access) {
-			router.push('error?error=AccessDenied');
+			router.push('/error?error=AccessDenied');
 		} else {
 			setIsLoading(false);
 		}
@@ -122,21 +122,24 @@ export default function PlayList({ isStarted, setIsStarted }) {
 							<div className="w-full py-3">
 								<div className="relative overflow-x-auto">
 									<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-										<thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
+										<thead className="text-xs uppercase dark:text-gray-400">
 											<tr>
-												<th scope="col" className="px-1 sm:px-3 py-0.5 sm:py-1">
+												<th scope="col" className="px-3 sm:px-3 py-0.5 sm:py-1 text-center">
 													#
 												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
+												<th scope="col" className="sm:px-6 py-1 sm:py-3 sm:hidden table-cell">
+													User
+												</th>
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Name
 												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Email
 												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
 													Authorization
 												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Username
 												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
@@ -153,13 +156,17 @@ export default function PlayList({ isStarted, setIsStarted }) {
 										<tbody>
 											{whitelist.map((user, index) => (
 												<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm">
-													<th scope="row" className="px-1 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap">
+													<th scope="row" className="px-3 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap text-center">
 														{index + 1}
 													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell">
+														<p className="text-base">{user.user_name}</p>
+														<p className={user.user_name ? 'text-gray-400 font-normal' : 'text-base'}>{user.user_email}</p>
+													</th>
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
 														{user.user_name}
 													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
 														{user.user_email}
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
@@ -175,7 +182,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 															'Admin'
 														)}
 													</th>
-													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap ">
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
 														{user.user_username}
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap hidden sm:table-cell">
