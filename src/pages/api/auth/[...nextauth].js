@@ -69,6 +69,8 @@ export const authOptions = (req) => ({
 			try {
 				const [[existingUser]] = await connection.execute('SELECT * FROM users LEFT JOIN authorization a on a.authorization_id = users.authorization_id WHERE user_email = ?', [session.user.email]);
 				if (existingUser) {
+					await connection.execute('UPDATE users SET last_connect = NOW() WHERE user_email = ?', [session.user.email]);
+
 					session.user.id = existingUser.user_id_public;
 					session.user.username = existingUser.user_username;
 					session.user.version = existingUser.user_version;
