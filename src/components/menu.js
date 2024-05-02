@@ -28,7 +28,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 	]);
 
 	useEffect(() => {
-		if (session && !collections.some((item) => item.name === 'Whitelist')) {
+		if (session.accessName == 'admin' && !collections.some((item) => item.name === 'Whitelist')) {
 			const updatedCollections = [...collections, { name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'whitelist' }];
 			setCollections(updatedCollections);
 		}
