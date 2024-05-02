@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 export default function AddInPlaylist({ songData, isAddModalOpen, setIsAddModalOpen }) {
 	const [playlists, setPlaylists] = useState([]);
 	const [selectedPlaylist, setSelectedPlaylist] = useState('');
-
-	console.log(songData);
 	useEffect(() => {
 		fetch('/api/playlist')
 			.then((response) => {
@@ -28,7 +26,6 @@ export default function AddInPlaylist({ songData, isAddModalOpen, setIsAddModalO
 	};
 
 	const handleAddButtonClick = () => {
-		console.log(songData.id);
 		fetch('/api/tracks/', { method: 'POST', body: JSON.stringify({ spotifyId: songData.id }) })
 			.then((response) => {
 				if (!response.ok) {
