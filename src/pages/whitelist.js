@@ -82,7 +82,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 		}
 		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
-		} else if (!session.user.access) {
+		} else if (session.user.access != 'admin') {
 			router.push('/error?error=AccessDenied');
 		} else {
 			setIsLoading(false);
