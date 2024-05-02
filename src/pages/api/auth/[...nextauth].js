@@ -67,12 +67,13 @@ export const authOptions = (req) => ({
 			const connection = await connectMySQL();
 
 			try {
-				const [[existingUser]] = await connection.execute('SELECT * FROM users WHERE user_email = ?', [session.user.email]);
+				const [[existingUser]] = await connection.execute('SELECT * FROM users LEFT JOIN authorization a on a.authorization_id = users.authorization_id WHERE user_email = ?', [session.user.email]);
 				if (existingUser) {
 					session.user.id = existingUser.user_id_public;
 					session.user.username = existingUser.user_username;
 					session.user.version = existingUser.user_version;
 					session.user.access = existingUser.authorization_id == 4 || existingUser.authorization_id == 3;
+					session.user.accessName = existingUser.authorization_name;
 				}
 			} catch (error) {
 				console.error('Error during session creation:', error);
