@@ -27,12 +27,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 		// { name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
 	]);
 
-	useEffect(() => {
-		if (session.user.accessName == 'admin' && !collections.some((item) => item.name === 'Whitelist')) {
-			const updatedCollections = [...collections, { name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'whitelist' }];
-			setCollections(updatedCollections);
-		}
-	}, [session, collections]);
+	const [admins, setAdmins] = useState([{ name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'whitelist' }]);
 
 	const fetchPlaylist = async () => {
 		try {
@@ -233,6 +228,19 @@ export default function Menu({ isOpen, setIsOpen }) {
 							</div>
 						))}
 					</div>
+					{session.user.accessName == 'admin' && (
+						<div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
+							<p className="flex-grow-0 flex-shrink-0 w-[129px] h-4 text-xs font-medium text-left text-[#9898a6]">ADMIN</p>
+							{admins.map((collection, index) => (
+								<div key={index + '-collection'} onClick={() => router.push('/' + collection.url)} className="flex justify-start items-center cursor-pointer flex-grow-0 flex-shrink-0 w-full relative gap-2.5 p-3 rounded-lg hover:text-gray-400 hover:brightness-75">
+									<div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-6 h-6 relative overflow-hidden gap-2.5">
+										<img src={collection.svg} />
+									</div>
+									<p className="flex-grow w-full text-sm font-medium text-left text-[#fcfcfc]">{collection.name}</p>
+								</div>
+							))}
+						</div>
+					)}
 					<div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
 						<div className="w-full flex justify-between">
 							<p className="flex-grow-0 flex-shrink-0 h-4 text-xs font-medium text-left text-[#9898a6]">MY PLAYLISTS</p>
