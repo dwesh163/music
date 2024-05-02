@@ -120,8 +120,8 @@ export default function artist({ isStarted, setIsStarted }) {
 			</Head>
 			<main className="w-screen h-screen">
 				<div className="w-full h-full relative flex overflow-hidden bg-[#171719]">
-					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					<AddInPlaylist songData={songData} isAddModalOpen={isAddModalOpen} setIsAddModalOpen={setIsAddModalOpen} />
+					<Menu isOpen={isOpen} setIsOpen={setIsOpen} />
 					{error == '' ? (
 						<div
 							className="w-full h-full overflow-hidden"
