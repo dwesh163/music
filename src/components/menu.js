@@ -198,11 +198,11 @@ export default function Menu({ isOpen, setIsOpen }) {
 				<div className="flex flex-col justify-start items-start w-full left-0 top-0 overflow-y-auto overflow-x-hidden gap-3 px-3 pt-4 pb-8 bg-[#212124] h-screen">
 					<div className="flex justify-between items-center flex-grow-0 flex-shrink-0 w-full relative p-3 pb-0 rounded-lg">
 						<div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5 rounded-[999px] bg-[#63676f]">
-							{session.user.image ? (
+							{session?.user?.image ? (
 								<img className="w-10 h-10 rounded-full" src={session.user.image} />
 							) : (
 								<p className="flex-grow-0 flex-shrink-0 w-8 h-8 text-8 pt-1 font-medium text-center text-[#cacad1]">
-									{session.user.name
+									{session?.user?.name
 										.split(' ')
 										.map((word) => word[0])
 										.join('')}
@@ -228,7 +228,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 							</div>
 						))}
 					</div>
-					{session.user.accessName == 'admin' && (
+					{session?.user?.accessName == 'admin' && (
 						<div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative">
 							<p className="flex-grow-0 flex-shrink-0 w-[129px] h-4 text-xs font-medium text-left text-[#9898a6]">ADMIN</p>
 							{admins.map((collection, index) => (
