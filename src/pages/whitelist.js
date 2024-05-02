@@ -54,7 +54,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 		setIsOpen(!isOpen);
 	};
 
-	useEffect(() => {
+	const fetchData = async () => {
 		fetch('/api/admin/whitelist')
 			.then((response) => {
 				if (!response.ok) {
@@ -74,6 +74,13 @@ export default function PlayList({ isStarted, setIsStarted }) {
 			.catch((error) => {
 				console.error('Error fetching playlist data:', error);
 			});
+	};
+
+	useEffect(() => {
+		fetchData();
+		setInterval(() => {
+			fetchData();
+		}, 10000);
 	}, []);
 
 	useEffect(() => {
