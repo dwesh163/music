@@ -136,7 +136,13 @@ export default function PlayList({ isStarted, setIsStarted }) {
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Email
 												</th>
-												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3">
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 sm:hidden table-cell">
+													Last Login
+												</th>
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 sm:hidden table-cell">
+													Auth
+												</th>
+												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
 													Authorization
 												</th>
 												<th scope="col" className="px-2 sm:px-6 py-1 sm:py-3 hidden sm:table-cell">
@@ -168,6 +174,9 @@ export default function PlayList({ isStarted, setIsStarted }) {
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white hidden sm:table-cell">
 														{user.user_email}
+													</th>
+													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap sm:hidden table-cell">
+														<p className="text-gray-400 font-normal">{new Date(user.last_connect).toLocaleString('fr-FR')}</p>
 													</th>
 													<th scope="row" className="px-2 sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white">
 														{!user.isAdmin ? (
