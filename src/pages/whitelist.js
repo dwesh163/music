@@ -126,8 +126,8 @@ export default function PlayList({ isStarted, setIsStarted }) {
 							</svg>
 						</div>
 
-						<div className="sm:px-7 px-4 overflow-y-scroll">
-							<div className="w-full py-3">
+						<div className="sm:px-7 px-4 mt-6 h-screen overflow-y-scroll">
+							<div className="w-full py-3 mb-[200px]">
 								<div className="relative overflow-x-auto">
 									<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 										<thead className="text-xs uppercase dark:text-gray-400">
@@ -167,6 +167,8 @@ export default function PlayList({ isStarted, setIsStarted }) {
 													<tr key={index} className="bg-[#11111170] hover:bg-[#1d1d1d70] cursor-pointer text-xs sm:text-sm">
 														<th scope="row" className="px-3 sm:px-3 py-0.5 sm:py-1 font-medium whitespace-nowrap text-center">
 															{index + 1}
+															{whitelist.length}
+															{index}
 														</th>
 														<th scope="row" className=" sm:px-6 py-2 sm:py-4 font-medium whitespace-nowrap text-white sm:hidden table-cell" onClick={() => (!selectedUser || selectedUser != user.user_email ? setSelectedUser(user.user_email) : setSelectedUser(null))}>
 															<p className="text-base">{user.user_name}</p>
@@ -206,7 +208,7 @@ export default function PlayList({ isStarted, setIsStarted }) {
 													</tr>
 													{selectedUser == user.user_email && (
 														<tr className="bg-[#11111170] cursor-pointer" onClick={() => setSelectedUser(null)}>
-															<th scope="row" className="px-2 pl-12" colSpan="3">
+															<th scope="row" className={'px-2 pl-12' + (index + 1 == whitelist.length ? ' pb-5' : '')} colSpan="3">
 																<span className="flex gap-1">
 																	<p className="">Provider : </p>
 																	<p className="font-normal">{user.user_provider}</p>
