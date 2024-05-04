@@ -4,6 +4,7 @@ import { authOptions } from './auth/[...nextauth]';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -27,6 +28,8 @@ export default async function Home(req, res) {
 	});
 
 	if (req.method === 'GET') {
+		WriteLogs(req.method, req.url, session.user.email, 'home', 'home');
+
 		try {
 			const connection = await connectMySQL();
 

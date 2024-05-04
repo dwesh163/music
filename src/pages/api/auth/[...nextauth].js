@@ -8,6 +8,7 @@ import { dbConfig } from '/lib/config';
 
 import packageJson from '/package.json';
 import UserAccess from '../../../../lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -50,6 +51,7 @@ export const authOptions = (req) => ({
 				}
 
 				const session = { user };
+				WriteLogs(req.method, req.url, session.user.email, 'signin', 'signin');
 				if (await UserAccess(session, 'player')) {
 					return Promise.resolve(true);
 				}
@@ -66,6 +68,7 @@ export const authOptions = (req) => ({
 		async session({ session, token, user }) {
 			const connection = await connectMySQL();
 
+			// WriteLogs(req.method, req.url, session.user.email, 'session', 'session');
 			try {
 				const [[existingUser]] = await connection.execute('SELECT * FROM users LEFT JOIN authorization a on a.authorization_id = users.authorization_id WHERE user_email = ?', [session.user.email]);
 				if (existingUser) {

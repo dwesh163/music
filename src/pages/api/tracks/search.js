@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from '../auth/[...nextauth]';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 export default async function Tracks(req, res) {
 	const session = await getServerSession(req, res, authOptions);
@@ -30,6 +31,8 @@ export default async function Tracks(req, res) {
 			if (songInfo.length == 0 || !songInfo) {
 				res.status(200).json({ error: 'Music not found' });
 			}
+
+			WriteLogs(req.method, req.url, session.user.email, 'search', 'track:' + songName + (artistName != 'undefined' ? ' ;artist:' + artistName : ''));
 
 			res.status(200).json(songInfo);
 		} catch (error) {

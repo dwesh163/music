@@ -6,6 +6,7 @@ import Menu from '@/components/menu';
 import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
+import { Code } from '@geist-ui/core';
 
 export default function Logs() {
 	const { data: session, status } = useSession();
@@ -45,9 +46,18 @@ export default function Logs() {
 	useEffect(() => {
 		getLogs();
 		setInterval(() => {
-			fetchData();
+			getLogs();
 		}, 50000);
 	}, []);
+
+	const code = `function MyComponent(props) {
+		return (
+			<div>
+			<h1>Hello, {props.name}!</h1>
+			<p>This is an example React component.</p>
+			</div>
+		);
+		}`;
 
 	useEffect(() => {
 		if (!session && status != 'unauthenticated') {
@@ -98,9 +108,15 @@ export default function Logs() {
 							</div>
 						</div>
 
-						<div className="sm:px-7 px-4 mt-6 h-screen overflow-y-scroll">
+						<div className="sm:px-7 px-4 mt-6 h-screen overflow-y-scroll mb-[200px]">
 							{!isContentLoading ? (
-								<></>
+								<div className="w-full py-3 mb-[200px]">
+									<div className="relative overflow-x-auto sm:text-sm text-xs text-white bg-[#262626] bg-opacity-50 p-2 rounded">
+										{logs.map((log, index) => (
+											<p className="w-full" id={index + 1 == logs.length ? 'last' : ''}>{`[${new Date(log.date).toLocaleString('FR-fr')}] ${log.method} ${log.url}`}</p>
+										))}
+									</div>
+								</div>
 							) : (
 								<div role="status" className="flex items-center justify-center h-screen h-[calc(100vh-100px)]">
 									<svg aria-hidden="true" className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

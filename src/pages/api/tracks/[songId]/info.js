@@ -2,6 +2,7 @@ import { getSession } from 'next-auth/react';
 import mysql from 'mysql2/promise';
 import { dbConfig } from '/lib/config';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -76,6 +77,7 @@ export default async function Info(req, res) {
 					id: item.public_id,
 				})),
 			};
+			WriteLogs(req.method, req.url, session.user.email, 'info', track.track_id);
 
 			res.status(200).json(trackInfo);
 		} catch (error) {

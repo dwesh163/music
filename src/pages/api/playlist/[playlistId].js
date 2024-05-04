@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -58,6 +59,7 @@ export default async function PlayList(req, res) {
 				playlist.tracks.push(track);
 			}
 
+			WriteLogs(req.method, req.url, session.user.email, 'playlist', playlistInfo.playlist_id);
 			res.status(200).json(playlist);
 		} catch (error) {
 			console.error(error);
@@ -96,6 +98,7 @@ export default async function PlayList(req, res) {
 		if (!playlist_tracks) {
 			await connection.execute('INSERT INTO playlist_tracks (playlist_id, track_id, added_date) VALUES (?, ?, ?)', [playlistInfo.playlist_id, track.track_id, new Date()]);
 		}
+		WriteLogs(req.method, req.url, session.user.email, 'playlist', playlistInfo.playlist_id);
 		res.status(200).json({ status: 'ok' });
 	}
 	if (req.method == 'DELETE') {
@@ -126,6 +129,8 @@ export default async function PlayList(req, res) {
 		}
 
 		const [[playlist_tracks]] = await connection.execute('SELECT * FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);
+
+		WriteLogs(req.method, req.url, session.user.email, 'playlist', playlistInfo.playlist_id);
 
 		if (playlist_tracks) {
 			await connection.execute('DELETE FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', [playlistInfo.playlist_id, track.track_id]);

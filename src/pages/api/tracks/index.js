@@ -7,6 +7,7 @@ import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import UserAccess from '/lib/auth';
 import fs from 'fs';
+import WriteLogs from '../../../../lib/logs';
 
 const path = require('path');
 const { spawn } = require('child_process');
@@ -125,6 +126,7 @@ export default async function Tracks(req, res) {
 			const download = spawn(command, args);
 
 			console.log('Start download :', track.name);
+			WriteLogs(req.method, req.url, session.user.email, 'track', track.track_id);
 
 			try {
 				await connection.execute('UPDATE tracks SET status = 1 WHERE spotify_id = ?', [songInfo.id]);

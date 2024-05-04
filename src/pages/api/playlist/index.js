@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -22,6 +23,8 @@ export default async function PlayLists(req, res) {
 	if (!(await UserAccess(session, 'player'))) {
 		return res.status(401).send({ error: 'Unauthorized' });
 	}
+
+	WriteLogs(req.method, req.url, session.user.email, 'playlists', 'playlists');
 
 	if (req.method === 'GET') {
 		try {

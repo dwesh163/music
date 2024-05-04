@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from '../auth/[...nextauth]';
 import UserAccess from '/lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -36,6 +37,8 @@ export default async function Album(req, res) {
 		spotifyApi.setAccessToken(accessToken);
 
 		const [[album]] = await connection.execute('SELECT * FROM albums WHERE public_id = ?', [req.query.albumId]);
+		WriteLogs(req.method, req.url, session.user.email, 'album', album ? album.spotify_id : req.query.albumId);
+
 		spotifyApi.getAlbum(album ? album.spotify_id : req.query.albumId).then(
 			function (data) {
 				if (data.body) {

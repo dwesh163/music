@@ -4,7 +4,6 @@ import { dbConfig } from '/lib/config';
 import { authOptions } from '../auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import UserAccess from '../../../../lib/auth';
-import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -23,11 +22,9 @@ export default async function Whitelist(req, res) {
 	}
 
 	if (req.method === 'GET') {
-		WriteLogs(req.method, req.url, session.user.email, 'whitelist', 'whitelist');
-
 		const connection = await connectMySQL();
 
-		const [users] = await connection.execute('SELECT * FROM users LEFT JOIN authorization a on a.authorization_id = users.authorization_id;');
+		const [users] = await connection.execute('SELECT method, url, action, related_data, date FROM logs LEFT JOIN music.users u on u.user_id = logs.user_id ORDER BY date DESC LIMIT 100;');
 		users.forEach((user) => {
 			if (user.user_email === process.env.ADMIN) {
 				user.isAdmin = true;
@@ -36,18 +33,6 @@ export default async function Whitelist(req, res) {
 			}
 		});
 		res.status(200).send(users);
-	} else if (req.method == 'POST') {
-		WriteLogs(req.method, req.url, session.user.email, 'whitelist', 'whitelist');
-
-		const connection = await connectMySQL();
-		const { userId, authorizationName } = req.body;
-		const [[users]] = await connection.execute('SELECT * FROM users WHERE user_id_public = ?;', [userId]);
-
-		if (process.env.ADMIN != users.user_email) {
-			await connection.execute('UPDATE users SET authorization_id = (SELECT authorization_id FROM authorization WHERE authorization_name = ?) WHERE user_id_public = ?;', [authorizationName, userId]);
-			res.status(200).send({ status: 'ok' });
-		}
-		res.status(401).send({ error: 'unauthorized' });
 	} else {
 		res.setHeader('Allow', ['POST', 'GET']);
 		res.status(405).send({ error: `The ${req.method} method is not allowed` });

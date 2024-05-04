@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { authOptions } from '../auth/[...nextauth]';
 import UserAccess from '../../../../lib/auth';
+import WriteLogs from '../../../../lib/logs';
 
 async function connectMySQL() {
 	try {
@@ -38,6 +39,8 @@ export default async function Artist(req, res) {
 		let artistData = {};
 
 		const [[artist]] = await connection.execute('SELECT * FROM artists WHERE public_id = ?', [req.query.artistId]);
+		WriteLogs(req.method, req.url, session.user.email, 'artist', artist ? artist.spotify_id : req.query.artistId);
+
 		spotifyApi.getArtist(artist ? artist.spotify_id : req.query.artistId).then(
 			function (data) {
 				if (data.body) {
