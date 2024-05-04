@@ -27,7 +27,7 @@ export default function Menu({ isOpen, setIsOpen }) {
 		// { name: 'Artists', svg: '/svg/artists.svg', url: 'artists' },
 	]);
 
-	const [admins, setAdmins] = useState([{ name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'whitelist' }]);
+		{ name: 'Whitelist', svg: '/svg/whitelist.svg', url: 'admin/whitelist' },
 
 	const fetchPlaylist = async () => {
 		try {

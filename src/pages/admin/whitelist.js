@@ -7,7 +7,7 @@ import Loading from '@/components/loading';
 import { useRouter } from 'next/router';
 import packageJson from '/package.json';
 
-export default function PlayList({ isStarted, setIsStarted }) {
+export default function Whitelist() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
