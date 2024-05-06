@@ -96,7 +96,7 @@ export default function Logs() {
 						<div className="w-full p-5 pl-4 sm:p-7 pb-0 sm:pb-0 flex justify-between">
 							<h1 className="text-3xl mb-0 font-extrabold leading-none tracking-tight md:text-4xl lg:text-6xl text-white">Logs</h1>
 							<div className="flex gap-2">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="w-6 h-6 cursor-pointer" onClick={() => fetchData()} viewBox="0 0 16 16">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="w-6 h-6 cursor-pointer" onClick={() => getLogs()} viewBox="0 0 16 16">
 									<path fillRule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
 									<path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
 								</svg>
