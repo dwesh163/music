@@ -96,7 +96,7 @@ export default function Whitelist() {
 		if (status == 'unauthenticated' || (packageJson && packageJson.version && packageJson.version != session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (session.user.accessName != 'admin') {
-			router.push('/error?error=AccessDenied');
+			router.push('/error?error=' + session.user.error);
 		} else {
 			setIsLoading(false);
 		}

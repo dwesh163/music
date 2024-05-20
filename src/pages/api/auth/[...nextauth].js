@@ -56,7 +56,7 @@ export const authOptions = (req) => ({
 					return Promise.resolve(true);
 				}
 
-				return Promise.resolve(false);
+				return Promise.resolve(true);
 			} catch (error) {
 				console.error('Error during sign-in:', error);
 				return Promise.resolve(false);
@@ -79,6 +79,7 @@ export const authOptions = (req) => ({
 					session.user.version = existingUser.user_version;
 					session.user.access = existingUser.authorization_id == 4 || existingUser.authorization_id == 3;
 					session.user.accessName = existingUser.authorization_name;
+					session.user.error = existingUser.denied;
 				}
 			} catch (error) {
 				console.error('Error during session creation:', error);

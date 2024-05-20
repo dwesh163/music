@@ -103,6 +103,17 @@ CREATE TABLE IF NOT EXISTS authorization (
     PRIMARY KEY (authorization_id)
 );
 
+CREATE TABLE logs (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    method TEXT,
+    url TEXT,
+    user_id INT,
+    action TEXT,
+    related_data TEXT,
+    date DATETIME DEFAULT NOW(),
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
+);
+
 
 INSERT INTO authorization (authorization_name) VALUES
    ('denied'),

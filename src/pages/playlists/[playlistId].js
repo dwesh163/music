@@ -118,7 +118,7 @@ export default function Playlist({ isStarted, setIsStarted }) {
 		if (status === 'unauthenticated' || (packageJson && packageJson.version && packageJson.version !== session.user.version)) {
 			router.push('/auth/signin?callbackUrl=' + router.asPath);
 		} else if (!session.user.access) {
-			router.push('/error?error=AccessDenied');
+			router.push('/error?error=' + session.user.error);
 		} else {
 			setLoginIsLoading(false);
 		}
