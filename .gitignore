@@ -34,3 +34,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# mysql
+data/*
+
+#PWA
+public/sw.js.map
+
+#env
+.env
