@@ -1,0 +1,27 @@
+services:
+    tonalys_db:
+        image: postgresql:lastest
+        restart: always
+        container_name: tonalysDB
+        environment:
+            POSTGRESQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            POSTGRESQL_DATABASE: ${MYSQL_DATABASE}
+            POSTGRESQL_USER: ${MYSQL_USER}
+            POSTGRESQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - ./data/mysql:/var/lib/postgresql
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        command: --max_connections=100000000
+
+    tonalys_web:
+        image: node:hydrogen-slim
+        container_name: tonalys
+        command: /bin/sh -c "cd /srv/app && npm install && npm run dev"
+        ports:
+            - 3004:3000
+        working_dir: /srv/app
+        volumes:
+            - type: bind
+              source: ./
+              target: /srv/app
+        tty: true
