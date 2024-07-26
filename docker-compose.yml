@@ -1,17 +1,18 @@
 services:
     tonalys_db:
-        image: postgresql:lastest
+        image: mysql:latest
         restart: always
         container_name: tonalysDB
         environment:
-            POSTGRESQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            POSTGRESQL_DATABASE: ${MYSQL_DATABASE}
-            POSTGRESQL_USER: ${MYSQL_USER}
-            POSTGRESQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
-            - ./data/mysql:/var/lib/postgresql
+            - ./data/mysql:/var/lib/mysql
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-        command: --max_connections=100000000
+        ports:
+            - '3304:3306'
 
     tonalys_web:
         image: node:hydrogen-slim
