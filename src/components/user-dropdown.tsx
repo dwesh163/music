@@ -23,7 +23,7 @@ export function UserDropdown() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="rounded-full ring-offset-background focus-visible:outline-none">
-				<Avatar className="border shadow-sm">
+				<Avatar className="border shadow-sm w-8 h-8 lg:w-10 lg:h-10">
 					<AvatarImage src={session?.user?.image ?? undefined} alt={session?.user?.name ?? 'Guest User'} />
 					<AvatarFallback>
 						{session?.user?.name

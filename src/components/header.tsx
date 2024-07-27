@@ -12,7 +12,7 @@ export function Header() {
 	const { data: session, status } = useSession();
 
 	return (
-		<header className="w-full flex justify-between p-5 border-b">
+		<header className="w-full flex justify-between p-5 border-b lg:relative fixed bg-background z-50">
 			<div className="flex justify-start items-center">
 				<Link href="/" className="flex gap-0.5 justify-center items-center">
 					<Disc3 />
