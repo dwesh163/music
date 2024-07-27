@@ -3,7 +3,7 @@
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Disc3, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,11 @@ export default function LoginForm() {
 	const error = searchParams.get('error');
 
 	return (
-		<div className="flex items-center justify-center w-full h-screen">
+		<div className="flex items-center justify-center w-full sm:h-screen flex-col p-5">
+			<Link href="/" className="flex gap-0.5 justify-center items-center mb-8 mt-8">
+				<Disc3 className="w-6 h-6" />
+				<h1 className="text-3xl font-black">Tonalys</h1>
+			</Link>
 			<Card className="w-full sm:w-1/2 xl:w-1/4 mx-5">
 				<CardHeader>
 					<CardTitle className="font-semibold tracking-tight text-2xl">Signin</CardTitle>
