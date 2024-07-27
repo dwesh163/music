@@ -22,15 +22,6 @@ interface MySQLUser {
   provider?: string;
 }
 
-interface CustomSession extends DefaultSession {
-  user: {
-    username: string | undefined;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  };
-}
-
 async function connectMySQL() {
   try {
     const connection = await mysql.createConnection(dbConfig);
@@ -140,7 +131,7 @@ export const authOptions: AuthOptions = {
 
           await connection.execute(
             'INSERT INTO playlists (name, publicId, user) VALUES (?, ?, ?)',
-            ['Liked', uuidv4(), insertedUser.userId]
+            ['liked-songs', uuidv4(), insertedUser.userId]
           );
         }
 
@@ -163,10 +154,21 @@ export const authOptions: AuthOptions = {
           );
           const existingUser = rows[0];
 
+          const [playlistsRows]: [RowDataPacket[], FieldPacket[]] = await connection.execute(
+            "SELECT publicId, name FROM playlists WHERE user = ? && name != 'liked-songs'",
+            [existingUser.userId]
+          );
+
           if (existingUser) {
-            const newSession: CustomSession = {
+            const playlists = playlistsRows.map((row) => ({
+              publicId: row.publicId,
+              name: row.name,
+            }));
+    
+            const newSession: Session = {
               ...session,
               user: { ...session.user, username: existingUser.username },
+              playlists,
             };
             return newSession;
           }
