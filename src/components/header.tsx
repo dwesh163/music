@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import Link from 'next/link';
 import { Disc3 } from 'lucide-react';
+import { UserDropdown } from './user-dropdown';
 
 export function Header() {
 	const { data: session, status } = useSession();
@@ -23,15 +24,7 @@ export function Header() {
 					<Link href="/auth/signin">Login</Link>
 				</Button>
 			) : (
-				<Avatar>
-					<AvatarImage src={session?.user?.image ?? ''} />
-					<AvatarFallback>
-						{session?.user?.name
-							?.split(' ')
-							.map((word) => word.charAt(0).toUpperCase())
-							.join('')}
-					</AvatarFallback>
-				</Avatar>
+				<UserDropdown />
 			)}
 		</header>
 	);
