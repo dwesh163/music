@@ -1,10 +1,11 @@
-import NextAuth, { Account, NextAuthConfig, Profile, User } from 'next-auth/index';
+import NextAuth, { Account, NextAuthConfig, Profile, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { IUser, UserModel } from '@/models/User';
 import db from '@/lib/mongo';
 import { isPasswordValid } from '@/lib/hash';
+import { AdapterUser } from 'next-auth/adapters';
 
 export const authOptions: NextAuthConfig = {
 	pages: {
@@ -55,7 +56,8 @@ export const authOptions: NextAuthConfig = {
 		maxAge: 30 * 24 * 60 * 60,
 	},
 	callbacks: {
-		async signIn({ user, account, profile }: { user: any; account: any; profile: any }) {
+		async signIn(params: { user: AdapterUser | User; account: Account | null; profile?: Profile; email?: { verificationRequest?: boolean }; credentials?: Record<string, any> }) {
+			const { user, account, profile } = params;
 			await db.connect();
 			const dbUser = await UserModel.findOne<IUser>({ email: user.email });
 			const provider = account?.provider || 'credentials';
