@@ -1,13 +1,13 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { Account, NextAuthConfig, Profile, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { IUser, UserModel } from '@/models/User';
 import db from '@/lib/mongo';
 import { isPasswordValid } from '@/lib/hash';
+import { AdapterUser } from 'next-auth/adapters';
 
-// Define NextAuth options
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthConfig = {
 	pages: {
 		signIn: '/signin',
 	},
@@ -38,6 +38,7 @@ export const authOptions: NextAuthOptions = {
 					id: user._id.toString(),
 					name: user.name,
 					email: user.email,
+					isTwoFactorComplete: false,
 				};
 			},
 		}),
@@ -52,16 +53,17 @@ export const authOptions: NextAuthOptions = {
 	],
 	session: {
 		strategy: 'jwt',
-		maxAge: 30 * 24 * 60 * 60, // 7 Days
+		maxAge: 30 * 24 * 60 * 60,
 	},
 	callbacks: {
-		async signIn({ user, account, profile }) {
+		async signIn(params: { user: AdapterUser | User; account: Account | null; profile?: Profile; email?: { verificationRequest?: boolean }; credentials?: Record<string, any> }) {
+			const { user, account, profile } = params;
 			await db.connect();
 			const dbUser = await UserModel.findOne<IUser>({ email: user.email });
 			const provider = account?.provider || 'credentials';
 
 			if (!dbUser) {
-				UserModel.create({
+				await UserModel.create({
 					email: user.email,
 					username: profile?.name || (profile as any)?.login || null,
 					image: user.image || profile?.image || null,
