@@ -20,7 +20,7 @@ export default function Sidebar({ session }: { session: Session | null }) {
 				<Link href="/" className="flex gap-2 justify-center mt-1 items-center">
 					<h1 className={'text-4xl text-[hsl(var(--color))] ' + righteous.className}>MUSICS</h1>
 				</Link>
-				<div className="grid gap-6 font-medium mt-16">
+				<div className="grid gap-6 font-medium  mt-20">
 					<Link href="/" className={cn('flex items-center gap-4 px-2.5 ', pathname === '/' ? 'text-primary' : 'text-[hsl(var(--color))] hover:text-[hsl(var(--color))]/60')} prefetch={false}>
 						<AudioLines className="h-5 w-5" />
 						Feed
