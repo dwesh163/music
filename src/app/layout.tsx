@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { Session } from 'next-auth';
 import '@/styles/globals.css';
 import { SessionProvider } from '@/components/SessionProvider';
 import React from 'react';
