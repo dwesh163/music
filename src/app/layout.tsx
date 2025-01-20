@@ -7,10 +7,10 @@ import React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Music',
-	description: 'A simple music app',
-	keywords: ['music', 'songs', 'albums', 'artists'],
-	applicationName: 'Kooked Music',
+	title: 'Musics',
+	description: 'A simple musics app',
+	keywords: ['musics', 'songs', 'albums', 'artists'],
+	applicationName: 'Kooked Musics',
 };
 
 type RootLayoutProps = any;
