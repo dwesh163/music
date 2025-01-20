@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSICS - Email Verification</title>
+    <style>
+        :root {
+            --primary: #ff4d00;
+            --primary-dark: #cc3e00;
+            --background: rgb(24, 24, 27);
+            --card-background: rgb(39, 39, 45);
+            --foreground: rgb(250, 250, 250);
+            --muted: rgb(161, 161, 170);
+            --border: rgb(63, 63, 70);
+            --code-background: rgb(39, 39, 45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--foreground);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .container {
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-background);
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            color: var(--primary);
+        }
+
+        .app-name {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary), #ff8533);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+
+        p {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .verification-code {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            font-family: monospace;
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(255, 77, 0, 0.2);
+        }
+
+        .expiry {
+            font-size: 0.875rem;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+        }
+
+        .footer p {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <div class="app-name">MUSICS</div>
+        </div>
+
+        <h1>Welcome to Your Musical Journey</h1>
+        <p>Thank you for joining <span class="highlight">MUSICS</span>. To start discovering and sharing amazing music,
+            please verify your email with the code below:</p>
+
+        <div class="verification-code">{verification_code}</div>
+
+        <p class="expiry">This verification code will expire in 24 hours</p>
+
+        <div class="footer">
+            <p>This is an automated message from MUSICS. Please don't reply to this email.</p>
+            <p>If you didn't create a MUSICS account, you can safely ignore this email.</p>
+        </div>
+    </div>
+</body>
+
+</html>
