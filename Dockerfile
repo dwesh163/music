@@ -9,7 +9,7 @@ RUN apk add --no-cache \
     python3 \
     && rm -rf /var/cache/apk/*
 
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM base AS builder
