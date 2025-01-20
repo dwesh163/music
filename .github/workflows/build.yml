@@ -15,11 +15,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Get Version from Cargo.toml
+            - name: Get Version from package.json
               id: get_version
               run: |
-                  version=$(awk -F ' = ' '/^version/ {print $2}' Cargo.toml | tr -d '"')
-                  echo "Version from Cargo.toml: $version"
+                  version=$(jq -r .version package.json)
+                  echo "Version from package.json: $version"
                   echo "version=$version" >> $GITHUB_OUTPUT
 
     build:
