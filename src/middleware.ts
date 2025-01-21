@@ -9,9 +9,8 @@ export async function middleware(req: NextRequest) {
 		const token = await getToken({
 			req,
 			secret: process.env.NEXTAUTH_SECRET,
+			cookieName: process.env.NEXTAUTH_COOKIE_NAME,
 		});
-
-		console.log('Middleware token:', token);
 
 		const url = new URL(req.url);
 
