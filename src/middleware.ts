@@ -11,6 +11,8 @@ export async function middleware(req: NextRequest) {
 			secret: process.env.NEXTAUTH_SECRET,
 		});
 
+		console.log('Middleware token:', token);
+
 		const url = new URL(req.url);
 
 		const sanitizeRedirectUrl = (path: string): string => {
@@ -40,7 +42,7 @@ export async function middleware(req: NextRequest) {
 		}
 
 		if (token.exp && (token.exp as number) < Date.now() / 1000) {
-			const response = NextResponse.redirect(new URL('/login', req.url));
+			const response = NextResponse.redirect(new URL(`/login?callbackUrl=${encodeURIComponent(sanitizeRedirectUrl(url.pathname))}`, req.url));
 			return createResponseWithHeaders(response);
 		}
 
