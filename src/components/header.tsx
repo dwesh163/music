@@ -15,7 +15,7 @@ export default function TopBar({ user }: { user: User }) {
 		const query = new URLSearchParams();
 		if (search) {
 			query.set('s', search);
-			router.replace(`/s?${query.toString()}`);
+			router.replace(`/search?${query.toString()}`);
 		}
 	}, [search, router]);
 
