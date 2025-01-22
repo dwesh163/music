@@ -1,0 +1,9 @@
+{
+    "name": "Musics",
+    "short_name": "Musics",
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait"
+}
