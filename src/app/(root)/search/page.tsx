@@ -5,7 +5,7 @@ import { SearchResults } from '@/components/search';
 import { api } from '@/lib/api';
 import { AlertCircle, SearchIcon } from 'lucide-react';
 
-export default async function SearchPage({ params, searchParams }: { params: any; searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function SearchPage({ params, searchParams }: { params: any; searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
 	try {
 		const search = (await searchParams)?.s;
 
