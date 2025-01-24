@@ -25,3 +25,18 @@ export async function downloadTrack(trackId: string): Promise<ErrorType> {
 	}
 }
 
+export async function getTrackFile(trackId: string): Promise<Blob | null> {
+	const clientId = await getClientId();
+	if (!clientId) throw new Error('No valid client ID');
+
+	const song = await SongModel.findOne({ id: trackId });
+
+	const response = await fetch(`${process.env.API_URL}/api/download/file?file=${encodeURIComponent(song.path)}&client_id=${clientId}`);
+
+	if (!response.ok) {
+		const data = await response.json();
+		throw new Error(data.detail || 'File download failed');
+	}
+
+	return await response.blob();
+}
