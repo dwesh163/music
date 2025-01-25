@@ -50,7 +50,7 @@ export default function LoginComponent() {
 				<Card className="backdrop-blur-xl shadow-xl md:border border-0">
 					<CardHeader className="space-y-1 pb-6">
 						<CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
-						<p className="">Sign in to your account to continue</p>
+						<p>Sign in to your account to continue</p>
 					</CardHeader>
 					<CardContent>
 						{error && (
