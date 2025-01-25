@@ -81,9 +81,7 @@ export function ArtistComponents({ artist }: { artist: { data: Artist; topTracks
 											<Play size={20} fill="currentColor" />
 										</button>
 									</div>
-									<Link href={`/album/${album.id}`} className="hover:underline">
-										<h3 className="font-medium truncate">{album.name}</h3>
-									</Link>
+									<h3 className="font-medium truncate hover:underline">{album.name}</h3>
 									<p className="text-sm text-gray-400">
 										{album.release_date} • {album.total_tracks} songs
 									</p>
