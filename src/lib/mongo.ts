@@ -46,6 +46,8 @@ async function init() {
 			accessLevel: 0,
 			authorizations: {
 				level: 0,
+				app: ['access'],
+				musics: ['download', 'play'],
 			},
 		},
 		{
@@ -55,6 +57,8 @@ async function init() {
 			accessLevel: 0,
 			authorizations: {
 				level: 1,
+				app: ['access'],
+				musics: ['download', 'play'],
 			},
 		},
 		{
@@ -64,6 +68,8 @@ async function init() {
 			accessLevel: 0,
 			authorizations: {
 				level: 2,
+				app: ['access'],
+				musics: ['download', 'play'],
 			},
 		},
 		{
