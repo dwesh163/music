@@ -20,9 +20,9 @@ export default async function SearchPage({ params, searchParams }: { params: any
 		}
 
 		return (
-			<div className="w-full h-full px-6">
+			<div className="w-full h-full sm:px-6 px-3">
 				<Header />
-				<h2 className="text-2xl font-bold mb-4">Search Results for "{search.trim()}"</h2>
+				<h2 className="sm:text-2xl text-xl sm:font-bold font-semibold sm:mb-4 mb-2">Search Results for "{search.trim()}"</h2>
 				<SearchResults results={results} />
 			</div>
 		);
