@@ -1,6 +1,6 @@
 {
-  "name": "music",
-  "version": "3.1.6",
+  "name": "musics",
+  "version": "3.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
