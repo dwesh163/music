@@ -2,7 +2,7 @@ import { checkAccreditation, getUser } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { downloadTrack } from '@/lib/spotdl';
 
-export async function GET(req: NextRequest, context: any) {
+export async function POST(req: NextRequest, context: any) {
 	try {
 		const { trackId } = await context.params;
 
