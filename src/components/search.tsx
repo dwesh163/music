@@ -22,13 +22,13 @@ const SearchResultItem = ({ image, title, subtitle, actions = [], linkHref = nul
 			{actions && (
 				<div className="flex items-center space-x-1 sm:space-x-2">
 					{actions.map((action, index) => (
-						<Button key={index} variant="ghost" size="sm" className={cn('text-gray-400 hover:text-white', action.highlight ? 'bg-orange-500 hover:bg-orange-400 text-white rounded-full p-2' : 'p-1 sm:p-2', 'opacity-0 group-hover:opacity-100 transition-opacity')} onClick={action.onClick}>
+						<button key={index} className={cn('text-gray-400 hover:text-white', action.highlight ? 'bg-orange-500 hover:bg-orange-400 text-white rounded-full p-2 mx-1' : 'p-0 sm:p-1', 'opacity-0 group-hover:opacity-100 transition-opacity')} onClick={action.onClick}>
 							{action.icon}
-						</Button>
+						</button>
 					))}
-					<Button variant="ghost" size="sm" className="p-1 sm:p-2 text-gray-400 hover:text-white">
+					<button className="p-0 sm:p-1 text-gray-400 hover:text-white">
 						<MoreHorizontal size={14} className="sm:size-4" />
-					</Button>
+					</button>
 				</div>
 			)}
 		</div>
