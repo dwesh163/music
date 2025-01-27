@@ -1,13 +1,27 @@
 'use client';
 
-import { Artist, Page, SimplifiedAlbum, TopTracksResult } from '@spotify/web-api-ts-sdk';
+import { Artist, Page, SimplifiedAlbum, TopTracksResult, Track } from '@spotify/web-api-ts-sdk';
 import { Play, Heart, MoreHorizontal, Plus } from 'lucide-react';
 import momment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ScrollArea } from './ui/scroll-area';
+import { usePlayback } from '@/app/playback-context';
 
 export function ArtistComponents({ artist }: { artist: { data: Artist; topTracks: TopTracksResult; albums: Page<SimplifiedAlbum> } }) {
+	const { playTrack } = usePlayback();
+
+	const onPlayTrack = (track: Track) => {
+		playTrack({
+			id: track.id,
+			name: track.name,
+			artists: track.artists.map((artist) => ({ id: artist.id, name: artist.name })),
+			imageUrl: track.album.images[0]?.url,
+			album: { id: track.album.id, name: track.album.name },
+			duration: track.duration_ms / 1000,
+		});
+	};
+
 	return (
 		<div className="w-full h-full">
 			<div className="relative h-[200px]">
@@ -48,7 +62,7 @@ export function ArtistComponents({ artist }: { artist: { data: Artist; topTracks
 											<p className="text-sm text-gray-400">{track.album.name}</p>
 										</div>
 									</div>
-									<button className="bg-orange-500 hover:bg-opacity-90 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+									<button onClick={() => onPlayTrack(track)} className="bg-orange-500 hover:bg-opacity-90 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
 										<Play size={16} fill="currentColor" />
 									</button>
 									<div className="flex items-center gap-4">
