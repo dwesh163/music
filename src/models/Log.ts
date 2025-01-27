@@ -5,14 +5,14 @@ export interface ILog extends Document {
 	userId: String;
 	date: Date;
 	type: 'listen' | 'download';
-	songId: string;
+	songId: String;
 }
 
 const logSchema = new mongoose.Schema<ILog>({
 	date: { type: Date, required: true, default: Date.now },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 	type: { type: String, required: true, enum: ['listen', 'download'] },
-	songId: { type: String, required: true },
+	songId: { type: mongoose.Schema.Types.ObjectId, ref: 'Song' },
 });
 
 export const LogModel = mongoose.models.Log || mongoose.model<ILog>('Log', logSchema);
